@@ -1,6 +1,6 @@
 import { Box, VStack, Text, Link as ChakraLink, HStack } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { House, Users, Kanban, Gear, UserPlus, ChatsCircle, Archive, X } from "@phosphor-icons/react";
+import { House, Users, Kanban, Gear, UserPlus, ChatsCircle, Archive, X, BookOpen } from "@phosphor-icons/react";
 import brandLogo from "@/assets/brand.png";
 
 const allNavItems = [
@@ -11,6 +11,7 @@ const allNavItems = [
   { label: "Broadcast", icon: ChatsCircle, path: "/broadcasts" },
   { label: "Broadcast History", icon: ChatsCircle, path: "/broadcasts/history" },
   { label: "Archived Leads", icon: Archive, path: "/leads/archived" },
+  { label: "Daftar Akun", icon: BookOpen, path: "/daftar-akun" },
 ];
 
 export default function Sidebar({ open, onClose }) {

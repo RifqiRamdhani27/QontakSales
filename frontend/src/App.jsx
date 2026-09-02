@@ -11,6 +11,7 @@ import AgentsPage from "./pages/AgentsPage";
 import BroadcastPage from "./pages/BroadcastPage";
 import BroadcastHistoryPage from "./pages/BroadcastHistoryPage";
 import ArchivedLeadsPage from "./pages/ArchivedLeadsPage";
+import DaftarAkunPage from "./pages/DaftarAkunPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import ContactPage from "./pages/ContactPage";
@@ -37,6 +38,7 @@ function App() {
           <Route path="/broadcasts" element={<BroadcastPage />} />
           <Route path="/broadcasts/history" element={<BroadcastHistoryPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/daftar-akun" element={<DaftarAkunPage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
