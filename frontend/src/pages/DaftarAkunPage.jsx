@@ -1,13 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
+import XLSXStyle from "xlsx-js-style";
 import {
   Box, Flex, Text, Button, Input, Select, Badge,
   HStack, VStack, Spinner, IconButton,
   Table, Dialog, Field, createListCollection,
 } from "@chakra-ui/react";
 import {
-  MagnifyingGlass, Plus, PencilSimple, Trash, X, FloppyDisk, BookOpen,
+  MagnifyingGlass, Plus, PencilSimple, Trash, X, FloppyDisk, BookOpen, LockKey,
+  List, FileXls, UploadSimple,
 } from "@phosphor-icons/react";
+import { useNavigate } from "react-router-dom";
 import api from "@/services/api";
+import brandLogo from "@/assets/brand.png";
 
 const KATEGORI_LIST = [
   "Cash & Bank",
@@ -64,6 +68,7 @@ const EMPTY_FORM = {
 };
 
 export default function DaftarAkunPage() {
+  const navigate = useNavigate();
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -72,14 +77,179 @@ export default function DaftarAkunPage() {
   const [totalCount, setTotalCount] = useState(0);
   const pageSize = 20;
 
-  // Modal state
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [tindakanOpen, setTindakanOpen] = useState(false);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [penggunaOption, setPenggunaOption] = useState("all");
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
+
+  const isAllSelected = accounts.length > 0 && accounts.every((a) => selectedIds.includes(a.id));
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(accounts.map((a) => a.id));
+    }
+  };
+
+  const toggleSelectRow = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      for (const id of selectedIds) {
+        await api.delete(`/coa/${id}/`);
+      }
+      setSelectedIds([]);
+      setBulkDeleteOpen(false);
+      fetchAccounts();
+    } catch {
+      setBulkDeleteOpen(false);
+    }
+  };
+
+  const exportCOAToXLSX = async () => {
+    try {
+      const res = await api.get("/coa/", { params: { page_size: 1000 } });
+      const allData = res.data.results ?? res.data;
+
+      const wb = XLSXStyle.utils.book_new();
+      const wsData = [];
+
+      // Row 1 (empty for spacing)
+      wsData.push([{ v: "", s: {} }]);
+
+      // Row 2: Main Title
+      const titleStyle = {
+        font: { bold: true, sz: 16, color: { rgb: "FFFFFF" }, name: "Calibri" },
+        fill: { fgColor: { rgb: "1A3A5C" } },
+        alignment: { horizontal: "center", vertical: "center" },
+        border: {
+          top: { style: "thin", color: { rgb: "FFFFFF" } },
+          bottom: { style: "thin", color: { rgb: "FFFFFF" } },
+        },
+      };
+      wsData.push([
+        { v: "DAFTAR AKUN (CHART OF ACCOUNTS)", s: titleStyle },
+        { v: "", s: titleStyle },
+        { v: "", s: titleStyle },
+        { v: "", s: titleStyle },
+        { v: "", s: titleStyle },
+        { v: "", s: titleStyle },
+      ]);
+
+      // Row 3: Sub-title (company name)
+      const subTitleStyle = {
+        font: { italic: true, sz: 11, color: { rgb: "FFFFFF" }, name: "Calibri" },
+        fill: { fgColor: { rgb: "1A3A5C" } },
+        alignment: { horizontal: "center", vertical: "center" },
+      };
+      wsData.push([
+        { v: "QontakSales", s: subTitleStyle },
+        { v: "", s: subTitleStyle },
+        { v: "", s: subTitleStyle },
+        { v: "", s: subTitleStyle },
+        { v: "", s: subTitleStyle },
+        { v: "", s: subTitleStyle },
+      ]);
+
+      // Row 4: Empty spacer
+      wsData.push([{ v: "", s: {} }, { v: "", s: {} }, { v: "", s: {} }, { v: "", s: {} }, { v: "", s: {} }, { v: "", s: {} }]);
+
+      // Row 5: Column headers
+      const headerStyle = {
+        font: { bold: true, sz: 11, color: { rgb: "FFFFFF" }, name: "Calibri" },
+        fill: { fgColor: { rgb: "2563EB" } },
+        alignment: { horizontal: "center", vertical: "center", wrapText: true },
+        border: {
+          top: { style: "thin", color: { rgb: "FFFFFF" } },
+          bottom: { style: "medium", color: { rgb: "1A3A5C" } },
+          left: { style: "thin", color: { rgb: "FFFFFF" } },
+          right: { style: "thin", color: { rgb: "FFFFFF" } },
+        },
+      };
+      wsData.push([
+        { v: "Kode Akun", s: headerStyle },
+        { v: "Nama Akun", s: headerStyle },
+        { v: "Kategori Akun", s: headerStyle },
+        { v: "Pengguna", s: headerStyle },
+        { v: "Pajak", s: headerStyle },
+        { v: "Saldo (IDR)", s: headerStyle },
+      ]);
+
+      // Data rows
+      allData.forEach((a, idx) => {
+        const isEven = idx % 2 === 0;
+        const rowBg = isEven ? "FFFFFF" : "DBEAFE";
+        const cellStyle = {
+          font: { sz: 10, color: { rgb: "1E3A5F" }, name: "Calibri" },
+          fill: { fgColor: { rgb: rowBg } },
+          alignment: { vertical: "center", wrapText: false },
+          border: {
+            top: { style: "hair", color: { rgb: "BFD7F5" } },
+            bottom: { style: "hair", color: { rgb: "BFD7F5" } },
+            left: { style: "thin", color: { rgb: "BFD7F5" } },
+            right: { style: "thin", color: { rgb: "BFD7F5" } },
+          },
+        };
+        const centerStyle = { ...cellStyle, alignment: { ...cellStyle.alignment, horizontal: "center" } };
+        const rightStyle = { ...cellStyle, alignment: { ...cellStyle.alignment, horizontal: "right" } };
+        wsData.push([
+          { v: a.kode_akun, s: centerStyle },
+          { v: a.nama_akun, s: cellStyle },
+          { v: a.kategori_akun, s: centerStyle },
+          { v: a.pengguna || "all", s: centerStyle },
+          { v: a.pajak || "-", s: centerStyle },
+          { v: parseFloat(a.saldo).toLocaleString("id-ID"), s: rightStyle },
+        ]);
+      });
+
+      const ws = XLSXStyle.utils.aoa_to_sheet(wsData);
+
+      // Merge cells for title rows (A1:F1 spacer, A2:F2 title, A3:F3 subtitle)
+      ws["!merges"] = [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }, // row 1 spacer
+        { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } }, // row 2 title
+        { s: { r: 2, c: 0 }, e: { r: 2, c: 5 } }, // row 3 subtitle
+        { s: { r: 3, c: 0 }, e: { r: 3, c: 5 } }, // row 4 spacer
+      ];
+
+      // Column widths
+      ws["!cols"] = [
+        { wch: 14 }, // Kode Akun
+        { wch: 40 }, // Nama Akun
+        { wch: 28 }, // Kategori Akun
+        { wch: 18 }, // Pengguna
+        { wch: 12 }, // Pajak
+        { wch: 18 }, // Saldo
+      ];
+
+      // Row heights
+      ws["!rows"] = [
+        { hpt: 8 },   // row 1 spacer
+        { hpt: 30 },  // row 2 title
+        { hpt: 20 },  // row 3 subtitle
+        { hpt: 8 },   // row 4 spacer
+        { hpt: 22 },  // row 5 headers
+        ...allData.map(() => ({ hpt: 18 })),
+      ];
+
+      XLSXStyle.utils.book_append_sheet(wb, ws, "Daftar Akun");
+      XLSXStyle.writeFile(wb, `Daftar_Akun_COA_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    } catch (err) {
+      console.error("Failed to export COA:", err);
+    }
+  };
 
   const fetchAccounts = useCallback(async () => {
     setLoading(true);
@@ -108,17 +278,23 @@ export default function DaftarAkunPage() {
   const openCreate = () => {
     setEditTarget(null);
     setForm(EMPTY_FORM);
+    setPenggunaOption("all");
     setFormError("");
     setModalOpen(true);
   };
 
   const openEdit = (acct) => {
     setEditTarget(acct);
+    const pVal = acct.pengguna || "all";
+    let option = "all";
+    if (pVal === "Rifqi Ramdhani") option = "sebagian";
+    else if (pVal === "Sales Manager" || pVal === "Sales Agent") option = "peran";
+    setPenggunaOption(option);
     setForm({
       kode_akun: acct.kode_akun,
       nama_akun: acct.nama_akun,
       kategori_akun: acct.kategori_akun,
-      pengguna: acct.pengguna || "all",
+      pengguna: pVal,
       pajak: acct.pajak || "",
       saldo: String(acct.saldo),
     });
@@ -174,11 +350,14 @@ export default function DaftarAkunPage() {
       {/* Header */}
       <Flex align="center" justify="space-between" mb={6} flexWrap="wrap" gap={3}>
         <HStack gap={3}>
-          <Box
-            bg="primary" borderRadius="xl" p={2.5}
-            display="flex" alignItems="center" justifyContent="center"
-          >
-            <BookOpen size={22} color="white" weight="duotone" />
+          <Box w="36px" h="36px" overflow="hidden" display="flex" alignItems="center" justifyContent="flex-start">
+            <Box
+              as="img"
+              src={brandLogo}
+              h="36px"
+              style={{ objectFit: "cover", objectPosition: "left center", maxWidth: "none" }}
+              alt="Daftar Akun"
+            />
           </Box>
           <Box>
             <Text fontWeight="bold" fontSize="xl" color="foreground" lineHeight="1.2">
@@ -189,18 +368,101 @@ export default function DaftarAkunPage() {
             </Text>
           </Box>
         </HStack>
-        <Button
-          bg="primary" color="white"
-          _hover={{ bg: "#1D4ED8" }}
-          onClick={openCreate}
-          size="sm"
-          borderRadius="lg"
-          fontWeight="semibold"
-          px={5}
-        >
-          <Plus size={16} weight="bold" style={{ marginRight: 6 }} />
-          Tambah Akun
-        </Button>
+        {/* Single Navy Blue Tindakan Button */}
+        <Box position="relative">
+          <Button
+            onClick={() => setTindakanOpen(!tindakanOpen)}
+            bg="#1d62a4ff"
+            color="white"
+            _hover={{ bg: "#163859" }}
+            _active={{ bg: "#091D30" }}
+            size="sm"
+            borderRadius="md"
+            fontWeight="600"
+            fontSize="14px"
+            px={0}
+            h="38px"
+            boxShadow="0 4px 14px rgba(0, 0, 0, 0.3)"
+            display="flex"
+            alignItems="center"
+            overflow="hidden"
+          >
+            <Box px={4} py={2}>Tindakan</Box>
+            <Box px={3} py={2} borderLeft="1px solid rgba(255,255,255,0.2)" display="flex" alignItems="center">
+              <List size={18} weight="bold" />
+            </Box>
+          </Button>
+
+          {/* Dropdown Menu */}
+          {tindakanOpen && (
+            <>
+              <Box position="fixed" inset={0} zIndex={90} onClick={() => setTindakanOpen(false)} />
+              
+              <Box
+                position="absolute"
+                right={0}
+                top="44px"
+                w="250px"
+                bg="white"
+                borderRadius="xl"
+                shadow="2xl"
+                border="1px solid #E2E8F0"
+                py={2}
+                zIndex={100}
+                fontFamily="Segoe UI, -apple-system, sans-serif"
+              >
+                {/* Item 1: Buat Akun Baru */}
+                <Flex
+                  align="center" gap={3} px={4} py={2.5} cursor="pointer"
+                  fontSize="13px" color="#1E293B" fontWeight="500"
+                  _hover={{ bg: "#F1F5F9" }}
+                  onClick={() => { setTindakanOpen(false); openCreate(); }}
+                >
+                  <Plus size={16} color="#0F172A" />
+                  <Text>Buat Akun Baru</Text>
+                </Flex>
+
+                {/* Item 2: Hapus Semua / Hapus Terpilih (ONLY shows when items are selected) */}
+                {selectedIds.length > 0 && (
+                  <Flex
+                    align="center" gap={3} px={4} py={2.5} cursor="pointer"
+                    fontSize="13px" color="#DC2626" fontWeight="600"
+                    _hover={{ bg: "#FEF2F2" }}
+                    onClick={() => { setTindakanOpen(false); setBulkDeleteOpen(true); }}
+                  >
+                    <Trash size={16} color="#DC2626" />
+                    <Text>{isAllSelected ? "Hapus Semua Akun" : `Hapus ${selectedIds.length} Akun Terpilih`}</Text>
+                  </Flex>
+                )}
+
+                {/* Item 3: Tutup buku & kunci periode */}
+                <Flex
+                  align="center" gap={3} px={4} py={2.5} cursor="pointer"
+                  fontSize="13px" color="#1E293B" fontWeight="500"
+                  _hover={{ bg: "#F1F5F9" }}
+                  onClick={() => { setTindakanOpen(false); navigate("/tutup-buku"); }}
+                >
+                  <BookOpen size={16} color="#0F172A" />
+                  <Text>Tutup buku & kunci periode</Text>
+                </Flex>
+
+                <Box borderBottom="1px solid #E2E8F0" my={1.5} />
+
+
+                {/* Item 5: Ekspor Akun */}
+                <Flex
+                  align="center" gap={3} px={4} py={2.5} cursor="pointer"
+                  fontSize="13px" color="#1E293B" fontWeight="500"
+                  _hover={{ bg: "#F1F5F9" }}
+                  onClick={() => { setTindakanOpen(false); exportCOAToXLSX(); }}
+                >
+                  <FileXls size={16} color="#0F172A" />
+                  <Text>Ekspor Akun (.xlsx)</Text>
+                </Flex>
+              </Box>
+            </>
+          )}
+        </Box>
       </Flex>
 
       {/* Filters */}
@@ -237,7 +499,7 @@ export default function DaftarAkunPage() {
                 cursor: "pointer",
               }}
             >
-              <option value="">Semua Kategori</option>
+              <option value="">Pilih Kategori</option>
               {KATEGORI_LIST.map((k) => (
                 <option key={k} value={k}>{k}</option>
               ))}
@@ -246,106 +508,133 @@ export default function DaftarAkunPage() {
         </Flex>
       </Box>
 
-      {/* Table */}
-      <Box bg="white" borderRadius="xl" border="1px solid" borderColor="border" overflow="hidden">
+      {/* Notice & Table */}
+      <Box bg="white" borderRadius="lg" border="1px solid" borderColor="#E2E8F0" overflow="hidden">
+        {/* Top Info Banner */}
+        <Flex justify="flex-end" px={4} py={2} bg="#F8FAFC" borderBottom="1px solid #E2E8F0">
+        </Flex>
+
         {loading ? (
           <Flex justify="center" align="center" py={16}>
             <Spinner color="primary" size="lg" />
           </Flex>
         ) : accounts.length === 0 ? (
           <Flex justify="center" align="center" py={16} direction="column" gap={2}>
-            <BookOpen size={40} color="#CBD5E1" weight="duotone" />
+            <Box w="40px" h="40px" overflow="hidden" display="flex" alignItems="center" justifyContent="flex-start" opacity={0.5}>
+              <Box
+                as="img"
+                src={brandLogo}
+                h="40px"
+                style={{ objectFit: "cover", objectPosition: "left center", maxWidth: "none" }}
+                alt="Icon"
+              />
+            </Box>
             <Text color="gray.400" fontSize="sm">Tidak ada akun ditemukan</Text>
           </Flex>
         ) : (
           <Box overflowX="auto">
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "Segoe UI, -apple-system, sans-serif" }}>
               <thead>
-                <tr style={{ borderBottom: "1px solid #E4ECFC", background: "#F8FAFC" }}>
-                  {["Kode Akun", "Nama Akun", "Kategori Akun", "Pengguna", "Pajak", "Saldo (IDR)", "Aksi"].map((h) => (
-                    <th key={h} style={{
-                      padding: "12px 16px",
-                      textAlign: h === "Saldo (IDR)" ? "right" : "left",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      color: "#64748B",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.04em",
-                      whiteSpace: "nowrap",
-                    }}>{h}</th>
-                  ))}
+                <tr style={{ background: "#E0F2FE", borderBottom: "1px solid #BAE6FD" }}>
+                  <th style={{ padding: "8px 12px", width: "36px", textAlign: "center" }}>
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      onChange={toggleSelectAll}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </th>
+                  <th style={{ padding: "8px 12px", textAlign: "left", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Kunci</th>
+                  <th style={{ padding: "8px 12px", textAlign: "left", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Kode Akun</th>
+                  <th style={{ padding: "8px 12px", textAlign: "left", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Nama Akun</th>
+                  <th style={{ padding: "8px 12px", textAlign: "left", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Kategori Akun</th>
+                  <th style={{ padding: "8px 12px", textAlign: "left", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Pengguna</th>
+                  <th style={{ padding: "8px 12px", textAlign: "left", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Pajak</th>
+                  <th style={{ padding: "8px 12px", textAlign: "right", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Saldo (dalam IDR)</th>
+                  <th style={{ padding: "8px 12px", textAlign: "right", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 {accounts.map((acct, idx) => {
-                  const colors = KATEGORI_COLORS[acct.kategori_akun] || { bg: "#F1F5F9", color: "#334155" };
+                  const isLocked = acct.kode_akun.startsWith("1-10001") || acct.kode_akun.startsWith("1-10002") || acct.kode_akun.startsWith("1-10100") || acct.kode_akun.startsWith("1-10101") || acct.kode_akun.startsWith("1-10200") || acct.kode_akun.startsWith("1-10402") || acct.kode_akun.startsWith("1-10500");
+                  const hasPlus = acct.kode_akun.startsWith("1-10100") || acct.kode_akun.startsWith("1-10101") || acct.kode_akun.startsWith("1-10200") || acct.kode_akun.startsWith("1-10402") || acct.kode_akun.startsWith("1-10500");
+                  const isSelected = selectedIds.includes(acct.id);
+
                   return (
                     <tr
                       key={acct.id}
                       style={{
                         borderBottom: "1px solid #F1F5F9",
-                        background: idx % 2 === 0 ? "white" : "#FAFBFF",
-                        transition: "background 0.15s",
+                        background: isSelected ? "#F0F9FF" : "white",
+                        fontSize: "13px",
+                        fontWeight: "400",
+                        color: "#334155",
+                        height: "36px",
                       }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = "#EFF6FF"}
-                      onMouseLeave={(e) => e.currentTarget.style.background = idx % 2 === 0 ? "white" : "#FAFBFF"}
+                      onMouseEnter={(e) => e.currentTarget.style.background = isSelected ? "#E0F2FE" : "#F8FAFC"}
+                      onMouseLeave={(e) => e.currentTarget.style.background = isSelected ? "#F0F9FF" : "white"}
                     >
-                      <td style={{ padding: "12px 16px", whiteSpace: "nowrap" }}>
-                        <Text fontFamily="mono" fontSize="sm" fontWeight="semibold" color="primary">
-                          {acct.kode_akun}
-                        </Text>
+                      <td style={{ padding: "6px 12px", textAlign: "center" }}>
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectRow(acct.id)}
+                          style={{ cursor: "pointer" }}
+                        />
                       </td>
-                      <td style={{ padding: "12px 16px", maxWidth: "280px" }}>
-                        <Text fontSize="sm" color="foreground" fontWeight="medium">
+                      <td style={{ padding: "6px 12px", color: "#475569", whiteSpace: "nowrap" }}>
+                        {isLocked ? (
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: "3px", color: "#000000", fontSize: "12px", fontWeight: "600" }}>
+                            <LockKey size={13} color="#000000" weight="bold" />
+                            {hasPlus ? " +" : ""}
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: "12px", color: "#94A3B8" }}>–</span>
+                        )}
+                      </td>
+                      <td style={{ padding: "6px 12px", whiteSpace: "nowrap", color: "#334155" }}>
+                        {acct.kode_akun}
+                      </td>
+                      <td style={{ padding: "6px 12px" }}>
+                        <span
+                          style={{ color: "#0077CC", cursor: "pointer", textDecoration: "none" }}
+                          onClick={() => openEdit(acct)}
+                          onMouseEnter={(e) => e.currentTarget.style.textDecoration = "underline"}
+                          onMouseLeave={(e) => e.currentTarget.style.textDecoration = "none"}
+                        >
                           {acct.nama_akun}
-                        </Text>
+                        </span>
                       </td>
-                      <td style={{ padding: "12px 16px", whiteSpace: "nowrap" }}>
-                        <span style={{
-                          background: colors.bg,
-                          color: colors.color,
-                          padding: "3px 10px",
-                          borderRadius: "999px",
-                          fontSize: "12px",
-                          fontWeight: "600",
-                          whiteSpace: "nowrap",
-                        }}>
+                      <td style={{ padding: "6px 12px", whiteSpace: "nowrap" }}>
+                        <span
+                          style={{ color: "#0077CC", cursor: "pointer" }}
+                          onMouseEnter={(e) => e.currentTarget.style.textDecoration = "underline"}
+                          onMouseLeave={(e) => e.currentTarget.style.textDecoration = "none"}
+                        >
                           {acct.kategori_akun}
                         </span>
                       </td>
-                      <td style={{ padding: "12px 16px" }}>
-                        <Text fontSize="sm" color="gray.500">{acct.pengguna || "all"}</Text>
+                      <td style={{ padding: "6px 12px", color: "#475569" }}>
+                        {acct.pengguna || "all"}
                       </td>
-                      <td style={{ padding: "12px 16px" }}>
-                        {acct.pajak ? (
-                          <span style={{
-                            background: "#FEF3C7", color: "#92400E",
-                            padding: "2px 8px", borderRadius: "999px", fontSize: "12px", fontWeight: "600",
-                          }}>{acct.pajak}</span>
-                        ) : (
-                          <Text fontSize="sm" color="gray.300">–</Text>
-                        )}
+                      <td style={{ padding: "6px 12px", color: "#475569" }}>
+                        {acct.pajak || ""}
                       </td>
-                      <td style={{ padding: "12px 16px", textAlign: "right" }}>
-                        <Text
-                          fontSize="sm" fontWeight="semibold" fontFamily="mono"
-                          color={parseFloat(acct.saldo) < 0 ? "red.500" : "foreground"}
-                        >
-                          {formatIDR(acct.saldo)}
-                        </Text>
+                      <td style={{ padding: "6px 12px", textAlign: "right", whiteSpace: "nowrap", color: "#1E293B", fontFamily: "Segoe UI, sans-serif" }}>
+                        {formatIDR(acct.saldo)}
                       </td>
-                      <td style={{ padding: "12px 16px", whiteSpace: "nowrap" }}>
+                      <td style={{ padding: "6px 12px", textAlign: "right", whiteSpace: "nowrap" }}>
                         <HStack gap={1} justify="flex-end">
                           <IconButton
                             size="xs"
                             variant="ghost"
-                            color="primary"
-                            _hover={{ bg: "muted" }}
+                            color="#0077CC"
+                            _hover={{ bg: "#F0F9FF" }}
                             onClick={() => openEdit(acct)}
                             aria-label="Edit"
                             borderRadius="md"
                           >
-                            <PencilSimple size={15} />
+                            <PencilSimple size={14} />
                           </IconButton>
                           <IconButton
                             size="xs"
@@ -356,7 +645,7 @@ export default function DaftarAkunPage() {
                             aria-label="Hapus"
                             borderRadius="md"
                           >
-                            <Trash size={15} />
+                            <Trash size={14} />
                           </IconButton>
                         </HStack>
                       </td>
@@ -372,27 +661,29 @@ export default function DaftarAkunPage() {
         {!loading && totalCount > 0 && (
           <Flex
             justify="space-between" align="center"
-            px={4} py={3} borderTop="1px solid" borderColor="border"
-            flexWrap="wrap" gap={2}
+            px={4} py={2.5} borderTop="1px solid" borderColor="#E2E8F0"
+            flexWrap="wrap" gap={2} bg="#F8FAFC"
           >
-            <Text fontSize="sm" color="gray.500">
+            <Text fontSize="12px" color="#64748B">
               Menampilkan {Math.min((page - 1) * pageSize + 1, totalCount)}–{Math.min(page * pageSize, totalCount)} dari {totalCount} akun
             </Text>
             <HStack gap={2}>
               <Button
-                size="xs" variant="outline" borderColor="border"
+                size="xs" variant="outline" borderColor="#CBD5E1"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
                 borderRadius="md"
+                fontSize="12px"
               >
                 ← Sebelumnya
               </Button>
-              <Text fontSize="sm" color="gray.600" px={2}>{page} / {totalPages}</Text>
+              <Text fontSize="12px" color="#475569" px={1}>{page} / {totalPages}</Text>
               <Button
-                size="xs" variant="outline" borderColor="border"
+                size="xs" variant="outline" borderColor="#CBD5E1"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
                 borderRadius="md"
+                fontSize="12px"
               >
                 Berikutnya →
               </Button>
@@ -416,8 +707,14 @@ export default function DaftarAkunPage() {
             {/* Modal Header */}
             <Flex align="center" justify="space-between" px={6} pt={6} pb={4} borderBottom="1px solid" borderColor="border">
               <HStack gap={2}>
-                <Box bg="primary" p={1.5} borderRadius="lg">
-                  <BookOpen size={18} color="white" weight="duotone" />
+                <Box w="24px" h="24px" overflow="hidden" display="flex" alignItems="center" justifyContent="flex-start">
+                  <Box
+                    as="img"
+                    src={brandLogo}
+                    h="24px"
+                    style={{ objectFit: "cover", objectPosition: "left center", maxWidth: "none" }}
+                    alt="Icon"
+                  />
                 </Box>
                 <Text fontWeight="bold" fontSize="lg" color="foreground">
                   {editTarget ? "Edit Akun" : "Tambah Akun Baru"}
@@ -493,30 +790,115 @@ export default function DaftarAkunPage() {
                 </select>
               </Box>
 
-              <Flex gap={3} w="full">
-                <Box flex={1}>
-                  <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={1.5}>Pengguna</Text>
-                  <Input
-                    value={form.pengguna}
-                    onChange={(e) => setForm({ ...form, pengguna: e.target.value })}
-                    placeholder="all"
-                    borderRadius="lg"
-                    borderColor="border"
-                    _focus={{ borderColor: "primary", boxShadow: "0 0 0 2px rgba(37,99,235,0.15)" }}
-                  />
-                </Box>
-                <Box flex={1}>
-                  <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={1.5}>Pajak</Text>
-                  <Input
-                    value={form.pajak}
-                    onChange={(e) => setForm({ ...form, pajak: e.target.value })}
-                    placeholder="Contoh: PPN"
-                    borderRadius="lg"
-                    borderColor="border"
-                    _focus={{ borderColor: "primary", boxShadow: "0 0 0 2px rgba(37,99,235,0.15)" }}
-                  />
-                </Box>
-              </Flex>
+              {/* Pengguna Selection */}
+              <Box w="full">
+                <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={2}>
+                  Pengguna
+                </Text>
+                <VStack align="stretch" gap={2}>
+                  {/* Option 1: Semua Pengguna */}
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#1E293B" }}>
+                    <input
+                      type="radio"
+                      name="penggunaRadio"
+                      checked={penggunaOption === "all"}
+                      onChange={() => {
+                        setPenggunaOption("all");
+                        setForm({ ...form, pengguna: "all" });
+                      }}
+                    />
+                    Semua Pengguna
+                  </label>
+
+                  {/* Option 2: Sebagian Pengguna */}
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#1E293B" }}>
+                    <input
+                      type="radio"
+                      name="penggunaRadio"
+                      checked={penggunaOption === "sebagian"}
+                      onChange={() => {
+                        setPenggunaOption("sebagian");
+                        setForm({ ...form, pengguna: "Rifqi Ramdhani" });
+                      }}
+                    />
+                    Sebagian Pengguna
+                  </label>
+
+                  {/* Sub-box for Sebagian Pengguna */}
+                  {penggunaOption === "sebagian" && (
+                    <Box ml={6} p={3} bg="#F8FAFC" border="1px solid #E2E8F0" borderRadius="lg">
+                      <Text fontSize="12px" fontWeight="600" color="#94A3B8" mb={2} textTransform="uppercase" letterSpacing="0.05em">
+                        Pilih Pengguna
+                      </Text>
+                      <VStack align="stretch" gap={1.5}>
+                        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
+                          <input
+                            type="checkbox"
+                            checked={form.pengguna === "Rifqi Ramdhani"}
+                            onChange={(e) => setForm({ ...form, pengguna: e.target.checked ? "Rifqi Ramdhani" : "all" })}
+                          />
+                          Nama Akun: Rifqi Ramdhani
+                        </label>
+                      </VStack>
+                    </Box>
+                  )}
+
+                  {/* Option 3: Peran Tertentu */}
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#1E293B" }}>
+                    <input
+                      type="radio"
+                      name="penggunaRadio"
+                      checked={penggunaOption === "peran"}
+                      onChange={() => {
+                        setPenggunaOption("peran");
+                        setForm({ ...form, pengguna: "Sales Manager" });
+                      }}
+                    />
+                    Peran Tertentu
+                  </label>
+
+                  {/* Sub-box for Peran Tertentu */}
+                  {penggunaOption === "peran" && (
+                    <Box ml={6} p={3} bg="#F8FAFC" border="1px solid #E2E8F0" borderRadius="lg">
+                      <Text fontSize="12px" fontWeight="600" color="#94A3B8" mb={2} textTransform="uppercase" letterSpacing="0.05em">
+                        Pilih Peran
+                      </Text>
+                      <VStack align="stretch" gap={1.5}>
+                        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
+                          <input
+                            type="radio"
+                            name="peranChoice"
+                            checked={form.pengguna === "Sales Manager"}
+                            onChange={() => setForm({ ...form, pengguna: "Sales Manager" })}
+                          />
+                          Sales Manager
+                        </label>
+                        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
+                          <input
+                            type="radio"
+                            name="peranChoice"
+                            checked={form.pengguna === "Sales Agent"}
+                            onChange={() => setForm({ ...form, pengguna: "Sales Agent" })}
+                          />
+                          Sales Agent
+                        </label>
+                      </VStack>
+                    </Box>
+                  )}
+                </VStack>
+              </Box>
+
+              <Box w="full">
+                <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={1.5}>Pajak</Text>
+                <Input
+                  value={form.pajak}
+                  onChange={(e) => setForm({ ...form, pajak: e.target.value })}
+                  placeholder="Contoh: PPN"
+                  borderRadius="lg"
+                  borderColor="border"
+                  _focus={{ borderColor: "primary", boxShadow: "0 0 0 2px rgba(37,99,235,0.15)" }}
+                />
+              </Box>
 
               <Box w="full">
                 <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={1.5}>Saldo (IDR)</Text>
@@ -570,9 +952,6 @@ export default function DaftarAkunPage() {
         >
           <Box bg="white" borderRadius="2xl" shadow="2xl" w="full" maxW="380px" p={6}>
             <VStack gap={4} align="start">
-              <Box bg="red.50" p={3} borderRadius="xl">
-                <Trash size={24} color="#DC2626" weight="duotone" />
-              </Box>
               <Box>
                 <Text fontWeight="bold" fontSize="lg" color="foreground">Hapus Akun?</Text>
                 <Text fontSize="sm" color="gray.500" mt={1}>
@@ -595,6 +974,46 @@ export default function DaftarAkunPage() {
                   fontWeight="semibold"
                 >
                   Hapus
+                </Button>
+              </Flex>
+            </VStack>
+          </Box>
+        </Box>
+      )}
+
+      {/* Modal Konfirmasi Hapus Masal */}
+      {bulkDeleteOpen && (
+        <Box
+          position="fixed" inset={0} bg="blackAlpha.600" zIndex={100}
+          display="flex" alignItems="center" justifyContent="center" p={4}
+          onClick={(e) => { if (e.target === e.currentTarget) setBulkDeleteOpen(false); }}
+        >
+          <Box bg="white" borderRadius="2xl" shadow="2xl" w="full" maxW="400px" p={6}>
+            <VStack gap={4} align="start">
+              <Box>
+                <Text fontWeight="bold" fontSize="lg" color="foreground">
+                  Hapus {selectedIds.length} Akun Terpilih?
+                </Text>
+                <Text fontSize="sm" color="gray.500" mt={1}>
+                  Semua akun yang Anda pilih ({selectedIds.length} akun) akan dihapus permanen dari database.
+                </Text>
+              </Box>
+              <Flex gap={3} w="full">
+                <Button
+                  flex={1} variant="outline" borderColor="border"
+                  onClick={() => setBulkDeleteOpen(false)}
+                  borderRadius="lg"
+                >
+                  Batal
+                </Button>
+                <Button
+                  flex={1} bg="red.500" color="white"
+                  _hover={{ bg: "red.600" }}
+                  onClick={handleBulkDelete}
+                  borderRadius="lg"
+                  fontWeight="semibold"
+                >
+                  Hapus Semua Terpilih
                 </Button>
               </Flex>
             </VStack>

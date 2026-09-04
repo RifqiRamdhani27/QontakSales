@@ -12,6 +12,7 @@ import BroadcastPage from "./pages/BroadcastPage";
 import BroadcastHistoryPage from "./pages/BroadcastHistoryPage";
 import ArchivedLeadsPage from "./pages/ArchivedLeadsPage";
 import DaftarAkunPage from "./pages/DaftarAkunPage";
+import TutupBukuPage from "./pages/TutupBukuPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import ContactPage from "./pages/ContactPage";
@@ -39,6 +40,7 @@ function App() {
           <Route path="/broadcasts/history" element={<BroadcastHistoryPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/daftar-akun" element={<DaftarAkunPage />} />
+          <Route path="/tutup-buku" element={<TutupBukuPage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
