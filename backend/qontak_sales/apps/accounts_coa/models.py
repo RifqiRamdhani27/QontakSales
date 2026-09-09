@@ -32,6 +32,7 @@ class AccountCOA(models.Model):
     kategori_akun = models.CharField(max_length=50, choices=KATEGORI_CHOICES)
     pengguna = models.CharField(max_length=100, default="all")
     pajak = models.CharField(max_length=50, blank=True, default="")
+    deskripsi_pajak = models.TextField(blank=True, default="")
     saldo = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

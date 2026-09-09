@@ -12,6 +12,7 @@ class AccountCOASerializer(serializers.ModelSerializer):
             "kategori_akun",
             "pengguna",
             "pajak",
+            "deskripsi_pajak",
             "saldo",
             "created_at",
             "updated_at",

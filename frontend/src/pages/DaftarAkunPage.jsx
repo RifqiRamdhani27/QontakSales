@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import {
   MagnifyingGlass, Plus, PencilSimple, Trash, X, FloppyDisk, BookOpen, LockKey,
-  List, FileXls, UploadSimple,
+  List, FileXls, UploadSimple, User,
 } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import api from "@/services/api";
@@ -58,12 +58,54 @@ const formatIDR = (value) => {
   return num < 0 ? `(${formatted})` : formatted;
 };
 
+function RoundCheckbox({ checked, onChange, title }) {
+  return (
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onChange) onChange(e);
+      }}
+      title={title}
+      style={{
+        width: "15px",
+        height: "15px",
+        borderRadius: "50%",
+        border: checked ? "1.5px solid #0077CC" : "1.5px solid #94A3B8",
+        backgroundColor: checked ? "#0077CC" : "#FFFFFF",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        transition: "all 0.15s ease-in-out",
+        userSelect: "none",
+        flexShrink: 0,
+      }}
+    >
+      {checked && (
+        <svg
+          width="9"
+          height="9"
+          viewBox="0 0 12 12"
+          fill="none"
+          stroke="#FFFFFF"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="2.5 6 5 8.5 9.5 3.5" />
+        </svg>
+      )}
+    </div>
+  );
+}
+
 const EMPTY_FORM = {
   kode_akun: "",
   nama_akun: "",
   kategori_akun: "",
   pengguna: "all",
   pajak: "",
+  deskripsi_pajak: "",
   saldo: "0",
 };
 
@@ -296,6 +338,7 @@ export default function DaftarAkunPage() {
       kategori_akun: acct.kategori_akun,
       pengguna: pVal,
       pajak: acct.pajak || "",
+      deskripsi_pajak: acct.deskripsi_pajak || "",
       saldo: String(acct.saldo),
     });
     setFormError("");
@@ -537,12 +580,13 @@ export default function DaftarAkunPage() {
               <thead>
                 <tr style={{ background: "#E0F2FE", borderBottom: "1px solid #BAE6FD" }}>
                   <th style={{ padding: "8px 12px", width: "36px", textAlign: "center" }}>
-                    <input
-                      type="checkbox"
-                      checked={isAllSelected}
-                      onChange={toggleSelectAll}
-                      style={{ cursor: "pointer" }}
-                    />
+                    <Flex justify="center" align="center">
+                      <RoundCheckbox
+                        checked={isAllSelected}
+                        onChange={toggleSelectAll}
+                        title="Pilih Semua"
+                      />
+                    </Flex>
                   </th>
                   <th style={{ padding: "8px 12px", textAlign: "left", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Kunci</th>
                   <th style={{ padding: "8px 12px", textAlign: "left", fontSize: "12px", fontWeight: "600", color: "#0F172A", whiteSpace: "nowrap" }}>Kode Akun</th>
@@ -587,12 +631,12 @@ export default function DaftarAkunPage() {
                       onMouseLeave={(e) => e.currentTarget.style.background = isSelected ? "#F0F9FF" : "white"}
                     >
                       <td style={{ padding: "6px 12px", textAlign: "center" }}>
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleSelectRow(acct.id)}
-                          style={{ cursor: "pointer" }}
-                        />
+                        <Flex justify="center" align="center">
+                          <RoundCheckbox
+                            checked={isSelected}
+                            onChange={() => toggleSelectRow(acct.id)}
+                          />
+                        </Flex>
                       </td>
                       <td style={{ padding: "6px 12px", color: "#475569", whiteSpace: "nowrap" }}>
                         {isLocked ? (
@@ -739,10 +783,10 @@ export default function DaftarAkunPage() {
           <Box
             bg="white" borderRadius="2xl" shadow="2xl"
             w="full" maxW="500px"
-            maxH="90vh" overflowY="auto"
+            maxH="90vh" display="flex" flexDirection="column" overflow="hidden"
           >
             {/* Modal Header */}
-            <Flex align="center" justify="space-between" px={6} pt={6} pb={4} borderBottom="1px solid" borderColor="border">
+            <Flex align="center" justify="space-between" px={6} py={4} borderBottom="1px solid" borderColor="border" flexShrink={0}>
               <HStack gap={2}>
                 <Box w="24px" h="24px" overflow="hidden" display="flex" alignItems="center" justifyContent="flex-start">
                   <Box
@@ -765,8 +809,16 @@ export default function DaftarAkunPage() {
               </IconButton>
             </Flex>
 
-            {/* Modal Body */}
-            <VStack gap={4} p={6}>
+            {/* Modal Body (Scrollable) */}
+            <VStack
+              gap={4} p={6} flex={1} overflowY="auto"
+              css={{
+                "&::-webkit-scrollbar": { width: "6px" },
+                "&::-webkit-scrollbar-track": { background: "transparent" },
+                "&::-webkit-scrollbar-thumb": { background: "#CBD5E1", borderRadius: "10px" },
+                "&::-webkit-scrollbar-thumb:hover": { background: "#94A3B8" },
+              }}
+            >
               {formError && (
                 <Box w="full" bg="red.50" border="1px solid" borderColor="red.200" borderRadius="lg" px={4} py={3}>
                   <Text fontSize="sm" color="red.600">{formError}</Text>
@@ -827,104 +879,7 @@ export default function DaftarAkunPage() {
                 </select>
               </Box>
 
-              {/* Pengguna Selection */}
-              <Box w="full">
-                <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={2}>
-                  Pengguna
-                </Text>
-                <VStack align="stretch" gap={2}>
-                  {/* Option 1: Semua Pengguna */}
-                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#1E293B" }}>
-                    <input
-                      type="radio"
-                      name="penggunaRadio"
-                      checked={penggunaOption === "all"}
-                      onChange={() => {
-                        setPenggunaOption("all");
-                        setForm({ ...form, pengguna: "all" });
-                      }}
-                    />
-                    Semua Pengguna
-                  </label>
-
-                  {/* Option 2: Sebagian Pengguna */}
-                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#1E293B" }}>
-                    <input
-                      type="radio"
-                      name="penggunaRadio"
-                      checked={penggunaOption === "sebagian"}
-                      onChange={() => {
-                        setPenggunaOption("sebagian");
-                        setForm({ ...form, pengguna: "Rifqi Ramdhani" });
-                      }}
-                    />
-                    Sebagian Pengguna
-                  </label>
-
-                  {/* Sub-box for Sebagian Pengguna */}
-                  {penggunaOption === "sebagian" && (
-                    <Box ml={6} p={3} bg="#F8FAFC" border="1px solid #E2E8F0" borderRadius="lg">
-                      <Text fontSize="12px" fontWeight="600" color="#94A3B8" mb={2} textTransform="uppercase" letterSpacing="0.05em">
-                        Pilih Pengguna
-                      </Text>
-                      <VStack align="stretch" gap={1.5}>
-                        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
-                          <input
-                            type="checkbox"
-                            checked={form.pengguna === "Rifqi Ramdhani"}
-                            onChange={(e) => setForm({ ...form, pengguna: e.target.checked ? "Rifqi Ramdhani" : "all" })}
-                          />
-                          Nama Akun: Rifqi Ramdhani
-                        </label>
-                      </VStack>
-                    </Box>
-                  )}
-
-                  {/* Option 3: Peran Tertentu */}
-                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#1E293B" }}>
-                    <input
-                      type="radio"
-                      name="penggunaRadio"
-                      checked={penggunaOption === "peran"}
-                      onChange={() => {
-                        setPenggunaOption("peran");
-                        setForm({ ...form, pengguna: "Sales Manager" });
-                      }}
-                    />
-                    Peran Tertentu
-                  </label>
-
-                  {/* Sub-box for Peran Tertentu */}
-                  {penggunaOption === "peran" && (
-                    <Box ml={6} p={3} bg="#F8FAFC" border="1px solid #E2E8F0" borderRadius="lg">
-                      <Text fontSize="12px" fontWeight="600" color="#94A3B8" mb={2} textTransform="uppercase" letterSpacing="0.05em">
-                        Pilih Peran
-                      </Text>
-                      <VStack align="stretch" gap={1.5}>
-                        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
-                          <input
-                            type="radio"
-                            name="peranChoice"
-                            checked={form.pengguna === "Sales Manager"}
-                            onChange={() => setForm({ ...form, pengguna: "Sales Manager" })}
-                          />
-                          Sales Manager
-                        </label>
-                        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
-                          <input
-                            type="radio"
-                            name="peranChoice"
-                            checked={form.pengguna === "Sales Agent"}
-                            onChange={() => setForm({ ...form, pengguna: "Sales Agent" })}
-                          />
-                          Sales Agent
-                        </label>
-                      </VStack>
-                    </Box>
-                  )}
-                </VStack>
-              </Box>
-
+              {/* Pajak */}
               <Box w="full">
                 <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={1.5}>Pajak</Text>
                 <Input
@@ -935,6 +890,171 @@ export default function DaftarAkunPage() {
                   borderColor="border"
                   _focus={{ borderColor: "primary", boxShadow: "0 0 0 2px rgba(37,99,235,0.15)" }}
                 />
+              </Box>
+
+              {/* Deskripsi pajak */}
+              <Box w="full">
+                <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={1.5}>Deskripsi pajak</Text>
+                <Input
+                  value={form.deskripsi_pajak}
+                  onChange={(e) => setForm({ ...form, deskripsi_pajak: e.target.value })}
+                  placeholder="Deskripsi pajak..."
+                  borderRadius="lg"
+                  borderColor="border"
+                  _focus={{ borderColor: "primary", boxShadow: "0 0 0 2px rgba(37,99,235,0.15)" }}
+                />
+              </Box>
+
+              {/* Akses akun */}
+              <Box w="full" pt={2}>
+                <Flex align="center" gap={2.5} mb={3}>
+                  <User size={26} color="#3B82F6" weight="regular" />
+                  <Text fontSize="20px" fontWeight="700" color="#0F2B48" letterSpacing="-0.01em">
+                    Akses akun
+                  </Text>
+                </Flex>
+
+                <Text fontSize="14px" fontWeight="600" color="#1E293B" mb={3}>
+                  Pengguna yang dapat mengakses
+                </Text>
+
+                <Flex align="center" gap={6} flexWrap="wrap">
+                  {/* Option 1: Semua pengguna */}
+                  <Flex
+                    align="center"
+                    gap={2.5}
+                    cursor="pointer"
+                    onClick={() => {
+                      setPenggunaOption("all");
+                      setForm({ ...form, pengguna: "all" });
+                    }}
+                    userSelect="none"
+                  >
+                    <Box
+                      w="18px"
+                      h="18px"
+                      borderRadius="50%"
+                      border={penggunaOption === "all" ? "2px solid #3B82F6" : "1.5px solid #CBD5E1"}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      bg="white"
+                      flexShrink={0}
+                    >
+                      {penggunaOption === "all" && <Box w="10px" h="10px" borderRadius="50%" bg="#3B82F6" />}
+                    </Box>
+                    <Text fontSize="14px" fontWeight="400" color="#1E293B">
+                      Semua pengguna
+                    </Text>
+                  </Flex>
+
+                  {/* Option 2: Sebagian pengguna */}
+                  <Flex
+                    align="center"
+                    gap={2.5}
+                    cursor="pointer"
+                    onClick={() => {
+                      setPenggunaOption("sebagian");
+                      setForm({ ...form, pengguna: "Rifqi Ramdhani" });
+                    }}
+                    userSelect="none"
+                  >
+                    <Box
+                      w="18px"
+                      h="18px"
+                      borderRadius="50%"
+                      border={penggunaOption === "sebagian" ? "2px solid #3B82F6" : "1.5px solid #CBD5E1"}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      bg="white"
+                      flexShrink={0}
+                    >
+                      {penggunaOption === "sebagian" && <Box w="10px" h="10px" borderRadius="50%" bg="#3B82F6" />}
+                    </Box>
+                    <Text fontSize="14px" fontWeight="400" color="#1E293B">
+                      Sebagian pengguna
+                    </Text>
+                  </Flex>
+
+                  {/* Option 3: Peran tertentu */}
+                  <Flex
+                    align="center"
+                    gap={2.5}
+                    cursor="pointer"
+                    onClick={() => {
+                      setPenggunaOption("peran");
+                      setForm({ ...form, pengguna: "Sales Manager" });
+                    }}
+                    userSelect="none"
+                  >
+                    <Box
+                      w="18px"
+                      h="18px"
+                      borderRadius="50%"
+                      border={penggunaOption === "peran" ? "2px solid #3B82F6" : "1.5px solid #CBD5E1"}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      bg="white"
+                      flexShrink={0}
+                    >
+                      {penggunaOption === "peran" && <Box w="10px" h="10px" borderRadius="50%" bg="#3B82F6" />}
+                    </Box>
+                    <Text fontSize="14px" fontWeight="400" color="#1E293B">
+                      Peran tertentu
+                    </Text>
+                  </Flex>
+                </Flex>
+
+                {/* Sub-box for Sebagian Pengguna */}
+                {penggunaOption === "sebagian" && (
+                  <Box mt={3} p={3} bg="#F8FAFC" border="1px solid #E2E8F0" borderRadius="lg">
+                    <Text fontSize="12px" fontWeight="600" color="#94A3B8" mb={2} textTransform="uppercase" letterSpacing="0.05em">
+                      Pilih Pengguna
+                    </Text>
+                    <VStack align="stretch" gap={1.5}>
+                      <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
+                        <RoundCheckbox
+                          checked={form.pengguna === "Rifqi Ramdhani"}
+                          onChange={() => setForm({ ...form, pengguna: form.pengguna === "Rifqi Ramdhani" ? "all" : "Rifqi Ramdhani" })}
+                        />
+                        Nama Akun: Rifqi Ramdhani
+                      </label>
+                    </VStack>
+                  </Box>
+                )}
+
+                {/* Sub-box for Peran Tertentu */}
+                {penggunaOption === "peran" && (
+                  <Box mt={3} p={3} bg="#F8FAFC" border="1px solid #E2E8F0" borderRadius="lg">
+                    <Text fontSize="12px" fontWeight="600" color="#94A3B8" mb={2} textTransform="uppercase" letterSpacing="0.05em">
+                      Pilih Peran
+                    </Text>
+                    <VStack align="stretch" gap={1.5}>
+                      <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
+                        <input
+                          type="radio"
+                          name="peranChoice"
+                          checked={form.pengguna === "Sales Manager"}
+                          onChange={() => setForm({ ...form, pengguna: "Sales Manager" })}
+                          style={{ accentColor: "#3B82F6" }}
+                        />
+                        Sales Manager
+                      </label>
+                      <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px", color: "#334155" }}>
+                        <input
+                          type="radio"
+                          name="peranChoice"
+                          checked={form.pengguna === "Sales Agent"}
+                          onChange={() => setForm({ ...form, pengguna: "Sales Agent" })}
+                          style={{ accentColor: "#3B82F6" }}
+                        />
+                        Sales Agent
+                      </label>
+                    </VStack>
+                  </Box>
+                )}
               </Box>
 
               <Box w="full">
@@ -952,7 +1072,7 @@ export default function DaftarAkunPage() {
             </VStack>
 
             {/* Modal Footer */}
-            <Flex gap={3} px={6} pb={6} pt={2}>
+            <Flex gap={3} px={6} py={4} borderTop="1px solid" borderColor="#F1F5F9" flexShrink={0} bg="white">
               <Button
                 flex={1}
                 variant="outline"
