@@ -479,7 +479,7 @@ export default function DaftarAkunPage() {
               onChange={(e) => setSearch(e.target.value)}
               borderRadius="lg"
               borderColor="border"
-              _focus={{ borderColor: "primary", boxShadow: "0 0 0 2px rgba(37,99,235,0.15)" }}
+              _focus={{ borderColor: "primary", boxShadow: "0 0 0 2px rgba(37,99,235,0.08)" }}
               fontSize="sm"
             />
           </Box>
@@ -556,7 +556,19 @@ export default function DaftarAkunPage() {
               </thead>
               <tbody>
                 {accounts.map((acct, idx) => {
-                  const isLocked = acct.kode_akun.startsWith("1-10001") || acct.kode_akun.startsWith("1-10002") || acct.kode_akun.startsWith("1-10100") || acct.kode_akun.startsWith("1-10101") || acct.kode_akun.startsWith("1-10200") || acct.kode_akun.startsWith("1-10402") || acct.kode_akun.startsWith("1-10500");
+                  const isLocked = acct.is_system || acct.is_locked ||
+                    acct.kode_akun.startsWith("1-10001") ||
+                    acct.kode_akun.startsWith("1-10002") ||
+                    acct.kode_akun.startsWith("1-10003") ||
+                    acct.kode_akun.startsWith("1-10100") ||
+                    acct.kode_akun.startsWith("1-10101") ||
+                    acct.kode_akun.startsWith("1-10102") ||
+                    acct.kode_akun.startsWith("1-10200") ||
+                    acct.kode_akun.startsWith("1-10402") ||
+                    acct.kode_akun.startsWith("1-10500") ||
+                    acct.kode_akun.startsWith("2-20100") ||
+                    acct.kode_akun.startsWith("2-20200") ||
+                    acct.kode_akun.startsWith("3-30000");
                   const hasPlus = acct.kode_akun.startsWith("1-10100") || acct.kode_akun.startsWith("1-10101") || acct.kode_akun.startsWith("1-10200") || acct.kode_akun.startsWith("1-10402") || acct.kode_akun.startsWith("1-10500");
                   const isSelected = selectedIds.includes(acct.id);
 
@@ -633,20 +645,45 @@ export default function DaftarAkunPage() {
                             onClick={() => openEdit(acct)}
                             aria-label="Edit"
                             borderRadius="md"
+                            title="Edit Akun"
                           >
                             <PencilSimple size={14} />
                           </IconButton>
-                          <IconButton
-                            size="xs"
-                            variant="ghost"
-                            color="red.500"
-                            _hover={{ bg: "red.50" }}
-                            onClick={() => confirmDelete(acct)}
-                            aria-label="Hapus"
-                            borderRadius="md"
-                          >
-                            <Trash size={14} />
-                          </IconButton>
+                          {isLocked ? (
+                            <Box
+                              as="span"
+                              display="inline-flex"
+                              title="Tidak dapat menghapus akun sistem / akun bawaan default"
+                              style={{ cursor: "not-allowed" }}
+                            >
+                              <IconButton
+                                size="xs"
+                                variant="ghost"
+                                color="gray.800"
+                                disabled
+                                aria-label="Tidak dapat dihapus"
+                                borderRadius="md"
+                                opacity={0.4}
+                                _hover={{ bg: "transparent" }}
+                                style={{ cursor: "not-allowed", pointerEvents: "none" }}
+                              >
+                                <Trash size={14} />
+                              </IconButton>
+                            </Box>
+                          ) : (
+                            <IconButton
+                              size="xs"
+                              variant="ghost"
+                              color="red.500"
+                              _hover={{ bg: "red.50" }}
+                              onClick={() => confirmDelete(acct)}
+                              aria-label="Hapus"
+                              borderRadius="md"
+                              title="Hapus Akun"
+                            >
+                              <Trash size={14} />
+                            </IconButton>
+                          )}
                         </HStack>
                       </td>
                     </tr>
