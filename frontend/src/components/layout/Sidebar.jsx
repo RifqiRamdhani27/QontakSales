@@ -7,6 +7,7 @@ const allNavItems = [
   { label: "Dashboard", icon: House, path: "/dashboard" },
   { label: "Leads", icon: Users, path: "/leads" },
   { label: "Pipeline", icon: Kanban, path: "/pipeline" },
+  { label: "Calendar", icon: CalendarBlank, path: "/calendar" },
   { label: "Agents", icon: UserPlus, path: "/agents", managerOnly: true },
   { label: "Broadcast", icon: ChatsCircle, path: "/broadcasts" },
   { label: "Broadcast History", icon: ChatsCircle, path: "/broadcasts/history" },

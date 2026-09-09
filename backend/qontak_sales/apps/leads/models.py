@@ -4,9 +4,9 @@ from django.conf import settings
 
 class Lead(models.Model):
     STAGE_CHOICES = [
-        ("NEW", "Prospek Baru"),
-        ("CONTACTED", "Hubungi"),
-        ("NEGOTIATION", "Presentasi/Negosiasi"),
+        ("NEW", "New Lead"),
+        ("CONTACTED", "Contacted"),
+        ("NEGOTIATION", "Negotiation"),
         ("WON", "Won"),
         ("LOST", "Lost"),
     ]
@@ -35,6 +35,7 @@ class Lead(models.Model):
         related_name="assigned_leads",
     )
     address = models.TextField(blank=True, default="")
+    next_follow_up = models.DateTimeField(null=True, blank=True)
     is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

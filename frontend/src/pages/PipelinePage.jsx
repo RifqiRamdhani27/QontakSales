@@ -12,14 +12,15 @@ import {
   createToaster,
 } from "@chakra-ui/react";
 import { ArrowRight, CurrencyDollar, CheckCircle, XCircle } from "@phosphor-icons/react";
+import { startOfDay, endOfDay, startOfMonth, parseISO, format } from "date-fns";
 import api from "@/services/api";
 
 const toaster = createToaster({ placement: "top-end" });
 
 const stages = [
-  { id: "NEW", label: "Prospek Baru", color: "stageNew", next: "CONTACTED" },
-  { id: "CONTACTED", label: "Hubungi", color: "stageContacted", next: "NEGOTIATION" },
-  { id: "NEGOTIATION", label: "Negosiasi", color: "stageNegotiation", next: "WON" },
+  { id: "NEW", label: "New Lead", color: "stageNew", next: "CONTACTED" },
+  { id: "CONTACTED", label: "Contacted", color: "stageContacted", next: "NEGOTIATION" },
+  { id: "NEGOTIATION", label: "Negotiation", color: "stageNegotiation", next: "WON" },
   { id: "WON", label: "Won", color: "stageWon", next: null },
   { id: "LOST", label: "Lost", color: "stageLost", next: null },
 ];
@@ -92,9 +93,11 @@ function KanbanCard({ lead, onMove }) {
 export default function PipelinePage() {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dateFrom, setDateFrom] = useState(() => format(startOfMonth(new Date()), "yyyy-MM-dd"));
+  const [dateTo, setDateTo] = useState(() => format(new Date(), "yyyy-MM-dd"));
 
   const fetchLeads = () => {
-    api.get("/leads/")
+    api.get("/leads/", { params: { page_size: 100 } })
       .then((r) => {
         setLeads(r.data.results || r.data);
         setLoading(false);
@@ -106,6 +109,13 @@ export default function PipelinePage() {
   };
 
   useEffect(() => { fetchLeads(); }, []);
+
+  const filteredLeads = leads.filter((l) => {
+    if (!l.created_at) return true;
+    if (!dateFrom || !dateTo) return true;
+    const created = parseISO(l.created_at);
+    return created >= startOfDay(parseISO(dateFrom)) && created <= endOfDay(parseISO(dateTo));
+  });
 
   const handleMove = async (leadId, newStage) => {
     try {
@@ -129,10 +139,41 @@ export default function PipelinePage() {
 
   return (
     <VStack gap={6} align="stretch">
-      <Heading size="lg">Sales Pipeline</Heading>
+      <HStack justify="space-between">
+        <Heading size="lg">Sales Pipeline</Heading>
+        <HStack gap={3} align="center">
+          <Button
+            size="sm"
+            variant={dateFrom === "" && dateTo === "" ? "solid" : "outline"}
+            bg={dateFrom === "" && dateTo === "" ? "primary" : "transparent"}
+            color={dateFrom === "" && dateTo === "" ? "white" : "gray.600"}
+            onClick={() => { setDateFrom(""); setDateTo(""); }}
+          >
+            All
+          </Button>
+          <HStack gap={1} align="center">
+            <Text fontSize="sm" color="gray.500">From</Text>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              style={{ padding: "6px 10px", borderRadius: "8px", border: "1px solid var(--color-border)", fontSize: "14px", backgroundColor: "white" }}
+            />
+          </HStack>
+          <HStack gap={1} align="center">
+            <Text fontSize="sm" color="gray.500">To</Text>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              style={{ padding: "6px 10px", borderRadius: "8px", border: "1px solid var(--color-border)", fontSize: "14px", backgroundColor: "white" }}
+            />
+          </HStack>
+        </HStack>
+      </HStack>
       <HStack gap={4} align="start" overflowX="auto" pb={4}>
         {stages.map((stage) => {
-          const stageLeads = leads.filter((l) => l.stage === stage.id);
+          const stageLeads = filteredLeads.filter((l) => l.stage === stage.id);
           return (
             <Box key={stage.id} minW="300px" flex={1} bg="muted" borderRadius="lg" p={4}>
               <HStack mb={4} justify="space-between">

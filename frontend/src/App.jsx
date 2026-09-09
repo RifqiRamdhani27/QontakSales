@@ -34,6 +34,7 @@ function App() {
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/leads/archived" element={<ArchivedLeadsPage />} />
           <Route path="/pipeline" element={<PipelinePage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/leads/:id" element={<LeadDetailPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/broadcasts" element={<BroadcastPage />} />
