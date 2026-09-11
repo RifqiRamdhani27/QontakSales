@@ -411,8 +411,32 @@ export default function DaftarAkunPage() {
             </Text>
           </Box>
         </HStack>
-        {/* Single Navy Blue Tindakan Button */}
-        <Box position="relative">
+        {/* Action Buttons Group */}
+        <HStack gap={3}>
+          {/* Buat Jurnal Umum Button */}
+          <Button
+            bg="#1d62a4ff"
+            color="white"
+            _hover={{ bg: "#163859" }}
+            _active={{ bg: "#091D30" }}
+            size="sm"
+            borderRadius="md"
+            fontWeight="600"
+            fontSize="14px"
+            px={4}
+            h="38px"
+            boxShadow="0 4px 14px rgba(0, 0, 0, 0.3)"
+            display="flex"
+            alignItems="center"
+            gap={2}
+            onClick={() => navigate("/jurnal-umum")}
+          >
+            <Plus size={16} weight="bold" />
+            Buat Jurnal Umum
+          </Button>
+
+          {/* Single Navy Blue Tindakan Button */}
+          <Box position="relative">
           <Button
             onClick={() => setTindakanOpen(!tindakanOpen)}
             bg="#1d62a4ff"
@@ -506,6 +530,7 @@ export default function DaftarAkunPage() {
             </>
           )}
         </Box>
+        </HStack>
       </Flex>
 
       {/* Filters */}
@@ -1057,18 +1082,6 @@ export default function DaftarAkunPage() {
                 )}
               </Box>
 
-              <Box w="full">
-                <Text fontSize="sm" fontWeight="semibold" color="gray.700" mb={1.5}>Saldo (IDR)</Text>
-                <Input
-                  type="number"
-                  value={form.saldo}
-                  onChange={(e) => setForm({ ...form, saldo: e.target.value })}
-                  placeholder="0"
-                  borderRadius="lg"
-                  borderColor="border"
-                  _focus={{ borderColor: "primary", boxShadow: "0 0 0 2px rgba(37,99,235,0.15)" }}
-                />
-              </Box>
             </VStack>
 
             {/* Modal Footer */}

@@ -5,6 +5,7 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import LeadsPage from "./pages/LeadsPage";
 import PipelinePage from "./pages/PipelinePage";
+import CalendarPage from "./pages/CalendarPage";
 import LeadDetailPage from "./pages/LeadDetailPage";
 import SettingsPage from "./pages/SettingsPage";
 import AgentsPage from "./pages/AgentsPage";
@@ -13,6 +14,7 @@ import BroadcastHistoryPage from "./pages/BroadcastHistoryPage";
 import ArchivedLeadsPage from "./pages/ArchivedLeadsPage";
 import DaftarAkunPage from "./pages/DaftarAkunPage";
 import TutupBukuPage from "./pages/TutupBukuPage";
+import JurnalUmumPage from "./pages/JurnalUmumPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import ContactPage from "./pages/ContactPage";
@@ -42,6 +44,7 @@ function App() {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/daftar-akun" element={<DaftarAkunPage />} />
           <Route path="/tutup-buku" element={<TutupBukuPage />} />
+          <Route path="/jurnal-umum" element={<JurnalUmumPage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

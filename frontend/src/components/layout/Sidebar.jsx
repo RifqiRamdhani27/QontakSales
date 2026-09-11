@@ -1,6 +1,6 @@
 import { Box, VStack, Text, Link as ChakraLink, HStack } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { House, Users, Kanban, Gear, UserPlus, ChatsCircle, Archive, X, BookOpen } from "@phosphor-icons/react";
+import { House, Users, Kanban, Gear, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank } from "@phosphor-icons/react";
 import brandLogo from "@/assets/brand.png";
 
 const allNavItems = [
