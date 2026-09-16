@@ -1,6 +1,6 @@
 import { Box, VStack, Text, Link as ChakraLink, HStack } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { House, Users, Kanban, Gear, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank } from "@phosphor-icons/react";
+import { House, Users, Kanban, Gear, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank, Buildings, FileText } from "@phosphor-icons/react";
 import brandLogo from "@/assets/brand.png";
 
 const allNavItems = [
@@ -13,6 +13,8 @@ const allNavItems = [
   { label: "Broadcast History", icon: ChatsCircle, path: "/broadcasts/history" },
   { label: "Archived Leads", icon: Archive, path: "/leads/archived" },
   { label: "Daftar Akun", icon: BookOpen, path: "/daftar-akun" },
+  { label: "Aset", icon: Buildings, path: "/aset" },
+  { label: "Laporan", icon: FileText, path: "/laporan" },
 ];
 
 export default function Sidebar({ open, onClose }) {
@@ -46,7 +48,7 @@ export default function Sidebar({ open, onClose }) {
 
         <VStack flex={1} align="stretch" px={3} gap={1}>
           {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path || (item.path === "/aset" && location.pathname.startsWith("/aset"));
             const Icon = item.icon;
             return (
               <ChakraLink

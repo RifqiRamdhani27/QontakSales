@@ -15,6 +15,10 @@ import ArchivedLeadsPage from "./pages/ArchivedLeadsPage";
 import DaftarAkunPage from "./pages/DaftarAkunPage";
 import TutupBukuPage from "./pages/TutupBukuPage";
 import JurnalUmumPage from "./pages/JurnalUmumPage";
+import AsetPage from "./pages/AsetPage";
+import SimpanAsetPage from "./pages/SimpanAsetPage";
+import Laporan from "./pages/Laporan";
+import Neraca from "./pages/Neraca";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import ContactPage from "./pages/ContactPage";
@@ -45,6 +49,10 @@ function App() {
           <Route path="/daftar-akun" element={<DaftarAkunPage />} />
           <Route path="/tutup-buku" element={<TutupBukuPage />} />
           <Route path="/jurnal-umum" element={<JurnalUmumPage />} />
+          <Route path="/aset" element={<AsetPage />} />
+          <Route path="/aset/simpan" element={<SimpanAsetPage />} />
+          <Route path="/laporan" element={<Laporan />} />
+          <Route path="/laporan/neraca" element={<Neraca />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
