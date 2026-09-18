@@ -57,7 +57,7 @@ export default function Neraca() {
   };
 
   const MONTH_NAMES = [
-    "Januari666",
+    "Januari",
     "Februari",
     "Maret",
     "April",
