@@ -19,6 +19,21 @@ import AsetPage from "./pages/AsetPage";
 import SimpanAsetPage from "./pages/SimpanAsetPage";
 import Laporan from "./pages/Laporan";
 import Neraca from "./pages/Neraca";
+import LabaRugi from "./pages/LabaRugi";
+import ArusKas from "./pages/ArusKas";
+import PerubahanModal from "./pages/PerubahanModal";
+import BukuBesar from "./pages/BukuBesar";
+import Jurnal from "./pages/Jurnal";
+import NeracaSaldo from "./pages/NeracaSaldo";
+import RingkasanBisnis from "./pages/RingkasanBisnis";
+import DaftarPenjualan from "./pages/DaftarPenjualan";
+import PiutangPelanggan from "./pages/PiutangPelanggan";
+import PengirimanPenjualan from "./pages/PengirimanPenjualan";
+import PenjualanPerPelanggan from "./pages/PenjualanPerPelanggan";
+import PenjualanPerProduk from "./pages/PenjualanPerProduk";
+import PenyelesaianPesananPenjualan from "./pages/PenyelesaianPesananPenjualan";
+import ProfitabilitasProduk from "./pages/ProfitabilitasProduk";
+import UsiaPiutang from "./pages/UsiaPiutang";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import ContactPage from "./pages/ContactPage";
@@ -53,6 +68,21 @@ function App() {
           <Route path="/aset/simpan" element={<SimpanAsetPage />} />
           <Route path="/laporan" element={<Laporan />} />
           <Route path="/laporan/neraca" element={<Neraca />} />
+          <Route path="/laporan/laba-rugi" element={<LabaRugi />} />
+          <Route path="/laporan/arus-kas" element={<ArusKas />} />
+          <Route path="/laporan/perubahan-modal" element={<PerubahanModal />} />
+          <Route path="/laporan/buku-besar" element={<BukuBesar />} />
+          <Route path="/laporan/jurnal" element={<Jurnal />} />
+          <Route path="/laporan/neraca-saldo" element={<NeracaSaldo />} />
+          <Route path="/laporan/ringkasan-bisnis" element={<RingkasanBisnis />} />
+          <Route path="/laporan/daftar-penjualan" element={<DaftarPenjualan />} />
+          <Route path="/laporan/piutang-pelanggan" element={<PiutangPelanggan />} />
+          <Route path="/laporan/pengiriman-penjualan" element={<PengirimanPenjualan />} />
+          <Route path="/laporan/penjualan-per-pelanggan" element={<PenjualanPerPelanggan />} />
+          <Route path="/laporan/penjualan-per-produk" element={<PenjualanPerProduk />} />
+          <Route path="/laporan/penyelesaian-pesanan-penjualan" element={<PenyelesaianPesananPenjualan />} />
+          <Route path="/laporan/profitabilitas-produk" element={<ProfitabilitasProduk />} />
+          <Route path="/laporan/usia-piutang" element={<UsiaPiutang />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

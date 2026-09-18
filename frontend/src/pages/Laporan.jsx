@@ -507,6 +507,20 @@ export default function Laporan() {
                   onClick={() => {
                     if (report.id === "neraca") {
                       navigate("/laporan/neraca");
+                    } else if (report.id === "laba-rugi") {
+                      navigate("/laporan/laba-rugi");
+                    } else if (report.id === "arus-kas") {
+                      navigate("/laporan/arus-kas");
+                    } else if (report.id === "perubahan-modal") {
+                      navigate("/laporan/perubahan-modal");
+                    } else if (report.id === "buku-besar") {
+                      navigate("/laporan/buku-besar");
+                    } else if (report.id === "jurnal") {
+                      navigate("/laporan/jurnal");
+                    } else if (report.id === "neraca-saldo") {
+                      navigate("/laporan/neraca-saldo");
+                    } else if (report.id === "ringkasan-bisnis") {
+                      navigate("/laporan/ringkasan-bisnis");
                     }
                   }}
                   style={{
@@ -593,6 +607,17 @@ export default function Laporan() {
                   </p>
                   <button
                     type="button"
+                    onClick={() => {
+                      if (report.id === "daftar-penjualan") {
+                        navigate("/laporan/daftar-penjualan");
+                      } else if (report.id === "piutang-pelanggan") {
+                        navigate("/laporan/piutang-pelanggan");
+                      } else if (report.id === "pengiriman-penjualan") {
+                        navigate("/laporan/pengiriman-penjualan");
+                      } else if (report.id === "penyelesaian-pesanan-penjualan") {
+                        navigate("/laporan/penyelesaian-pesanan-penjualan");
+                      }
+                    }}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -667,6 +692,17 @@ export default function Laporan() {
                   >
                     <button
                       type="button"
+                      onClick={() => {
+                        if (report.id === "penjualan-per-pelanggan") {
+                          navigate("/laporan/penjualan-per-pelanggan");
+                        } else if (report.id === "usia-piutang") {
+                          navigate("/laporan/usia-piutang");
+                        } else if (report.id === "penjualan-per-produk") {
+                          navigate("/laporan/penjualan-per-produk");
+                        } else if (report.id === "profitabilitas-produk") {
+                          navigate("/laporan/profitabilitas-produk");
+                        }
+                      }}
                       style={{
                         display: "inline-flex",
                         alignItems: "center",

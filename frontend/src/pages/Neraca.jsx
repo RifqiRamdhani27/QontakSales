@@ -769,7 +769,7 @@ export default function Neraca() {
                 height: "36px",
                 padding: "0 20px",
                 fontSize: "13px",
-                fontWeight: 500,
+                fontWeight: 600,
                 color: "#ffffff",
                 backgroundColor: "#4f67c9",
                 border: "none",
@@ -818,66 +818,59 @@ export default function Neraca() {
 
           {/* Right Controls: View Modifiers & Export Button */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            {/* Split View / Layout Icon */}
+            {/* Split View / Table Density Icon */}
             <button
               type="button"
-              title="Pemisah Halaman"
+              title="Tampilan"
               style={{
-                padding: "6px",
-                color: "#667085",
+                padding: "4px",
+                color: "#475569",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
               }}
             >
               <svg
-                style={{ width: "16px", height: "16px" }}
+                style={{ width: "20px", height: "20px" }}
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                viewBox="0 0 24 24"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <rect x="3" y="3" width="18" height="18" rx="2" strokeWidth="2" />
-                <line x1="12" y1="3" x2="12" y2="21" strokeWidth="2" />
+                <rect x="4" y="3" width="16" height="18" rx="7" ry="7" />
+                <line x1="9.5" y1="3.5" x2="9.5" y2="20.5" />
+                <line x1="14.5" y1="3.5" x2="14.5" y2="20.5" />
               </svg>
             </button>
 
-            {/* Fullscreen Expand / Compress Icon */}
+            {/* Diagonal Fullscreen Icon */}
             <button
               type="button"
-              title={isFullscreen ? "Kecilkan Layar" : "Layar Penuh"}
+              title={isFullscreen ? "Kecilkan Layar" : "Perbesar"}
               onClick={toggleFullscreen}
               style={{
-                padding: "6px",
-                color: "#667085",
+                padding: "4px",
+                color: "#475569",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
               }}
             >
               <svg
-                style={{ width: "16px", height: "16px" }}
+                style={{ width: "20px", height: "20px" }}
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                viewBox="0 0 24 24"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                {isFullscreen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 4v4H5M15 4v4h4M9 20v-4H5M15 20v-4h4"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"
-                  />
-                )}
+                <polyline points="15 5 19 5 19 9" />
+                <line x1="19" y1="5" x2="13" y2="11" />
+                <polyline points="9 19 5 19 5 15" />
+                <line x1="5" y1="19" x2="11" y2="13" />
               </svg>
             </button>
 
@@ -924,30 +917,61 @@ export default function Neraca() {
           }}
         >
           <a
-            href="#"
+            href="#lihat-contoh"
             onClick={(e) => e.preventDefault()}
             style={{
               display: "inline-flex",
               alignItems: "center",
-              fontSize: "12px",
-              fontWeight: 500,
-              color: "#4f67c9",
+              gap: "6px",
+              fontSize: "13px",
+              color: "#2563eb",
               textDecoration: "none",
             }}
           >
             <span
               style={{
-                marginRight: "6px",
-                color: "#e53935",
-                display: "flex",
+                position: "relative",
+                display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
+                width: "16px",
+                height: "16px",
               }}
             >
-              <svg style={{ width: "16px", height: "16px" }} fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+              <svg
+                style={{ width: "16px", height: "16px", color: "#64748b" }}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="9" y1="15" x2="15" y2="15" />
               </svg>
+              <span
+                style={{
+                  position: "absolute",
+                  left: "-4px",
+                  bottom: "2px",
+                  backgroundColor: "#ef4444",
+                  fontSize: "8px",
+                  fontWeight: 700,
+                  color: "#ffffff",
+                  padding: "0 2px",
+                  borderRadius: "2px",
+                  lineHeight: 1,
+                  transform: "scale(0.75)",
+                  transformOrigin: "bottom left",
+                  pointerEvents: "none",
+                }}
+              >
+                PDF
+              </span>
             </span>
-            <span style={{ textDecoration: "none" }}>Lihat contoh</span>
+            <span>Lihat contoh</span>
           </a>
         </div>
       </section>
