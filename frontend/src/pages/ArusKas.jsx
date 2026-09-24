@@ -199,7 +199,7 @@ export default function ArusKas() {
       <div
         style={{
           position: "absolute",
-          top: "42px",
+          top: "72px",
           ...(alignRight ? { right: 0 } : { left: 0 }),
           zIndex: 10000,
           backgroundColor: "#ffffff",

@@ -176,16 +176,66 @@ export default function TopBar({ onMenuClick }) {
       <HStack
         h="64px" px={{ base: 4, md: 6 }} bg="white"
         borderBottom="1px solid" borderColor="border"
-        justify="flex-end" gap={4}
+        justify="flex-end" gap={2}
       >
         <Box display={{ base: "block", md: "none" }} cursor="pointer" onClick={onMenuClick} p={2} borderRadius="md" _hover={{ bg: "muted" }}>
-          <List size={22} color="#0F172A" />
+          <List size={22} color="#595d67ff" />
+        </Box>
+
+        {/* Support (Intercom) */}
+        <Box
+          as="a"
+          href="mailto:support@yourcompany.com"
+          cursor="pointer"
+          p={2}
+          borderRadius="md"
+          _hover={{ bg: "muted" }}
+          display="flex"
+          alignItems="center"
+          title="Support"
+        >
+          <svg width="20" height="22" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.01984 21C2.84326 21 1.00155 19.1495 1.00155 16.9626V11.2056C0.955037 8.47663 1.95961 5.90654 3.83854 3.98131C5.71746 2.06542 8.2382 1 10.9543 1C16.498 1 21 5.53271 21 11.0935V16.8505C21 19.0748 19.1955 20.8878 16.9817 20.8878C14.8051 20.8878 12.9634 19.0374 12.9634 16.8505V14.2243C12.9634 12.8692 14.0238 11.8037 15.3725 11.8037C16.7213 11.8037 17.7816 12.8692 17.7816 14.2243V17.0561C17.7816 17.4393 17.4654 17.757 17.084 17.757C16.7027 17.757 16.3864 17.4393 16.3864 17.0561V14.2243C16.3864 13.5888 15.8748 13.2056 15.3725 13.2056C14.74 13.2056 14.3587 13.7196 14.3587 14.2243V16.8505C14.3587 18.2804 15.5586 19.486 16.9817 19.486C18.4049 19.486 19.6048 18.2804 19.6048 16.8505V11.0935C19.6048 6.29907 15.726 2.40187 10.9543 2.40187C8.61956 2.40187 6.45229 3.30841 4.83381 4.96262C3.21533 6.61682 2.35028 8.83177 2.39679 11.1869V16.9626C2.39679 18.3925 3.59669 19.5981 5.01984 19.5981C6.44299 19.5981 7.64289 18.3925 7.64289 16.9626V14.3364C7.64289 13.7009 7.1313 13.3178 6.62902 13.3178C5.99651 13.3178 5.61514 13.8318 5.61514 14.3364V17.0654C5.61514 17.4486 5.29889 17.7664 4.91752 17.7664C4.53616 17.7664 4.2199 17.4486 4.2199 17.0654V14.3364C4.2199 12.9813 5.28028 11.9159 6.62902 11.9159C7.97775 11.9159 9.03813 12.9813 9.03813 14.3364V16.9626C9.03813 19.1495 7.19642 21 5.01984 21Z" fill="#595d67ff" stroke="#595d67ff" strokeWidth="0.3" />
+            <path d="M20.22 18C20.6464 18 21 18.3053 21 18.6818C21 20.5 20.272 21.4818 19.44 22.0818C18.608 22.6818 17.4744 23 16.06 23H8.78C8.3536 23 8 22.6909 8 22.3182C8 21.9455 8.3536 21.6364 8.78 21.6364H16.06C18.3376 21.6364 19.44 20.6727 19.44 18.6818C19.44 18.3091 19.7936 18 20.22 18Z" fill="#595d67ff" stroke="#595d67ff" strokeWidth="0.1" />
+          </svg>
+        </Box>
+
+        {/* Help */}
+        <Box
+          cursor="pointer"
+          p={2}
+          borderRadius="md"
+          _hover={{ bg: "muted" }}
+          display="flex"
+          alignItems="center"
+          title="Help"
+          onClick={() => navigate("/pusat-bantuan")}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.9946 16H12.0036M10 10.5V10C10 8.89543 10.8954 8 12 8C13.1046 8 14 8.89543 14 10V10.1213C14 10.6839 13.7765 11.2235 13.3787 11.6213L12 13M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#595d67ff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Box>
+
+        {/* Riwayat / Time */}
+        <Box
+          cursor="pointer"
+          p={2}
+          borderRadius="md"
+          _hover={{ bg: "muted" }}
+          display="flex"
+          alignItems="center"
+          title="History"
+          onClick={() => navigate("/history")}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.71 15.18L12.61 13.33C12.07 13.01 11.63 12.24 11.63 11.61V7.51M22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12Z" stroke="#595d67ff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </Box>
 
         {/* Notifications */}
         <Box ref={notifRef} position="relative">
           <HStack cursor="pointer" p={2} borderRadius="md" _hover={{ bg: "muted" }} onClick={() => setShowNotif(!showNotif)} position="relative">
-            <Bell size={20} color="#0F172A" />
+            <Bell size={20} color="#595d67ff" />
             {unreadCount > 0 && (
               <Badge position="absolute" top={0} right={0} colorPalette="red" size="xs" borderRadius="full">{unreadCount}</Badge>
             )}
@@ -235,11 +285,11 @@ export default function TopBar({ onMenuClick }) {
               </Box>
               <VStack align="stretch" gap={0}>
                 <HStack p={3} cursor="pointer" _hover={{ bg: "muted" }} onClick={() => { navigate("/settings"); setShowMenu(false); }}>
-                  <Gear size={16} /><Text fontSize="sm">Settings</Text>
+                  <Gear size={16} color="#595d67ff" /><Text fontSize="sm">Settings</Text>
                 </HStack>
                 {(isManager || isImpersonating) && (
                   <HStack p={3} cursor="pointer" _hover={{ bg: "muted" }} onClick={isImpersonating ? handleSwitchBack : openSwitchSubmenu}>
-                    {isImpersonating ? <ArrowUUpLeft size={16} /> : <ArrowsClockwise size={16} />}
+                    {isImpersonating ? <ArrowUUpLeft size={16} color="#595d67ff" /> : <ArrowsClockwise size={16} color="#595d67ff" />}
                     <Text fontSize="sm">{isImpersonating ? "Switch Back" : "Switch Account"}</Text>
                   </HStack>
                 )}
@@ -255,7 +305,7 @@ export default function TopBar({ onMenuClick }) {
             <Box ref={submenuRef} position="absolute" top="100%" right={0} mt={2} w="300px" bg="white" border="1px solid" borderColor="border" borderRadius="lg" shadow="lg" zIndex={50}>
               <HStack p={3} borderBottom="1px solid" borderColor="border" justify="space-between">
                 <HStack gap={2} cursor="pointer" _hover={{ opacity: 0.7 }} onClick={closeSwitchSubmenu}>
-                  <ArrowLeft size={16} />
+                  <ArrowLeft size={16} color="#595d67ff" />
                   <Text fontSize="sm" fontWeight="semibold">Back</Text>
                 </HStack>
                 <Text fontSize="sm" fontWeight="semibold" color="primary">Switch Account</Text>
