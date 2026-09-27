@@ -6,13 +6,13 @@ import brandLogo from "@/assets/brand.png";
 const allNavItems = [
   { label: "Beranda", icon: House, path: "/beranda" },
   { label: "Dashboard", icon: Desktop, path: "/dashboard" },
-  { label: "Leads", icon: Users, path: "/leads" },
+  /* { label: "Leads", icon: Users, path: "/leads" },
   { label: "Pipeline", icon: Kanban, path: "/pipeline" },
   { label: "Calendar", icon: CalendarBlank, path: "/calendar" },
   { label: "Agents", icon: UserPlus, path: "/agents", managerOnly: true },
   { label: "Broadcast", icon: ChatsCircle, path: "/broadcasts" },
   { label: "Broadcast History", icon: ChatsCircle, path: "/broadcasts/history" },
-  { label: "Archived Leads", icon: Archive, path: "/leads/archived" },
+  { label: "Archived Leads", icon: Archive, path: "/leads/archived" }, */
   { label: "Daftar Akun", icon: BookOpen, path: "/daftar-akun" },
   { label: "Aset", icon: Buildings, path: "/aset" },
   { label: "Laporan", icon: FileText, path: "/laporan" },
