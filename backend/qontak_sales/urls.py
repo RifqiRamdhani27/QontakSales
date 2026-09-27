@@ -1,16 +1,12 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("qontak_sales.apps.accounts.urls")),
-    path("api/", include("qontak_sales.apps.leads.urls")),
-    path("api/", include("qontak_sales.apps.activities.urls")),
-    path("api/", include("qontak_sales.apps.notifications.urls")),
-    path("api/", include("qontak_sales.apps.broadcasts.urls")),
-    path("api/", include("qontak_sales.apps.accounts_coa.urls")),
+    path("api/", include("qontak_sales.apps.coa.urls")),
 ]
 
 if settings.DEBUG:

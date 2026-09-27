@@ -1,93 +1,157 @@
-import { Box, VStack, Text, Link as ChakraLink, HStack } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { House, Users, Kanban, Gear, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank, Buildings, FileText, Wallet, Desktop } from "@phosphor-icons/react";
+import {
+  House,
+  UserPlus,
+  ChartBar,
+  Users,
+  Buildings,
+  UsersThree,
+  X,
+  Bank,
+  Package,
+  Factory,
+  Tag,
+  ShoppingCart,
+  Scroll,
+} from "@phosphor-icons/react";
+
 import brandLogo from "@/assets/brand.png";
 
-const allNavItems = [
-  { label: "Beranda", icon: House, path: "/beranda" },
-  { label: "Dashboard", icon: Desktop, path: "/dashboard" },
-  /* { label: "Leads", icon: Users, path: "/leads" },
-  { label: "Pipeline", icon: Kanban, path: "/pipeline" },
-  { label: "Calendar", icon: CalendarBlank, path: "/calendar" },
-  { label: "Agents", icon: UserPlus, path: "/agents", managerOnly: true },
-  { label: "Broadcast", icon: ChatsCircle, path: "/broadcasts" },
-  { label: "Broadcast History", icon: ChatsCircle, path: "/broadcasts/history" },
-  { label: "Archived Leads", icon: Archive, path: "/leads/archived" }, */
-  { label: "Daftar Akun", icon: BookOpen, path: "/daftar-akun" },
-  { label: "Aset", icon: Buildings, path: "/aset" },
-  { label: "Laporan", icon: FileText, path: "/laporan" },
-  { label: "Anggaran", icon: Wallet, path: "/anggaran" },
+const navItems = [
+  {
+    label: "Dashboard",
+    icon: House,
+    path: "/dashboard",
+  },
+  {
+    label: "Agents",
+    icon: UserPlus,
+    path: "/agents",
+    managerOnly: true,
+  },
+  {
+    label: "Customers",
+    icon: Users,
+    path: "/customers",
+  },
+  {
+    label: "Chart of Accounts",
+    icon: ChartBar,
+    path: "/coa",
+  },
+  {
+    label: "Company",
+    icon: Buildings,
+    path: "/company",
+  },
+  {
+    label: "UserManagement",
+    icon: UsersThree,
+    path: "/usermanagement",
+  },
+  {
+    label: "Kas & bank",
+    icon: Bank,
+    path: "/kas-bank",
+  },
+  {
+    label: "penjualan",
+    icon: Tag,
+    path: "/penjualan",
+  },
+  {
+    label: "Pembelian",
+    icon: ShoppingCart,
+    path: "/pembelian",
+  },
+  {
+    label: "Biaya",
+    icon: Scroll,
+    path: "/biaya",
+  },
+  {
+    label: "Products",
+    icon: Package,
+    path: "/products",
+  },
+  {
+    label: "Productions",
+    icon: Factory,
+    path: "/productions",
+  },
 ];
 
 export default function Sidebar({ open, onClose }) {
   const location = useLocation();
-  const userRole = localStorage.getItem("user_role");
-  const isManager = userRole === "MANAGER";
-  const navItems = allNavItems.filter((item) => !item.managerOnly || isManager);
+
+  const isManager = localStorage.getItem("user_role") === "MANAGER";
+
+  const visibleItems = navItems.filter(
+    (item) => !item.managerOnly || isManager,
+  );
 
   return (
     <>
       {open && (
-        <Box
-          display={{ base: "block", md: "none" }}
-          position="fixed" inset={0} bg="blackAlpha.600" zIndex={40}
+        <div
+          className="fixed inset-0 z-40 hidden max-md:block"
+          style={{ background: "rgba(0, 0, 0, 0.5)" }}
           onClick={onClose}
         />
       )}
 
-      <Box
-        w="260px" h="100vh" bg="white" borderRight="1px solid" borderColor="border"
-        display="flex" flexDirection="column"
-        position={{ base: "fixed", md: "relative" }}
-        zIndex={50}
-        transform={{ base: open ? "translateX(0)" : "translateX(-100%)", md: "translateX(0)" }}
-        transition="transform 200ms ease"
+      <aside
+        className={`
+          z-50 flex h-screen w-[260px] flex-shrink-0 flex-col border-r border-gray-200 bg-white
+          max-md:fixed max-md:inset-y-0 max-md:left-0
+          max-md:shadow-[4px_0_16px_rgba(0,0,0,0.12)]
+          max-md:transition-transform max-md:duration-200
+          ${open ? "max-md:translate-x-0" : "max-md:-translate-x-full"}
+        `}
       >
-        <HStack justify="space-between" p={6}>
-          <Box as="img" src={brandLogo} h="28px" alt="QontakSales" />
-          <Box display={{ base: "block", md: "none" }} cursor="pointer" onClick={onClose}><X size={20} /></Box>
-        </HStack>
+        <div className="flex h-[72px] items-center justify-between border-b border-slate-100 px-6">
+          <img
+            src={brandLogo}
+            alt="QontakSales"
+            className="h-7 w-auto object-contain"
+          />
 
-        <VStack flex={1} align="stretch" px={3} gap={1}>
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path || (item.path === "/aset" && location.pathname.startsWith("/aset"));
+          <button
+            type="button"
+            className="hidden items-center justify-center rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-gray-900 max-md:flex"
+            onClick={onClose}
+            aria-label="Close menu"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
+          {visibleItems.map((item) => {
             const Icon = item.icon;
+            const active = location.pathname === item.path;
+
             return (
-              <ChakraLink
+              <RouterLink
                 key={item.path}
-                as={RouterLink}
                 to={item.path}
-                display="flex" alignItems="center" gap={3} px={4} py={3} borderRadius="md"
-                fontWeight={isActive ? "semibold" : "normal"}
-                bg={isActive ? "primary" : "transparent"}
-                color={isActive ? "white" : "foreground"}
-                _hover={{ bg: isActive ? "primary" : "muted", textDecoration: "none" }}
-                transition="all 150ms ease"
+                className={`
+                  flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm no-underline transition-all
+                  ${
+                    active
+                      ? "bg-brand font-semibold text-white hover:bg-brand hover:text-white"
+                      : "text-gray-700 hover:bg-slate-100 hover:text-gray-900"
+                  }
+                `}
                 onClick={onClose}
               >
-                <Icon size={20} />
-                <Text fontSize="sm">{item.label}</Text>
-              </ChakraLink>
+                <Icon size={20} weight={active ? "fill" : "regular"} />
+                <span>{item.label}</span>
+              </RouterLink>
             );
           })}
-        </VStack>
-
-        <Box p={3}>
-          <ChakraLink
-            as={RouterLink}
-            to="/settings"
-            display="flex" alignItems="center" gap={3} px={4} py={3} borderRadius="md"
-            color="foreground"
-            bg={location.pathname === "/settings" ? "muted" : "transparent"}
-            _hover={{ bg: "muted", textDecoration: "none" }}
-            transition="all 150ms ease"
-            onClick={onClose}
-          >
-            <Gear size={20} />
-            <Text fontSize="sm">Settings</Text>
-          </ChakraLink>
-        </Box>
-      </Box>
+        </nav>
+      </aside>
     </>
   );
 }

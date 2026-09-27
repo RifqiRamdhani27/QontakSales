@@ -1,9 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Beranda from "./pages/Beranda";
+
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import Beranda from "./pages/Beranda";
 import LeadsPage from "./pages/LeadsPage";
 import PipelinePage from "./pages/PipelinePage";
 import CalendarPage from "./pages/CalendarPage";
@@ -19,15 +20,15 @@ import JurnalUmumPage from "./pages/JurnalUmumPage";
 import AsetPage from "./pages/AsetPage";
 import SimpanAsetPage from "./pages/SimpanAsetPage";
 import Laporan from "./pages/Laporan";
-import Neraca from "./pages/Neraca";
 import Anggaran from "./pages/Anggaran";
+import RincianAnggaran from "./pages/RincianAnggaran";
+import Neraca from "./pages/Neraca";
 import LabaRugi from "./pages/LabaRugi";
 import ArusKas from "./pages/ArusKas";
 import PerubahanModal from "./pages/PerubahanModal";
 import BukuBesar from "./pages/BukuBesar";
 import Jurnal from "./pages/Jurnal";
 import NeracaSaldo from "./pages/NeracaSaldo";
-import RincianAnggaran from "./pages/RincianAnggaran";
 import RingkasanBisnis from "./pages/RingkasanBisnis";
 import DaftarPenjualan from "./pages/DaftarPenjualan";
 import PiutangPelanggan from "./pages/PiutangPelanggan";
@@ -65,17 +66,19 @@ import RingkasanRekonsiliasi from "./pages/RingkasanRekonsiliasi";
 import MutasiRekeningKoran from "./pages/MutasiRekeningKoran";
 import LaporanPajakPemotongan from "./pages/LaporanPajakPemotongan";
 import LaporanPajakPenjualan from "./pages/LaporanPajakPenjualan";
+
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import ContactPage from "./pages/ContactPage";
-import MainLayout from "./components/layout/MainLayout";
-import AuthGuard from "./components/layout/AuthGuard";
 import PusatBantuan from "./pages/PusatBantuan";
 
+import MainLayout from "./components/layout/MainLayout";
+import AuthGuard from "./components/layout/AuthGuard";
 
-function App() {
+export default function App() {
   return (
     <Routes>
+      {/* ── Public Routes (tanpa AuthGuard / MainLayout) ── */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
@@ -83,27 +86,34 @@ function App() {
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/pusat-bantuan" element={<PusatBantuan />} />
+
+      {/* ── Protected Routes (AuthGuard + MainLayout) ── */}
       <Route element={<AuthGuard />}>
         <Route element={<MainLayout />}>
+          {/* Utama */}
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/beranda" element={<Beranda  />} />
+          <Route path="/beranda" element={<Beranda />} />
+
+          {/* CRM */}
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/leads/archived" element={<ArchivedLeadsPage />} />
+          <Route path="/leads/:id" element={<LeadDetailPage />} />
           <Route path="/pipeline" element={<PipelinePage />} />
           <Route path="/calendar" element={<CalendarPage />} />
-          <Route path="/leads/:id" element={<LeadDetailPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/broadcasts" element={<BroadcastPage />} />
           <Route path="/broadcasts/history" element={<BroadcastHistoryPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+
+          {/* Akuntansi */}
           <Route path="/daftar-akun" element={<DaftarAkunPage />} />
           <Route path="/tutup-buku" element={<TutupBukuPage />} />
           <Route path="/jurnal-umum" element={<JurnalUmumPage />} />
           <Route path="/aset" element={<AsetPage />} />
           <Route path="/aset/simpan" element={<SimpanAsetPage />} />
+
+          {/* Laporan */}
           <Route path="/laporan" element={<Laporan />} />
-          <Route path="/anggaran" element={<Anggaran />} />
-          <Route path="/anggaran/rincian-anggaran" element={<RincianAnggaran />} />
           <Route path="/laporan/neraca" element={<Neraca />} />
           <Route path="/laporan/laba-rugi" element={<LabaRugi />} />
           <Route path="/laporan/arus-kas" element={<ArusKas />} />
@@ -113,6 +123,8 @@ function App() {
           <Route path="/laporan/neraca-saldo" element={<NeracaSaldo />} />
           <Route path="/laporan/ringkasan-bisnis" element={<RingkasanBisnis />} />
           <Route path="/laporan/manajemen-anggaran" element={<Anggaran />} />
+
+          {/* Laporan Penjualan */}
           <Route path="/laporan/daftar-penjualan" element={<DaftarPenjualan />} />
           <Route path="/laporan/piutang-pelanggan" element={<PiutangPelanggan />} />
           <Route path="/laporan/pengiriman-penjualan" element={<PengirimanPenjualan />} />
@@ -123,6 +135,8 @@ function App() {
           <Route path="/laporan/usia-piutang" element={<UsiaPiutang />} />
           <Route path="/laporan/daftar-faktur-proforma" element={<DaftarFakturProforma />} />
           <Route path="/laporan/daftar-tukar-faktur" element={<DaftarTukarFaktur />} />
+
+          {/* Laporan Pembelian */}
           <Route path="/laporan/daftar-pembelian" element={<DaftarPembelian />} />
           <Route path="/laporan/pembelian-per-supplier" element={<PembelianPerSupplier />} />
           <Route path="/laporan/utang-supplier" element={<UtangSupplier />} />
@@ -132,6 +146,8 @@ function App() {
           <Route path="/laporan/pengiriman-pembelian" element={<PengirimanPembelian />} />
           <Route path="/laporan/pembelian-per-produk" element={<PembelianPerProduk />} />
           <Route path="/laporan/penyelesaian-pesanan-pembelian" element={<PenyelesaianPesananPembelian />} />
+
+          {/* Laporan Produk / Persediaan */}
           <Route path="/laporan/tingkat-pemenuhan-pesanan" element={<TingkatPemenuhanPesanan />} />
           <Route path="/laporan/perputaran-persediaan-barang" element={<PerputaranPersediaanBarang />} />
           <Route path="/laporan/ringkasan-persediaan-barang" element={<RingkasanPersediaanBarang />} />
@@ -142,19 +158,28 @@ function App() {
           <Route path="/laporan/pergerakan-barang-gudang" element={<PergerakanBarangGudang />} />
           <Route path="/laporan/kuantitas-produk-no-seri" element={<KuantitasProdukNomorSeri />} />
           <Route path="/laporan/gudang-produk-bernomor-seri" element={<GudangProdukBernomorSeri />} />
+
+          {/* Laporan Aset */}
           <Route path="/laporan/ringkasan-aset-tetap" element={<RingkasanAsetTetap />} />
           <Route path="/laporan/detail-aset-tetap" element={<DetailAsetTetap />} />
           <Route path="/laporan/penjualan-pelepasan-aset" element={<LaporanPenjualanPelepasanAset />} />
+
+          {/* Laporan Bank */}
           <Route path="/laporan/ringkasan-rekonsiliasi-bank" element={<RingkasanRekonsiliasi />} />
           <Route path="/laporan/mutasi-rekening-koran" element={<MutasiRekeningKoran />} />
+
+          {/* Laporan Pajak */}
           <Route path="/laporan/pajak-pemotongan" element={<LaporanPajakPemotongan />} />
           <Route path="/laporan/pajak-penjualan" element={<LaporanPajakPenjualan />} />
-          <Route path="/laporan/:reportId" element={<PembelianPerProduk />} />       
+
+          {/* Anggaran */}
+          <Route path="/anggaran" element={<Anggaran />} />
+          <Route path="/anggaran/rincian-anggaran" element={<RincianAnggaran />} />
         </Route>
       </Route>
+
+      {/* Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
-
-export default App;

@@ -1,16 +1,22 @@
+from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth import get_user_model
-from .serializers import UserSerializer, RegisterSerializer, AgentCreateSerializer, EmailTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Company
 from .permissions import IsManager
-from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import (
+    AgentCreateSerializer,
+    EmailTokenObtainPairSerializer,
+    RegisterSerializer,
+    UserSerializer,
+)
 
 User = get_user_model()
 
 
 class EmailTokenObtainPairView(TokenObtainPairView):
+    permission_classes = [permissions.AllowAny]
     serializer_class = EmailTokenObtainPairSerializer
 
 
@@ -22,7 +28,7 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"message": "Registration successful."}, status=201)
+        return Response({"message": "Registration successful."}, status=status.HTTP_201_CREATED)
 
 
 class ProfileView(APIView):
@@ -31,19 +37,27 @@ class ProfileView(APIView):
 
     def put(self, request):
         user = request.user
-        data = request.data
-        if "first_name" in data:
-            user.first_name = data["first_name"]
-        if "last_name" in data:
-            user.last_name = data["last_name"]
-        if "email" in data:
-            user.email = data["email"]
-        if "phone" in data:
-            user.phone = data["phone"]
-        if "avatar" in data:
-            user.avatar = data["avatar"]
+        for field in ("first_name", "last_name", "email", "phone"):
+            if field in request.data:
+                setattr(user, field, request.data[field])
+        if "avatar" in request.FILES:
+            user.avatar = request.FILES["avatar"]
         user.save()
         return Response(UserSerializer(user, context={"request": request}).data)
+
+
+class DashboardStatsView(APIView):
+    def get(self, request):
+        company = request.user.company
+        users = User.objects.filter(company=company) if company else User.objects.none()
+        agents = users.filter(role="AGENT")
+        managers = users.filter(role="MANAGER")
+        return Response({
+            "company_name": company.name if company else "",
+            "total_users": users.count(),
+            "total_agents": agents.count(),
+            "total_managers": managers.count(),
+        })
 
 
 class AgentViewSet(viewsets.ModelViewSet):
@@ -51,10 +65,7 @@ class AgentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsManager]
 
     def get_queryset(self):
-        return User.objects.filter(
-            company=self.request.user.company,
-            role="AGENT",
-        )
+        return User.objects.filter(company=self.request.user.company, role="AGENT").order_by("first_name", "last_name")
 
     def create(self, request, *args, **kwargs):
         serializer = AgentCreateSerializer(data=request.data)
@@ -70,91 +81,21 @@ class AgentViewSet(viewsets.ModelViewSet):
             company=request.user.company,
             role="AGENT",
         )
-        return Response(UserSerializer(agent, context={"request": request}).data, status=201)
+        if data.get("avatar"):
+            agent.avatar = data["avatar"]
+            agent.save(update_fields=["avatar"])
+        return Response(UserSerializer(agent, context={"request": request}).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         agent = self.get_object()
-        data = request.data
-        if "first_name" in data:
-            agent.first_name = data["first_name"]
-        if "last_name" in data:
-            agent.last_name = data["last_name"]
-        if "email" in data:
-            agent.email = data["email"]
-        if "phone" in data:
-            agent.phone = data["phone"]
-        if "avatar" in data:
-            agent.avatar = data["avatar"]
+        for field in ("first_name", "last_name", "email", "phone"):
+            if field in request.data:
+                setattr(agent, field, request.data[field])
+        if "avatar" in request.FILES:
+            agent.avatar = request.FILES["avatar"]
         agent.save()
         return Response(UserSerializer(agent, context={"request": request}).data)
 
     def destroy(self, request, *args, **kwargs):
-        agent = self.get_object()
-        agent.delete()
-        return Response(status=204)
-
-
-class SettingsView(APIView):
-    def get(self, request):
-        user = request.user
-        return Response({
-            "user": UserSerializer(user, context={"request": request}).data,
-            "company": {
-                "id": user.company.id if user.company else None,
-                "name": user.company.name if user.company else "",
-            },
-        })
-
-    def put(self, request):
-        user = request.user
-        data = request.data
-        if "first_name" in data:
-            user.first_name = data["first_name"]
-        if "last_name" in data:
-            user.last_name = data["last_name"]
-        if "email" in data:
-            user.email = data["email"]
-        if "phone" in data:
-            user.phone = data["phone"]
-        if "avatar" in data:
-            user.avatar = data["avatar"]
-        user.save()
-        return Response(UserSerializer(user, context={"request": request}).data)
-
-
-class ChangePasswordView(APIView):
-    def post(self, request):
-        user = request.user
-        old_password = request.data.get("old_password")
-        new_password = request.data.get("new_password")
-        if not user.check_password(old_password):
-            return Response({"error": "Wrong password"}, status=400)
-        user.set_password(new_password)
-        user.save()
-        return Response({"message": "Password changed"})
-
-
-class SwitchAccountView(APIView):
-    def post(self, request):
-        user = request.user
-        target_user_id = request.data.get("user_id")
-        if user.role != "MANAGER":
-            return Response({"error": "Only managers can switch"}, status=403)
-        try:
-            target = User.objects.get(id=target_user_id, company=user.company)
-        except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=404)
-
-        from rest_framework_simplejwt.tokens import RefreshToken
-        refresh = RefreshToken.for_user(target)
-        return Response({
-            "access": str(refresh.access_token),
-            "refresh": str(refresh),
-            "user": UserSerializer(target, context={"request": request}).data,
-        })
-
-
-class TeamMembersView(APIView):
-    def get(self, request):
-        users = User.objects.filter(company=request.user.company)
-        return Response(UserSerializer(users, many=True, context={"request": request}).data)
+        self.get_object().delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
