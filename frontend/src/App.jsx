@@ -3,6 +3,10 @@ import Beranda from "./pages/Beranda";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import PenjualanPage from "./pages/PenjualanPage";
+import BiayaPage from "./pages/BiayaPage";
+import PembelianPage from "./pages/PembelianPage";
+import ProductsPages from "./pages/ProductsPages";
 import DashboardPage from "./pages/DashboardPage";
 import LeadsPage from "./pages/LeadsPage";
 import PipelinePage from "./pages/PipelinePage";
@@ -20,6 +24,7 @@ import AsetPage from "./pages/AsetPage";
 import SimpanAsetPage from "./pages/SimpanAsetPage";
 import Laporan from "./pages/Laporan";
 import Neraca from "./pages/Neraca";
+import KasBankPage from "./pages/KasBankPage";
 import Anggaran from "./pages/Anggaran";
 import LabaRugi from "./pages/LabaRugi";
 import ArusKas from "./pages/ArusKas";
@@ -85,6 +90,11 @@ function App() {
       <Route path="/pusat-bantuan" element={<PusatBantuan />} />
       <Route element={<AuthGuard />}>
         <Route element={<MainLayout />}>
+          <Route path="/penjualan" element={<PenjualanPage />} />
+          <Route path="/kas-bank" element={<KasBankPage />} />
+          <Route path="/pembelian" element={<PembelianPage />} />
+          <Route path="/products" element={<ProductsPages />} />
+          <Route path="/biaya" element={<BiayaPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/beranda" element={<Beranda  />} />
           <Route path="/leads" element={<LeadsPage />} />

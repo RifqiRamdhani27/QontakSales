@@ -340,7 +340,7 @@ export default function Beranda({ userName = "Rifqi" }) {
                                 e.currentTarget.style.backgroundColor = "#ffffff";
                             }}
                         >
-                            Kunjungi Inotal Marketplace
+                            Kunjungi Marketplace
                         </button>
                     </div>
 

@@ -11,7 +11,7 @@ export default function MainLayout() {
   const toggleFullscreen = () => setIsFullscreen((prev) => !prev);
 
   return (
-    <Flex h="100vh" bg="background" overflow="hidden">
+    <Flex h="100vh" bg="white" overflow="hidden">
       {!isFullscreen && (
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       )}

@@ -389,7 +389,7 @@ export default function DaftarAkunPage() {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
-    <Box p={{ base: 4, md: 6 }} bg="background" minH="100vh">
+    <Box p={{ base: 4, md: 6 }} bg="white" minH="100vh">
       {/* Header */}
       <Flex align="center" justify="space-between" mb={6} flexWrap="wrap" gap={3}>
         <HStack gap={3}>

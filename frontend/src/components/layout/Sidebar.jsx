@@ -1,6 +1,6 @@
 import { Box, VStack, Text, Link as ChakraLink, HStack } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { House, Users, Kanban, Gear, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank, Buildings, FileText, Wallet, Desktop } from "@phosphor-icons/react";
+import { House, Bank, CaretDown, Star, Users, Kanban, Gear, MagnifyingGlass, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank, Buildings, FileText, Wallet, Desktop, Tag, ShoppingCart, Pencil } from "@phosphor-icons/react";
 import brandLogo from "@/assets/brand.png";
 
 const allNavItems = [
@@ -12,11 +12,18 @@ const allNavItems = [
   { label: "Agents", icon: UserPlus, path: "/agents", managerOnly: true },
   { label: "Broadcast", icon: ChatsCircle, path: "/broadcasts" },
   { label: "Broadcast History", icon: ChatsCircle, path: "/broadcasts/history" },
-  { label: "Archived Leads", icon: Archive, path: "/leads/archived" }, */
+  { label: "Archived Leads", icon: Archive, path: "/leads/archived" }, 
+  { label: "Produk", icon: Pencil, path: "/products" },*/
   { label: "Daftar Akun", icon: BookOpen, path: "/daftar-akun" },
   { label: "Aset", icon: Buildings, path: "/aset" },
   { label: "Laporan", icon: FileText, path: "/laporan" },
   { label: "Anggaran", icon: Wallet, path: "/anggaran" },
+  { label: "Penjualan", icon: Tag, path: "/penjualan" },
+  { label: "Pembelian", icon: ShoppingCart, path: "/pembelian" },
+  { label: "Biaya", icon: MagnifyingGlass, path: "/biaya" },
+  { label: "Kas & Bank", icon: Bank, CaretDown, Star, path: "/kas-bank" },
+
+
 ];
 
 export default function Sidebar({ open, onClose }) {
