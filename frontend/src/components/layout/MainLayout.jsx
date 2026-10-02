@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 
 export default function MainLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const location = useLocation();
+  const isSettings = location.pathname.startsWith("/settings");
 
   const toggleFullscreen = () => setIsFullscreen((prev) => !prev);
 
@@ -19,7 +21,11 @@ export default function MainLayout() {
         {!isFullscreen && (
           <TopBar onMenuClick={() => setSidebarOpen(true)} />
         )}
-        <Box flex={1} p={isFullscreen ? 0 : { base: 4, md: 6 }} overflow="auto">
+        <Box
+          flex={1}
+          p={isFullscreen || isSettings ? 0 : { base: 4, md: 6 }}
+          overflow={isSettings ? "hidden" : "auto"}
+        >
           <Outlet context={{ isFullscreen, setIsFullscreen, toggleFullscreen }} />
         </Box>
       </Flex>

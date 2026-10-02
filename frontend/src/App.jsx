@@ -105,7 +105,7 @@ function App() {
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/broadcasts" element={<BroadcastPage />} />
           <Route path="/broadcasts/history" element={<BroadcastHistoryPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings/*" element={<SettingsPage />} />
           <Route path="/daftar-akun" element={<DaftarAkunPage />} />
           <Route path="/tutup-buku" element={<TutupBukuPage />} />
           <Route path="/jurnal-umum" element={<JurnalUmumPage />} />

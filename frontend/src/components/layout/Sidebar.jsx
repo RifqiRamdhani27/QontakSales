@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Box, VStack, Text, Link as ChakraLink, HStack } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { House, Bank, CaretDown, Star, Users, Kanban, Gear, MagnifyingGlass, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank, Buildings, FileText, Wallet, Desktop, Tag, ShoppingCart, Pencil } from "@phosphor-icons/react";
+import { House, CaretDown, Star, Users, Kanban, Gear, MagnifyingGlass, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank, Buildings, FileText, Wallet, Desktop, Tag, ShoppingCart, Pencil, Bank } from "@phosphor-icons/react";
 import brandLogo from "@/assets/brand.png";
 
 const allNavItems = [
@@ -22,8 +23,6 @@ const allNavItems = [
   { label: "Pembelian", icon: ShoppingCart, path: "/pembelian" },
   { label: "Biaya", icon: MagnifyingGlass, path: "/biaya" },
   { label: "Kas & Bank", icon: Bank, CaretDown, Star, path: "/kas-bank" },
-
-
 ];
 
 export default function Sidebar({ open, onClose }) {
@@ -31,6 +30,11 @@ export default function Sidebar({ open, onClose }) {
   const userRole = localStorage.getItem("user_role");
   const isManager = userRole === "MANAGER";
   const navItems = allNavItems.filter((item) => !item.managerOnly || isManager);
+
+  const isSettingsRoute = location.pathname.startsWith("/settings");
+  const [isHovered, setIsHovered] = useState(false);
+  const isCollapsed = isSettingsRoute && !isHovered;
+  const sidebarWidth = isCollapsed ? "80px" : "260px";
 
   return (
     <>
@@ -43,19 +47,54 @@ export default function Sidebar({ open, onClose }) {
       )}
 
       <Box
-        w="260px" h="100vh" bg="white" borderRight="1px solid" borderColor="border"
+        w={sidebarWidth}
+        h="100vh" bg="white" borderRight="1px solid" borderColor="border"
         display="flex" flexDirection="column"
-        position={{ base: "fixed", md: "relative" }}
-        zIndex={50}
+        position={{ base: "fixed", md: isSettingsRoute ? "relative" : "relative" }}
+        zIndex={isSettingsRoute ? 60 : 50}
         transform={{ base: open ? "translateX(0)" : "translateX(-100%)", md: "translateX(0)" }}
-        transition="transform 200ms ease"
+        transition="width 180ms ease, transform 200ms ease"
+        overflow="hidden"
+        onMouseEnter={() => isSettingsRoute && setIsHovered(true)}
+        onMouseLeave={() => isSettingsRoute && setIsHovered(false)}
       >
-        <HStack justify="space-between" p={6}>
-          <Box as="img" src={brandLogo} h="28px" alt="QontakSales" />
-          <Box display={{ base: "block", md: "none" }} cursor="pointer" onClick={onClose}><X size={20} /></Box>
+        <HStack
+          justify={isCollapsed ? "center" : "space-between"}
+          p={6}
+          minW={isCollapsed ? "72px" : "260px"}
+        >
+          {isCollapsed ? (
+            <Box
+              w="28px"
+              h="28px"
+              overflow="hidden"
+              display="flex"
+              alignItems="center"
+              justifyContent="flex-start"
+              flexShrink={0}
+            >
+              <Box
+                as="img"
+                src={brandLogo}
+                alt="QontakSales"
+                style={{
+                  height: "28px",
+                  width: "auto",
+                  maxWidth: "none",
+                  objectFit: "cover",
+                  objectPosition: "left center",
+                }}
+              />
+            </Box>
+          ) : (
+            <Box as="img" src={brandLogo} h="28px" alt="QontakSales" flexShrink={0} />
+          )}
+          {!isCollapsed && (
+            <Box display={{ base: "block", md: "none" }} cursor="pointer" onClick={onClose}><X size={20} /></Box>
+          )}
         </HStack>
 
-        <VStack flex={1} align="stretch" px={3} gap={1}>
+        <VStack flex={1} align="stretch" px={3} gap={1} minW="260px">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path === "/aset" && location.pathname.startsWith("/aset"));
             const Icon = item.icon;
@@ -71,27 +110,29 @@ export default function Sidebar({ open, onClose }) {
                 _hover={{ bg: isActive ? "primary" : "muted", textDecoration: "none" }}
                 transition="all 150ms ease"
                 onClick={onClose}
+                title={isCollapsed ? item.label : undefined}
               >
-                <Icon size={20} />
-                <Text fontSize="sm">{item.label}</Text>
+                <Icon size={20} style={{ flexShrink: 0 }} />
+                {!isCollapsed && <Text fontSize="sm" whiteSpace="nowrap">{item.label}</Text>}
               </ChakraLink>
             );
           })}
         </VStack>
 
-        <Box p={3}>
+        <Box p={3} minW="260px">
           <ChakraLink
             as={RouterLink}
             to="/settings"
             display="flex" alignItems="center" gap={3} px={4} py={3} borderRadius="md"
             color="foreground"
-            bg={location.pathname === "/settings" ? "muted" : "transparent"}
+            bg={location.pathname.startsWith("/settings") ? "muted" : "transparent"}
             _hover={{ bg: "muted", textDecoration: "none" }}
             transition="all 150ms ease"
             onClick={onClose}
+            title={isCollapsed ? "Settings" : undefined}
           >
-            <Gear size={20} />
-            <Text fontSize="sm">Settings</Text>
+            <Gear size={20} style={{ flexShrink: 0 }} />
+            {!isCollapsed && <Text fontSize="sm" whiteSpace="nowrap">Settings</Text>}
           </ChakraLink>
         </Box>
       </Box>
