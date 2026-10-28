@@ -6,76 +6,109 @@ import RegisterPage from "./pages/RegisterPage";
 import PenjualanPage from "./pages/PenjualanPage";
 import BiayaPage from "./pages/BiayaPage";
 import PembelianPage from "./pages/PembelianPage";
-import ProductsPages from "./pages/ProductsPages";
+import ProductsMain from "./pages/Main-Product/ProductsMain";
 import DashboardPage from "./pages/DashboardPage";
 import LeadsPage from "./pages/LeadsPage";
 import PipelinePage from "./pages/PipelinePage";
 import CalendarPage from "./pages/CalendarPage";
 import LeadDetailPage from "./pages/LeadDetailPage";
 import SettingsPage from "./pages/SettingsPage";
-import AgentsPage from "./pages/AgentsPage";
 import BroadcastPage from "./pages/BroadcastPage";
 import BroadcastHistoryPage from "./pages/BroadcastHistoryPage";
 import ArchivedLeadsPage from "./pages/ArchivedLeadsPage";
 import DaftarAkunPage from "./pages/DaftarAkunPage";
-import TutupBukuPage from "./pages/TutupBukuPage";
-import JurnalUmumPage from "./pages/JurnalUmumPage";
+import TutupBukuPage from "./pages/Main-DaftarAkun/TutupBukuPage";
+import JurnalUmumPage from "./pages/Main-DaftarAkun/JurnalUmumPage";
 import AsetPage from "./pages/AsetPage";
-import SimpanAsetPage from "./pages/SimpanAsetPage";
+import SimpanAsetPage from "./pages/Main-Aset/SimpanAsetPage";
 import Laporan from "./pages/Laporan";
-import Neraca from "./pages/Neraca";
+import Neraca from "./pages/Main-Laporan/Neraca";
 import KasBankPage from "./pages/KasBankPage";
 import Anggaran from "./pages/Anggaran";
-import LabaRugi from "./pages/LabaRugi";
-import ArusKas from "./pages/ArusKas";
-import PerubahanModal from "./pages/PerubahanModal";
-import BukuBesar from "./pages/BukuBesar";
-import Jurnal from "./pages/Jurnal";
-import NeracaSaldo from "./pages/NeracaSaldo";
-import RincianAnggaran from "./pages/RincianAnggaran";
-import RingkasanBisnis from "./pages/RingkasanBisnis";
-import DaftarPenjualan from "./pages/DaftarPenjualan";
-import PiutangPelanggan from "./pages/PiutangPelanggan";
-import PengirimanPenjualan from "./pages/PengirimanPenjualan";
-import PenjualanPerPelanggan from "./pages/PenjualanPerPelanggan";
-import PenjualanPerProduk from "./pages/PenjualanPerProduk";
-import PenyelesaianPesananPenjualan from "./pages/PenyelesaianPesananPenjualan";
-import ProfitabilitasProduk from "./pages/ProfitabilitasProduk";
-import UsiaPiutang from "./pages/UsiaPiutang";
+import LabaRugi from "./pages/Main-Laporan/LabaRugi";
+import ArusKas from "./pages/Main-Laporan/ArusKas";
+import PerubahanModal from "./pages/Main-Laporan/PerubahanModal";
+import BukuBesar from "./pages/Main-Laporan/BukuBesar";
+import Jurnal from "./pages/Main-Laporan/Jurnal";
+import NeracaSaldo from "./pages/Main-Laporan/NeracaSaldo";
+import RincianAnggaran from "./pages/Main-Anggaran/RincianAnggaran";
+import RingkasanBisnis from "./pages/Main-Laporan/RingkasanBisnis";
+import DaftarPenjualan from "./pages/Main-Laporan/DaftarPenjualan";
+import PiutangPelanggan from "./pages/Main-Laporan/PiutangPelanggan";
+import PengirimanPenjualan from "./pages/Main-Laporan/PengirimanPenjualan";
+import PenjualanPerPelanggan from "./pages/Main-Laporan/PenjualanPerPelanggan";
+import PenjualanPerProduk from "./pages/Main-Laporan/PenjualanPerProduk";
+import PenyelesaianPesananPenjualan from "./pages/Main-Laporan/PenyelesaianPesananPenjualan";
+import ProfitabilitasProduk from "./pages/Main-Laporan/ProfitabilitasProduk";
+import UsiaPiutang from "./pages/Main-Laporan/UsiaPiutang";
+import DaftarLainnya from "./pages/DaftarLainnya";
 import DaftarFakturProforma from "./pages/DaftarFakturProforma";
 import DaftarTukarFaktur from "./pages/DaftarTukarFaktur";
 import DaftarPembelian from "./pages/DaftarPembelian";
-import PembelianPerSupplier from "./pages/PembelianPerSupplier";
-import UtangSupplier from "./pages/UtangSupplier";
-import DaftarPengeluaran from "./pages/DaftarPengeluaran";
-import DetailPengeluaran from "./pages/DetailPengeluaran";
-import UsiaUtang from "./pages/UsiaUtang";
-import PengirimanPembelian from "./pages/PengirimanPembelian";
-import PembelianPerProduk from "./pages/PembelianPerProduk";
-import PenyelesaianPesananPembelian from "./pages/PenyelesaianPesananPembelian";
-import TingkatPemenuhanPesanan from "./pages/TingkatPemenuhanPesanan";
-import PerputaranPersediaanBarang from "./pages/PerputaranPersediaanBarang";
-import RingkasanPersediaanBarang from "./pages/RingkasanPersediaanBarang";
-import KuantitasStokGudang from "./pages/KuantitasStokGudang";
-import NilaiPersediaanBarang from "./pages/NilaiPersediaanBarang";
-import NilaiStokGudang from "./pages/NilaiStokGudang";
-import DetailPersediaanBarang from "./pages/DetailPersediaanBarang";
-import PergerakanBarangGudang from "./pages/PergerakanBarangGudang";
-import KuantitasProdukNomorSeri from "./pages/KuantitasProdukNomorSeri";
-import GudangProdukBernomorSeri from "./pages/GudangProdukBernomorSeri";
-import RingkasanAsetTetap from "./pages/RingkasanAsetTetap";
-import DetailAsetTetap from "./pages/DetailAsetTetap";
-import LaporanPenjualanPelepasanAset from "./pages/LaporanPenjualanPelepasanAset";
-import RingkasanRekonsiliasi from "./pages/RingkasanRekonsiliasi";
-import MutasiRekeningKoran from "./pages/MutasiRekeningKoran";
-import LaporanPajakPemotongan from "./pages/LaporanPajakPemotongan";
-import LaporanPajakPenjualan from "./pages/LaporanPajakPenjualan";
+import PembelianPerSupplier from "./pages/Main-Laporan/PembelianPerSupplier";
+import UtangSupplier from "./pages/Main-Laporan/UtangSupplier";
+import DaftarPengeluaran from "./pages/Main-Laporan/DaftarPengeluaran";
+import DetailPengeluaran from "./pages/Main-Laporan/DetailPengeluaran";
+import UsiaUtang from "./pages/Main-Laporan/UsiaUtang";
+import PengirimanPembelian from "./pages/Main-Laporan/PengirimanPembelian";
+import PembelianPerProduk from "./pages/Main-Laporan/PembelianPerProduk";
+import PenyelesaianPesananPembelian from "./pages/Main-Laporan/PenyelesaianPesananPembelian";
+import TingkatPemenuhanPesanan from "./pages/Main-Laporan/TingkatPemenuhanPesanan";
+import PerputaranPersediaanBarang from "./pages/Main-Laporan/PerputaranPersediaanBarang";
+import RingkasanPersediaanBarang from "./pages/Main-Laporan/RingkasanPersediaanBarang";
+import KuantitasStokGudang from "./pages/Main-Laporan/KuantitasStokGudang";
+import NilaiPersediaanBarang from "./pages/Main-Laporan/NilaiPersediaanBarang";
+import NilaiStokGudang from "./pages/Main-Laporan/NilaiStokGudang";
+import DetailPersediaanBarang from "./pages/Main-Laporan/DetailPersediaanBarang";
+import PergerakanBarangGudang from "./pages/Main-Laporan/PergerakanBarangGudang";
+import KuantitasProdukNomorSeri from "./pages/Main-Laporan/KuantitasProdukNomorSeri";
+import GudangProdukBernomorSeri from "./pages/Main-Laporan/GudangProdukBernomorSeri";
+import RingkasanAsetTetap from "./pages/Main-Laporan/RingkasanAsetTetap";
+import DetailAsetTetap from "./pages/Main-Laporan/DetailAsetTetap";
+import LaporanPenjualanPelepasanAset from "./pages/Main-Laporan/LaporanPenjualanPelepasanAset";
+import RingkasanRekonsiliasi from "./pages/Main-Laporan/RingkasanRekonsiliasi";
+import MutasiRekeningKoran from "./pages/Main-Laporan/MutasiRekeningKoran";
+import LaporanPajakPemotongan from "./pages/Main-Laporan/LaporanPajakPemotongan";
+import LaporanPajakPenjualan from "./pages/Main-Laporan/LaporanPajakPenjualan";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
-import ContactPage from "./pages/ContactPage";
+import ContactPage from "./pages/Main-Contact/ContactPage";
 import MainLayout from "./components/layout/MainLayout";
 import AuthGuard from "./components/layout/AuthGuard";
 import PusatBantuan from "./pages/PusatBantuan";
+import Pajak from "./pages/Main-DaftarLainnya/Pajak";
+import CaraPembayaran from "./pages/Main-DaftarLainnya/CaraPembayaran";
+import BuatPajakBaru from "./pages/BuatPajakBaru";
+import EditPajak from "./pages/EditPajak";
+import SyaratPembayaran from "./pages/Main-DaftarLainnya/SyaratPembayaran";
+import DataMigrasi from "./pages/Main-DaftarLainnya/DataMigrasi";
+import PengaturanPerusahaan from "./pages/PengaturanPerusahaan";
+import MasterData1 from "./pages/MasterData1";
+import MasterData2 from "./pages/MasterData2";
+import MasterData3 from "./pages/MasterData3";
+import Transaksi1 from "./pages/Transaksi1";
+import Transaksi2 from "./pages/Transaksi2";
+import Transaksi3 from "./pages/Transaksi3";
+import AturSaldoCoa from "./pages/AturSaldoCoa";
+
+/* Daftar Akun */
+import PpnKeluaran from "./pages/Isi-DaftarAkun/PpnKeluaran";
+import PpnMasukan from "./pages/Isi-DaftarAkun/PpnMasukan";
+import Kas from "./pages/Isi-DaftarAkun/Kas";
+
+/* Kontak */
+import ProfilKontak from "./pages/Main-Contact/ProfilKontak";
+import BuatKontak from "./pages/Main-Contact/BuatKontak";
+import UbahKontak from "./pages/Main-Contact/UbahKontak";
+
+/* Produk */
+import BuatProduk from "./pages/Main-Product/BuatProduk";
+import TambahGudang from "./pages/Main-Product/TambahGudang";
+import PenyesuaianStok from "./pages/Main-Product/PenyesuaianStok";
+import TransferGudang from "./pages/Main-Product/TransferGudang";
+import AturanHarga from "./pages/Main-Product/AturanHarga";
+import ProfilProduk from "./pages/Main-Product/ProfilProduk";
+import UbahProduk from "./pages/Main-Product/UbahProduk";
 
 
 function App() {
@@ -86,23 +119,59 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/privacy" element={<PrivacyPolicyPage />} />
       <Route path="/terms" element={<TermsPage />} />
-      <Route path="/contact" element={<ContactPage />} />
       <Route path="/pusat-bantuan" element={<PusatBantuan />} />
       <Route element={<AuthGuard />}>
         <Route element={<MainLayout />}>
+          /* Daftar Akun */
+          <Route path="/isi-daftar-akun/ppn-keluaran" element={<PpnKeluaran />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PpnKeluaran />} />
+          <Route path="/isi-daftar-akun/ppn-masukan" element={<PpnMasukan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PpnMasukan />} />
+          <Route path="/isi-daftar-akun/kas" element={<Kas />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<Kas />} />
+          /* Kontak */
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/main-contact/profil-kontak/:id" element={<ProfilKontak/>} />
+          <Route path="/main-contact/profil-kontak" element={<ProfilKontak />} />
+          <Route path="/main-contact/buat-kontak" element={<BuatKontak />} />
+          <Route path="/main-contact/ubah-kontak" element={<UbahKontak />} />
+          /* Produk */
+          <Route path="/main-product/products" element={<ProductsMain />} />
+          <Route path="/main-product/buat-produk" element={<BuatProduk />} />
+          <Route path="/main-product/tambah-gudang" element={<TambahGudang />} />
+          <Route path="/main-product/penyesuaian-stok" element={<PenyesuaianStok />} />
+          <Route path="/main-product/transfer-gudang" element={<TransferGudang />} />
+          <Route path="/main-product/aturan-harga" element={<AturanHarga />} />
+          <Route path="/main-product/profil-produk/:id" element={<ProfilProduk />} />
+          <Route path="/main-product/profil-produk" element={<ProfilProduk />} />
+          <Route path="/main-product/ubah-produk" element={<UbahProduk />} />
+          /* Beranda */
           <Route path="/penjualan" element={<PenjualanPage />} />
           <Route path="/kas-bank" element={<KasBankPage />} />
           <Route path="/pembelian" element={<PembelianPage />} />
-          <Route path="/products" element={<ProductsPages />} />
           <Route path="/biaya" element={<BiayaPage />} />
+          <Route path="/daftar-lainnya" element={<DaftarLainnya />} />
+          <Route path="/pajak" element={<Pajak />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/cara-pembayaran" element={<CaraPembayaran />} />
+          <Route path="/syarat-pembayaran" element={<SyaratPembayaran />} />
+          <Route path="/buat-pajak-baru" element={<BuatPajakBaru />} />
+          <Route path="/edit-pajak" element={<EditPajak />} />
+          <Route path="/data-migrasi" element={<DataMigrasi />} />
+          <Route path="/pengaturan-perusahaan" element={<PengaturanPerusahaan />} />
+          <Route path="/master-data/akun" element={<MasterData1 />} />
+          <Route path="/master-data/produk" element={<MasterData2 />} />
+          <Route path="/master-data/kontak" element={<MasterData3 />} />
+          <Route path="/transaksi/data-penjualan" element={<Transaksi1 />} />
+          <Route path="/transaksi/data-pembelian" element={<Transaksi2 />} />
+          <Route path="/transaksi/biaya" element={<Transaksi3 />} />
+          <Route path="/atur-saldo-coa" element={<AturSaldoCoa />} />
           <Route path="/beranda" element={<Beranda  />} />
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/leads/archived" element={<ArchivedLeadsPage />} />
           <Route path="/pipeline" element={<PipelinePage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/leads/:id" element={<LeadDetailPage />} />
-          <Route path="/agents" element={<AgentsPage />} />
           <Route path="/broadcasts" element={<BroadcastPage />} />
           <Route path="/broadcasts/history" element={<BroadcastHistoryPage />} />
           <Route path="/settings/*" element={<SettingsPage />} />

@@ -8,21 +8,23 @@ import { CaretDown, CaretLeft, CaretRight } from "@phosphor-icons/react";
  * Sesuaikan path di bawah ini dengan lokasi file asli masing-masing
  * halaman jika berbeda dari struktur "@/pages/settings/...".
  */
-import CompanyPage from "@/pages/settings/CompanyPage";
-import UserManagementPage from "@/pages/settings/UserManagementPage";
-import SalesPage from "@/pages/settings/SalesPage";
-import PurchasesSettingsPage from "@/pages/settings/PurchasesSettingsPage";
-import ProductsSettingsPage from "@/pages/settings/ProductsSettingsPage";
-import ProductionsSettingsPage from "@/pages/settings/ProductionsSettingsPage";
-import TemplateSettingsPage from "@/pages/settings/TemplateSettingsPage";
-import CustomFieldsPage from "@/pages/settings/CustomFieldsPage";
-import AccountMappingPage from "@/pages/settings/AccountMappingPage";
-import BillingsPage from "@/pages/settings/BillingsPage";
-import ApprovalRulesPage from "@/pages/settings/ApprovalRulesPage";
-import TaggingRulesPage from "@/pages/settings/TaggingRulesPage";
+import CompanyPage from "@/pages/Main-Settings/CompanyPage";
+import UserManagementPage from "@/pages/Main-Settings/UserManagementPage";
+import SalesPage from "@/pages/Main-Settings/SalesPage";
+import PurchasesSettingsPage from "@/pages/Main-Settings/PurchasesSettingsPage";
+import ProductsSettingsPage from "@/pages/Main-Settings/ProductsSettingsPage";
+import ProductionsSettingsPage from "@/pages/Main-Settings/ProductionsSettingsPage";
+import TemplateSettingsPage from "@/pages/Main-Settings/TemplateSettingsPage";
+import CustomFieldsPage from "@/pages/Main-Settings/CustomFieldsPage";
+import AccountMappingPage from "@/pages/Main-Settings/AccountMappingPage";
+import BillingsPage from "@/pages/Main-Settings/BillingsPage";
+import ApprovalRulesPage from "@/pages/Main-Settings/ApprovalRulesPage";
+import TaggingRulesPage from "@/pages/Main-Settings/TaggingRulesPage";
+import AgentsPage from "@/pages/Main-Settings/AgentsPage";
 
 const SETTINGS_MENU = [
   { id: "company", label: "Company", path: "/settings/company", component: CompanyPage },
+  { id: "agents", label: "Agents", path: "/settings/agents", component: AgentsPage },
   { id: "user-management", label: "User Management", path: "/settings/user-management", component: UserManagementPage },
   { id: "sales", label: "Sales", path: "/settings/sales", component: SalesPage, hasDropdown: true },
   { id: "purchases", label: "Purchases", path: "/settings/purchases", component: PurchasesSettingsPage },

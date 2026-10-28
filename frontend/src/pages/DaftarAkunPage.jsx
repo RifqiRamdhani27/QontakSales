@@ -677,14 +677,22 @@ export default function DaftarAkunPage() {
                         {acct.kode_akun}
                       </td>
                       <td style={{ padding: "6px 12px" }}>
-                        <span
-                          style={{ color: "#0077CC", cursor: "pointer", textDecoration: "none" }}
-                          onClick={() => openEdit(acct)}
-                          onMouseEnter={(e) => e.currentTarget.style.textDecoration = "underline"}
-                          onMouseLeave={(e) => e.currentTarget.style.textDecoration = "none"}
-                        >
-                          {acct.nama_akun}
-                        </span>
+                      <span
+                        style={{ color: "#0077CC", cursor: "pointer", textDecoration: "none" }}
+                        onClick={() => {
+                          if (acct.kode_akun === "2-20500") {
+                            navigate("/isi-daftar-akun/ppn-keluaran");
+                          } else if (acct.kode_akun === "1-10500") {
+                            navigate("/isi-daftar-akun/ppn-masukan");
+                          } else if (acct.kode_akun === "1-10001") {
+                            navigate("/isi-daftar-akun/kas");
+                          } 
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.textDecoration = "underline"}
+                        onMouseLeave={(e) => e.currentTarget.style.textDecoration = "none"}
+                      >
+                        {acct.nama_akun}
+                      </span>
                       </td>
                       <td style={{ padding: "6px 12px", whiteSpace: "nowrap" }}>
                         <span

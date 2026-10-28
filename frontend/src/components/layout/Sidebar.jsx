@@ -1,20 +1,14 @@
 import { useState } from "react";
 import { Box, VStack, Text, Link as ChakraLink, HStack } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { House, CaretDown, Star, Users, Kanban, Gear, MagnifyingGlass, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank, Buildings, FileText, Wallet, Desktop, Tag, ShoppingCart, Pencil, Bank } from "@phosphor-icons/react";
+import { House, AddressBookIcon, PackageIcon, CaretDown, NoteIcon, Star, Users, Kanban, Gear, MagnifyingGlass, UserPlus, ChatsCircle, Archive, X, BookOpen, CalendarBlank, Buildings, FileText, Wallet, Desktop, Tag, ShoppingCart, Pencil, Bank } from "@phosphor-icons/react";
 import brandLogo from "@/assets/brand.png";
 
 const allNavItems = [
   { label: "Beranda", icon: House, path: "/beranda" },
   { label: "Dashboard", icon: Desktop, path: "/dashboard" },
-  /* { label: "Leads", icon: Users, path: "/leads" },
-  { label: "Pipeline", icon: Kanban, path: "/pipeline" },
-  { label: "Calendar", icon: CalendarBlank, path: "/calendar" },
-  { label: "Agents", icon: UserPlus, path: "/agents", managerOnly: true },
-  { label: "Broadcast", icon: ChatsCircle, path: "/broadcasts" },
-  { label: "Broadcast History", icon: ChatsCircle, path: "/broadcasts/history" },
-  { label: "Archived Leads", icon: Archive, path: "/leads/archived" }, 
-  { label: "Produk", icon: Pencil, path: "/products" },*/
+  { label: "Produk", icon: PackageIcon, path: "/main-product/products" },
+  { label: "Kontak", icon: AddressBookIcon, path: "/contact" },
   { label: "Daftar Akun", icon: BookOpen, path: "/daftar-akun" },
   { label: "Aset", icon: Buildings, path: "/aset" },
   { label: "Laporan", icon: FileText, path: "/laporan" },
@@ -23,6 +17,8 @@ const allNavItems = [
   { label: "Pembelian", icon: ShoppingCart, path: "/pembelian" },
   { label: "Biaya", icon: MagnifyingGlass, path: "/biaya" },
   { label: "Kas & Bank", icon: Bank, CaretDown, Star, path: "/kas-bank" },
+  { label: "Daftar Lainnya", icon: NoteIcon, path: "/daftar-lainnya" },
+
 ];
 
 export default function Sidebar({ open, onClose }) {
@@ -100,18 +96,22 @@ export default function Sidebar({ open, onClose }) {
             const Icon = item.icon;
             return (
               <ChakraLink
-                key={item.path}
-                as={RouterLink}
-                to={item.path}
-                display="flex" alignItems="center" gap={3} px={4} py={3} borderRadius="md"
-                fontWeight={isActive ? "semibold" : "normal"}
-                bg={isActive ? "primary" : "transparent"}
-                color={isActive ? "white" : "foreground"}
-                _hover={{ bg: isActive ? "primary" : "muted", textDecoration: "none" }}
-                transition="all 150ms ease"
-                onClick={onClose}
-                title={isCollapsed ? item.label : undefined}
-              >
+  key={item.path}
+  as={RouterLink}
+  to={item.path}
+  display="flex" alignItems="center" gap={3} px={4} py={3} borderRadius="md"
+  fontWeight={isActive ? "semibold" : "normal"}
+  bg={isActive ? "#0adae1ff" : "transparent"} 
+  color={isActive ? "#ffffffff" : "foreground"} 
+  _hover={{ 
+    bg: isActive ? "#0bdfe6ff" : "#efefefff", 
+    color: isActive ? "#ffffffff" : "#111827", 
+    textDecoration: "none" 
+  }}
+  transition="all 150ms ease"
+  onClick={onClose}
+  title={isCollapsed ? item.label : undefined}
+>
                 <Icon size={20} style={{ flexShrink: 0 }} />
                 {!isCollapsed && <Text fontSize="sm" whiteSpace="nowrap">{item.label}</Text>}
               </ChakraLink>

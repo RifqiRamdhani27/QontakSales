@@ -139,7 +139,15 @@ export default function DaftarTukarFaktur() {
     if (setShowPeriod) setShowPeriod(false);
   };
 
-  const renderCalendarPicker = (selectedDate, setSelectedDate, viewDate, setViewDate, viewMode, setViewMode, yearRangeStart, setYearRangeStart, closePicker) => {
+  // // Calendar
+  const renderCalendarPicker = (
+    selectedDate, setSelectedDate, 
+    viewDate, setViewDate, 
+    viewMode, setViewMode, 
+    yearRangeStart, setYearRangeStart, 
+    closePicker,
+    alignRight = false
+  ) => {
     const year = viewDate.getFullYear();
     const month = viewDate.getMonth();
 
@@ -159,21 +167,35 @@ export default function DaftarTukarFaktur() {
     };
 
     return (
-      <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 1000, backgroundColor: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "8px", boxShadow: "0 10px 25px -5px rgba(0,0,0,0.12)", padding: "14px 16px", width: "260px", userSelect: "none" }}>
+      <div 
+        style={{ 
+          position: "absolute", 
+          top: "calc(100% + 6px)", 
+          ...(alignRight ? { right: 0 } : { left: 0 }),
+          zIndex: 1000, 
+          backgroundColor: "#ffffff", 
+          border: "1px solid #cbd5e1", 
+          borderRadius: "8px", 
+          boxShadow: "0 10px 25px -5px rgba(0,0,0,0.12)", 
+          padding: "14px 16px", 
+          width: "280px", 
+          userSelect: "none" 
+        }}
+      >
         {/* Calendar Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px" }}>
           <button type="button" onClick={handlePrev} style={{ border: "none", background: "none", cursor: "pointer", padding: "4px", borderRadius: "4px", color: "#64748b" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg>
           </button>
-          <div style={{ display: "flex", gap: "6px", fontSize: "13.5px", fontWeight: 600, color: "#1e293b" }}>
+          <div style={{ display: "flex", gap: "6px", fontSize: "14px", fontWeight: 700 }}>
             {viewMode === "days" && (
               <>
-                <span onClick={() => setViewMode("months")} style={{ cursor: "pointer" }}>{MONTH_NAMES[month]}</span>
-                <span onClick={() => setViewMode("years")} style={{ cursor: "pointer" }}>{year}</span>
+                <span onClick={() => setViewMode("months")} style={{ cursor: "pointer", color: "#0284c7" }}>{MONTH_NAMES[month]}</span>
+                <span onClick={() => setViewMode("years")} style={{ cursor: "pointer", color: "#0284c7" }}>{year}</span>
               </>
             )}
-            {viewMode === "months" && <span onClick={() => setViewMode("years")} style={{ cursor: "pointer" }}>{year}</span>}
-            {viewMode === "years" && <span>{yearRangeStart} - {yearRangeStart + 11}</span>}
+            {viewMode === "months" && <span onClick={() => setViewMode("years")} style={{ cursor: "pointer", color: "#0284c7" }}>{year}</span>}
+            {viewMode === "years" && <span style={{ color: "#0284c7" }}>{yearRangeStart} - {yearRangeStart + 11}</span>}
           </div>
           <button type="button" onClick={handleNext} style={{ border: "none", background: "none", cursor: "pointer", padding: "4px", borderRadius: "4px", color: "#64748b" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6" /></svg>
@@ -201,7 +223,7 @@ export default function DaftarTukarFaktur() {
                     }}
                     style={{
                       padding: "6px 0", fontSize: "12px", border: "none", borderRadius: "4px", cursor: "pointer",
-                      backgroundColor: isSelected ? "#0066cc" : "transparent",
+                      backgroundColor: isSelected ? "#0284c7" : "transparent",
                       color: isSelected ? "#ffffff" : "#334155",
                       fontWeight: isSelected ? 600 : 400,
                     }}
@@ -218,7 +240,7 @@ export default function DaftarTukarFaktur() {
         {viewMode === "months" && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", padding: "6px 0" }}>
             {MONTH_NAMES.map((mName, idx) => (
-              <button key={mName} type="button" onClick={() => { setViewDate(new Date(year, idx, 1)); setViewMode("days"); }} style={{ padding: "8px 4px", fontSize: "12px", border: "none", borderRadius: "4px", cursor: "pointer", backgroundColor: idx === month ? "#0066cc" : "#f1f5f9", color: idx === month ? "#ffffff" : "#334155" }}>
+              <button key={mName} type="button" onClick={() => { setViewDate(new Date(year, idx, 1)); setViewMode("days"); }} style={{ padding: "8px 4px", fontSize: "12px", border: "none", borderRadius: "4px", cursor: "pointer", backgroundColor: idx === month ? "#0284c7" : "#f1f5f9", color: idx === month ? "#ffffff" : "#334155" }}>
                 {mName.slice(0, 3)}
               </button>
             ))}
@@ -231,19 +253,40 @@ export default function DaftarTukarFaktur() {
             {Array.from({ length: 12 }).map((_, idx) => {
               const yNum = yearRangeStart + idx;
               return (
-                <button key={yNum} type="button" onClick={() => { setViewDate(new Date(yNum, month, 1)); setViewMode("months"); }} style={{ padding: "8px 4px", fontSize: "12px", border: "none", borderRadius: "4px", cursor: "pointer", backgroundColor: yNum === year ? "#0066cc" : "#f1f5f9", color: yNum === year ? "#ffffff" : "#334155" }}>
+                <button key={yNum} type="button" onClick={() => { setViewDate(new Date(yNum, month, 1)); setViewMode("months"); }} style={{ padding: "8px 4px", fontSize: "12px", border: "none", borderRadius: "4px", cursor: "pointer", backgroundColor: yNum === year ? "#0284c7" : "#f1f5f9", color: yNum === year ? "#ffffff" : "#334155" }}>
                   {yNum}
                 </button>
               );
             })}
           </div>
         )}
+
+        {/* Tombol Today */}
+        <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px solid #f1f5f9", textAlign: "center" }}>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              const today = new Date();
+              setSelectedDate(today);
+              setViewDate(today);
+              closePicker();
+            }}
+            style={{
+              background: "none", border: "none", fontSize: "13px", fontWeight: 600,
+              color: "#0284c7", cursor: "pointer", padding: "4px 8px", borderRadius: "4px",
+            }}
+          >
+            Hari ini
+          </button>
+        </div>
       </div>
     );
   };
 
   return (
-    <div style={{ backgroundColor: "#f4f6f9", minHeight: "100vh", fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif', color: "#1f2937", display: "flex", flexDirection: "column" }}>
+    // // bg
+    <div style={{ backgroundColor: "#ffffff", minHeight: "100vh", fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif', color: "#1f2937", display: "flex", flexDirection: "column" }}>
       {/* Main Content */}
       <main className="w-full px-6 py-5 flex-1">
         {/* Breadcrumb & Title */}
@@ -310,7 +353,7 @@ export default function DaftarTukarFaktur() {
                       <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
-                  {showEndCalendar && renderCalendarPicker(endSelectedDate, setEndSelectedDate, endCalendarViewDate, setEndCalendarViewDate, endCalendarViewMode, setEndCalendarViewMode, endYearRangeStart, setEndYearRangeStart, () => setShowEndCalendar(false))}
+                  {showEndCalendar && renderCalendarPicker(endSelectedDate, setEndSelectedDate, endCalendarViewDate, setEndCalendarViewDate, endCalendarViewMode, setEndCalendarViewMode, endYearRangeStart, setEndYearRangeStart, () => setShowEndCalendar(false), true)}
                 </div>
               </div>
 
@@ -466,7 +509,7 @@ export default function DaftarTukarFaktur() {
                       </svg>
                     </span>
                   </div>
-                  {showDrawerEndCalendar && renderCalendarPicker(drawerEndSelectedDate, setDrawerEndSelectedDate, drawerEndCalendarViewDate, setDrawerEndCalendarViewDate, drawerEndCalendarViewMode, setDrawerEndCalendarViewMode, drawerEndYearRangeStart, setDrawerEndYearRangeStart, () => setShowDrawerEndCalendar(false))}
+                  {showDrawerEndCalendar && renderCalendarPicker(drawerEndSelectedDate, setDrawerEndSelectedDate, drawerEndCalendarViewDate, setDrawerEndCalendarViewDate, drawerEndCalendarViewMode, setDrawerEndCalendarViewMode, drawerEndYearRangeStart, setDrawerEndYearRangeStart, () => setShowDrawerEndCalendar(false), true)}
                 </div>
               </div>
 

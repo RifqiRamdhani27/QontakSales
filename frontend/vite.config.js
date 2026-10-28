@@ -9,4 +9,14 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  server: {
+    proxy: {
+      // Setiap request yang dimulai dengan "/api" akan diteruskan ke Django
+      "/api": {
+        target: "http://127.0.0.1:8000", // Pastikan port ini sesuai dengan port runserver Django kamu
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });
