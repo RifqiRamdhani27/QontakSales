@@ -7,11 +7,11 @@ django.setup()
 from qontak_sales.apps.accounts_coa.models import AccountCOA
 from qontak_sales.apps.accounts.models import Company
 
-# Ambil company pertama (atau sesuaikan jika multi-company)
+# Ambil company pertama, atau buat jika belum ada
 company = Company.objects.first()
 if not company:
-    print("ERROR: Tidak ada Company di database. Buat dulu via /register.")
-    exit(1)
+    company = Company.objects.create(name="Perusahaan Demo")
+    print(f"Company belum ada, otomatis dibuat: {company.name}")
 
 print(f"Seeding COA untuk company: {company.name}")
 
