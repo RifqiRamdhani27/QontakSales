@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CaretDown, MagnifyingGlass, X } from "@phosphor-icons/react";
-import mekariPayLogo from "../assets/mekari-pay.png";
-import purchaseFolder from "../assets/purchase-folder.png";
+import mekariPayLogo from "../../assets/pay2.png";
+import purchaseFolder from "../../assets/dompetbiru.png";
 
 export default function PenjualanPage() {
+  const navigate = useNavigate();
+
   const tabs = [
     "Penagihan",
     "Pengiriman",
@@ -27,7 +30,7 @@ export default function PenjualanPage() {
       defaultStatus: "Menunggu pembayaran",
       title: "Belum ada penagihan penjualan",
       description: "Daftar penagihan penjualan akan muncul di sini.",
-      buttonText: "Buat penagihan",
+      buttonText: "Buat penagihan penjualan",
     },
 
     Pengiriman: {
@@ -99,8 +102,24 @@ export default function PenjualanPage() {
     setSearch("");
   };
 
+  const goToCreatePage = (type) => {
+    setCreateOpen(false);
+
+    if (type === "invoice") {
+      navigate("/penjualan/invoice/create");
+    }
+
+    if (type === "order") {
+      navigate("/penjualan/order/create");
+    }
+
+    if (type === "quote") {
+      navigate("/penjualan/quote/create");
+    }
+  };
+
   return (
-    <div className="-m-4 md:-m-6 min-h-[calc(100vh-64px)] bg-slate-50 p-4 md:p-6">
+    <div className="min-h-full bg-white p-4 md:p-5">
       <div className="mx-auto max-w-[1500px]">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-[22px] font-semibold text-slate-800">
@@ -115,7 +134,7 @@ export default function PenjualanPage() {
                   setImportOpen(!importOpen);
                   setCreateOpen(false);
                 }}
-                className="flex h-9 items-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-[12px] font-medium text-blue-600 hover:bg-slate-50"
+                className="flex h-9 items-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-[12px] font-semibold text-blue-600 hover:bg-slate-50"
               >
                 Impor
                 <CaretDown size={14} />
@@ -154,50 +173,14 @@ export default function PenjualanPage() {
                 Buat penjualan baru
                 <CaretDown size={14} />
               </button>
-
-              {createOpen && (
-                <div className="absolute right-0 z-30 mt-1 w-56 rounded-md border border-slate-200 bg-white py-1 shadow-lg">
-                  <button
-                    type="button"
-                    onClick={() => setCreateOpen(false)}
-                    className="w-full px-4 py-2.5 text-left text-[12px] text-slate-700 hover:bg-slate-50"
-                  >
-                    Buat penagihan
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setCreateOpen(false)}
-                    className="w-full px-4 py-2.5 text-left text-[12px] text-slate-700 hover:bg-slate-50"
-                  >
-                    Buat pengiriman
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setCreateOpen(false)}
-                    className="w-full px-4 py-2.5 text-left text-[12px] text-slate-700 hover:bg-slate-50"
-                  >
-                    Buat pesanan
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setCreateOpen(false)}
-                    className="w-full px-4 py-2.5 text-left text-[12px] text-slate-700 hover:bg-slate-50"
-                  >
-                    Buat penawaran
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </div>
 
         <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-4">
-          <div className="overflow-hidden rounded-md border border-amber-400 bg-white">
+          <div className="cursor-pointer overflow-hidden rounded-md border border-amber-400 bg-white transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
             <div className="flex items-center justify-between bg-amber-50 px-3 py-2">
-              <span className="text-[11px] font-semibold text-slate-700">
+              <span className="text-[14px] font-semibold text-slate-700">
                 Penagihan belum dibayar
               </span>
 
@@ -209,13 +192,13 @@ export default function PenjualanPage() {
             <div className="px-3 py-2">
               <p className="text-[10px] text-slate-500">Total</p>
 
-              <p className="text-[16px] font-medium text-slate-800">Rp 0,00</p>
+              <p className="text-[16px] font-bold text-slate-800">Rp 0,00</p>
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-md border border-red-400 bg-white">
+          <div className="cursor-pointer overflow-hidden rounded-md border border-red-400 bg-white transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
             <div className="flex items-center justify-between bg-orange-50 px-3 py-2">
-              <span className="text-[11px] font-semibold text-slate-700">
+              <span className="text-[14px] font-semibold text-slate-700">
                 Penagihan telat dibayar
               </span>
 
@@ -227,13 +210,13 @@ export default function PenjualanPage() {
             <div className="px-3 py-2">
               <p className="text-[10px] text-slate-500">Total</p>
 
-              <p className="text-[16px] font-medium text-slate-800">Rp 0,00</p>
+              <p className="text-[16px] font-bold text-slate-800">Rp 0,00</p>
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-md border border-green-500 bg-white">
+          <div className="cursor-pointer overflow-hidden rounded-md border border-green-500 bg-white transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
             <div className="flex items-center justify-between bg-green-50 px-3 py-2">
-              <span className="text-[11px] font-semibold text-slate-700">
+              <span className="text-[14px] font-semibold text-slate-700">
                 Pelunasan diterima 30 hari terakhir
               </span>
 
@@ -245,11 +228,11 @@ export default function PenjualanPage() {
             <div className="px-3 py-2">
               <p className="text-[10px] text-slate-500">Total</p>
 
-              <p className="text-[16px] font-medium text-slate-800">Rp 0,00</p>
+              <p className="text-[16px] font-bold text-slate-800">Rp 0,00</p>
             </div>
           </div>
 
-          <div className="rounded-md bg-white px-3 py-2">
+          <div className="cursor-pointer rounded-md border border-slate-400 bg-white px-3 py-2 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg hover:border-[#0052D4]">
             <div className="flex h-full items-center gap-3">
               <img
                 src={mekariPayLogo}
@@ -261,7 +244,7 @@ export default function PenjualanPage() {
                 <p className="text-[11px] font-semibold leading-4 text-slate-700">
                   Terima pembayaran lebih cepat
                   <br />
-                  dengan Mekari Pay
+                  dengan QRIS Pay
                 </p>
 
                 <button
@@ -287,9 +270,9 @@ export default function PenjualanPage() {
                   key={tab}
                   type="button"
                   onClick={() => changeTab(tab)}
-                  className={`relative whitespace-nowrap px-5 py-3 text-[11px] font-medium ${
+                  className={`relative whitespace-nowrap px-5 py-3 text-[13px] font-medium ${
                     activeTab === tab
-                      ? "text-blue-600"
+                      ? "text-[#41D1C8]"
                       : "text-slate-600 hover:text-slate-800"
                   }`}
                 >
@@ -302,7 +285,7 @@ export default function PenjualanPage() {
                   )}
 
                   {activeTab === tab && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-600" />
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#41D1C8]" />
                   )}
                 </button>
               ))}
@@ -320,7 +303,7 @@ export default function PenjualanPage() {
                         setFilterOpen(!filterOpen);
                         setStatusOpen(false);
                       }}
-                      className="flex h-8 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-[11px] text-slate-700 hover:bg-slate-50"
+                      className="flex h-8 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-[13px] text-slate-700 hover:bg-slate-50"
                     >
                       {filter}
                       <CaretDown size={14} />
@@ -451,21 +434,42 @@ export default function PenjualanPage() {
             <img
               src={purchaseFolder}
               alt="Folder kosong"
-              className="mb-4 h-[270px] w-[360px] object-contain"
+              className="mb-4 h-[200px] w-[360px] object-contain"
             />
 
-            <h2 className="text-[12px] font-semibold text-slate-800">
+            <h2 className="text-[15px] font-semibold text-slate-800">
               {currentConfig.title}
             </h2>
 
-            <p className="mt-1 text-[10px] text-slate-500">
+            <p className="mt-1 text-[13px] text-slate-500">
               {currentConfig.description}
             </p>
 
-            {activeTab !== "Membutuhkan persetujuan" && (
+            {activeTab === "Penagihan" && (
+              <button
+              type="button"
+              onClick={() => navigate("/penjualan/create")}
+              className="mt-4 rounded-md bg-[#4B61DD] px-4 py-2 text-[13px] font-medium text-white hover:bg-blue-700"
+            >
+              {currentConfig.buttonText}
+            </button>
+            )}
+
+            {activeTab === "Pesanan" && (
               <button
                 type="button"
-                className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-[10px] font-medium text-white hover:bg-blue-700"
+                onClick={() => navigate("/penjualan/create-sales-order")}
+                className="mt-4 rounded-md bg-[#4B61DD] px-4 py-2 text-[13px] font-medium text-white hover:bg-blue-700"
+              >
+                {currentConfig.buttonText}
+              </button>
+            )}
+
+            {activeTab === "Penawaran" && (
+              <button
+                type="button"
+                onClick={() => navigate("/penjualan/create-sales-quote")}
+                className="mt-4 rounded-md bg-[#4B61DD] px-4 py-2 text-[13px] font-medium text-white hover:bg-blue-700"
               >
                 {currentConfig.buttonText}
               </button>

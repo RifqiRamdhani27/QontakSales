@@ -12,6 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { Bell, List, SignOut, Gear, ArrowsClockwise, ArrowUUpLeft, ArrowLeft } from "@phosphor-icons/react";
 import api from "@/services/api";
+import { DotsNine } from "@phosphor-icons/react";
+import AppsDrawer from "./AppsDrawer";
 
 export default function TopBar({ onMenuClick }) {
   const navigate = useNavigate();
@@ -24,6 +26,7 @@ export default function TopBar({ onMenuClick }) {
   const [switching, setSwitching] = useState(null);
   const [user, setUser] = useState(null);
   const [avatarKey, setAvatarKey] = useState(0);
+  const [showApps, setShowApps] = useState(false);
   const notifRef = useRef(null);
   const menuRef = useRef(null);
   const submenuRef = useRef(null);
@@ -173,11 +176,13 @@ export default function TopBar({ onMenuClick }) {
         </Box>
       )}
 
-      <HStack
-        h="64px" px={{ base: 4, md: 6 }} bg="white"
-        borderBottom="1px solid" borderColor="border"
-        justify="flex-end" gap={2}
-      >
+        <HStack
+          h="64px" px={{ base: 4, md: 6 }} bg="white"
+          borderBottom="1px solid" borderColor="border"
+          boxShadow="0 2px 6px rgba(0,0,0,0.06)"
+          position="relative" zIndex={10}
+          justify="flex-end" gap={2}
+        >
         <Box display={{ base: "block", md: "none" }} cursor="pointer" onClick={onMenuClick} p={2} borderRadius="md" _hover={{ bg: "muted" }}>
           <List size={22} color="#595d67ff" />
         </Box>
@@ -262,6 +267,25 @@ export default function TopBar({ onMenuClick }) {
             </Box>
           )}
         </Box>
+
+        {/* Apps Launcher */}
+        <Box
+          cursor="pointer"
+          p={2}
+          borderRadius="md"
+          _hover={{ bg: "muted" }}
+          display="flex"
+          alignItems="center"
+          title="Apps"
+          onClick={() => setShowApps(true)}
+        >
+          <DotsNine size={22} color="#595d67ff" weight="bold" />
+        </Box>
+        <AppsDrawer
+          open={showApps}
+          onClose={() => setShowApps(false)}
+          userName={user ? `${user.first_name} ${user.last_name}` : ""}
+        />
 
         {/* User Menu */}
         <Box ref={menuRef} position="relative">

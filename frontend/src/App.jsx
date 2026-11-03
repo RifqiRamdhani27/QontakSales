@@ -3,20 +3,18 @@ import Beranda from "./pages/Beranda";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import PenjualanPage from "./pages/PenjualanPage";
 import BiayaPage from "./pages/BiayaPage";
-import PembelianPage from "./pages/PembelianPage";
 import ProductsMain from "./pages/Main-Product/ProductsMain";
 import DashboardPage from "./pages/DashboardPage";
 import LeadsPage from "./pages/LeadsPage";
 import PipelinePage from "./pages/PipelinePage";
 import CalendarPage from "./pages/CalendarPage";
 import LeadDetailPage from "./pages/LeadDetailPage";
-import SettingsPage from "./pages/SettingsPage";
+import SettingsPage from "./pages/Main-Settings/SettingsPage";
 import BroadcastPage from "./pages/BroadcastPage";
 import BroadcastHistoryPage from "./pages/BroadcastHistoryPage";
 import ArchivedLeadsPage from "./pages/ArchivedLeadsPage";
-import DaftarAkunPage from "./pages/DaftarAkunPage";
+import DaftarAkunPage from "./pages/Main-DaftarAkun/DaftarAkunPage";
 import TutupBukuPage from "./pages/Main-DaftarAkun/TutupBukuPage";
 import JurnalUmumPage from "./pages/Main-DaftarAkun/JurnalUmumPage";
 import AsetPage from "./pages/AsetPage";
@@ -90,17 +88,79 @@ import Transaksi1 from "./pages/Transaksi1";
 import Transaksi2 from "./pages/Transaksi2";
 import Transaksi3 from "./pages/Transaksi3";
 import AturSaldoCoa from "./pages/AturSaldoCoa";
-
-/* Daftar Akun */
-import PpnKeluaran from "./pages/Isi-DaftarAkun/PpnKeluaran";
-import PpnMasukan from "./pages/Isi-DaftarAkun/PpnMasukan";
-import Kas from "./pages/Isi-DaftarAkun/Kas";
-
+/* Isi Daftar Akun */
+import PpnMasukan from "./pages/Isi-DaftarAkun/OtherCurrentAssets/PpnMasukan";
+import Kas from "./pages/Isi-DaftarAkun/Cash & Bank/Kas";
+import RekeningBank from "./pages/Isi-DaftarAkun/Cash & Bank/RekeningBank";
+import Giro from "./pages/Isi-DaftarAkun/Cash & Bank/Giro";
+import PiutangBelumDitagih from "./pages/Isi-DaftarAkun/AccountsReceivable/PiutangBelumDitagih";
+import PiutangUsaha from "./pages/Isi-DaftarAkun/AccountsReceivable/PiutangUsaha"; 
+import CadanganKerugianPiutang from "./pages/Isi-DaftarAkun/AccountsReceivable/CadanganKerugianPiutang"; 
+import PersediaanBarang from "./pages/Isi-DaftarAkun/Inventory/PersediaanBarang";
+import PiutangLainnya from "./pages/Isi-DaftarAkun/OtherCurrentAssets/PiutangLainnya";
+import PiutangKaryawan from "./pages/Isi-DaftarAkun/OtherCurrentAssets/PiutangKaryawan";
+import DanaBelumDisetor from "./pages/Isi-DaftarAkun/OtherCurrentAssets/DanaBelumDisetor";
+import AsetLancarLainnya from "./pages/Isi-DaftarAkun/OtherCurrentAssets/AsetLancarLainnya";
+import BiayaDibayarDimuka from "./pages/Isi-DaftarAkun/OtherCurrentAssets/BiayaDibayarDimuka";
+import UangMuka from "./pages/Isi-DaftarAkun/OtherCurrentAssets/UangMuka";
+import PPh22 from "./pages/Isi-DaftarAkun/OtherCurrentAssets/PPh22";
+import PPh23 from "./pages/Isi-DaftarAkun/OtherCurrentAssets/PPh23";
+import PPh25 from "./pages/Isi-DaftarAkun/OtherCurrentAssets/PPh25";
+import AsetTetapTanah from "./pages/Isi-DaftarAkun/FixedAssets/AsetTetapTanah";
+import AsetTetapBangunan from "./pages/Isi-DaftarAkun/FixedAssets/AsetTetapBangunan";
+import AsetTetapBuildingImprovements from "./pages/Isi-DaftarAkun/FixedAssets/AsetTetapBuildingImprovements";
+import AsetTetapKendaraan from "./pages/Isi-DaftarAkun/FixedAssets/AsetTetapKendaraan";
+import AsetTetapMesinPeralatan from "./pages/Isi-DaftarAkun/FixedAssets/AsetTetapMesin&Peralatan";
+import AsetTetapPerlengkapanKantor from "./pages/Isi-DaftarAkun/FixedAssets/AsetTetapPerlengkapanKantor";
+import AsetTetapSewaGunaUsaha from "./pages/Isi-DaftarAkun/FixedAssets/AsetTetapSewaGunaUsaha";
+import AsetTakBerwujud from "./pages/Isi-DaftarAkun/FixedAssets/AsetTakBerwujud";
+import AkumulasiPenyusutanBangunan from "./pages/Isi-DaftarAkun/Depreciation & Amortization/AkumulasiPenyusutan-Bangunan";
+import AkumulasiPenyusutanBuilding from "./pages/Isi-DaftarAkun/Depreciation & Amortization/AkumulasiPenyusutan-Building";
+import AkumulasiPenyusutanKendaraan from "./pages/Isi-DaftarAkun/Depreciation & Amortization/AkumulasiPenyusutan-Kendaraan";
+import AkumulasiPenyusutanMesinPeralatan from "./pages/Isi-DaftarAkun/Depreciation & Amortization/AkumulasiPenyusutan-Mesin&Peralatan";
+import AkumulasiPenyusutanPeralatanKantor from "./pages/Isi-DaftarAkun/Depreciation & Amortization/AkumulasiPenyusutan-PeralatanKantor";
+import AkumulasiPenyusutanSewaGunaUsaha from "./pages/Isi-DaftarAkun/Depreciation & Amortization/AkumulasiPenyusutan-SewaGunaUsaha";
+import AkumulasiPenyusutanAmortisasi from "./pages/Isi-DaftarAkun/Depreciation & Amortization/AkumulasiPenyusutan-Amortisasi";
+import Investasi from "./pages/Isi-DaftarAkun/OtherAssets/Investasi";
+import HutangUsaha from "./pages/Isi-DaftarAkun/AccountsPayable/HutangUsaha";
+import HutangBelumDitagih from "./pages/Isi-DaftarAkun/AccountsPayable/HutangBelumDitagih";
+import HutangLainLain from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangLainLain";
+import HutangGaji from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangGaji";
+import HutangDeviden from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangDeviden";
+import PendapatanDiterimaDimuka from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/PendapatanDiterimaDimuka";
+import SaranaKantorTerhutang from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/SaranaKantorTerhutang";
+import BungaTerhutang from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/BungaTerhutang";
+import BiayaTerhutangLainnya from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/BiayaTerhutangLainnya";
+import HutangBank from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangBank";
+import PPNKeluaran from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/PPNKeluaran";
+import HutangPajakPPH21 from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangPajak-PPh21";
+import HutangPajakPPH22 from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangPajak-PPh22";
+import HutangPajakPPH23 from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangPajak-PPh23";
+import HutangPajakPPH29 from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangPajak-PPh29";
+import HutangPajakLainnya from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangPajakLainnya";
+import HutangDariPemegangSaham from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/HutangDariPemegangSaham";
+import KewajibanLancarLainnya from "./pages/Isi-DaftarAkun/OtherCurrentLiabilities/KewajibanLancarLainnya";
+import KewajibanManfaatKaryawan from "./pages/Isi-DaftarAkun/LongTermLiabilities/KewajibanManfaatKaryawan";
+import ModalSaham from "./pages/Isi-DaftarAkun/Equity/ModalSaham";
+import TambahanModalDisetor from "./pages/Isi-DaftarAkun/Equity/TambahanModalDisetor";
+import Deviden from "./pages/Isi-DaftarAkun/Equity/Deviden";
+import EquitasSaldoAwal from "./pages/Isi-DaftarAkun/Equity/EquitasSaldoAwal";
+import LabaDitahan from "./pages/Isi-DaftarAkun/Equity/LabaDitahan";
+import PendapatanKomprehensifLainnya from "./pages/Isi-DaftarAkun/Equity/PendapatanKomprehensifLainnya";
+import DiskonPenjualan from "./pages/Isi-DaftarAkun/Income/DiskonPenjualan";
+import PendapatanBelumDitagih from "./pages/Isi-DaftarAkun/Income/PendapatanBelumDitagih";
+import PendapatanJasa from "./pages/Isi-DaftarAkun/Income/PendapatanJasa";
+import ReturPenjualan from "./pages/Isi-DaftarAkun/Income/ReturPenjualan";
+import BebanPokokPendapatan from "./pages/Isi-DaftarAkun/CostOfSales/BebanPokokPendapatan";
+import BiayaImpor from "./pages/Isi-DaftarAkun/CostOfSales/BiayaImpor";
+import DiskonPembelian from "./pages/Isi-DaftarAkun/CostOfSales/DiskonPembelian";
+import ReturPembelian from "./pages/Isi-DaftarAkun/CostOfSales/ReturPembelian";
+import BiayaProduksi from "./pages/Isi-DaftarAkun/CostOfSales/BiayaProduksi";
+import PengirimanPengangkutan from "./pages/Isi-DaftarAkun/CostOfSales/Pengiriman&Pengangkutan" 
 /* Kontak */
 import ProfilKontak from "./pages/Main-Contact/ProfilKontak";
 import BuatKontak from "./pages/Main-Contact/BuatKontak";
 import UbahKontak from "./pages/Main-Contact/UbahKontak";
-
 /* Produk */
 import BuatProduk from "./pages/Main-Product/BuatProduk";
 import TambahGudang from "./pages/Main-Product/TambahGudang";
@@ -109,6 +169,19 @@ import TransferGudang from "./pages/Main-Product/TransferGudang";
 import AturanHarga from "./pages/Main-Product/AturanHarga";
 import ProfilProduk from "./pages/Main-Product/ProfilProduk";
 import UbahProduk from "./pages/Main-Product/UbahProduk";
+/* Penjualan */
+import PenjualanPage from "./pages/Main-Penjualan/PenjualanPage";
+import CreateInvoice from "./pages/Main-Penjualan/CreateSalesInvoicePage";
+import CreateSalesOrderPage from "./pages/Main-Penjualan/CreateSalesOrderPage";
+import CreateSalesQuotePage from "./pages/Main-Penjualan/CreateSalesQuotePage";
+/* Pembelian */
+import PembelianPage from "./pages/Main-Pembelian/PembelianPage";
+import CreatePurchaseInvoice from "./pages/Main-Pembelian/CreatePurchaseInvoice";
+import CreatePurchaseExchange from "./pages/Main-Pembelian/CreatePurchaseExchange";
+import CreatePurchaseOrderPage from "./pages/Main-Pembelian/CreatePurchaseOrderPage";
+import CreatePurchaseQuotePage from "./pages/Main-Pembelian/CreatePurchaseQuotePage";
+import CreatePurchaseRequestPage from "./pages/Main-Pembelian/CreatePurchaseRequestPage";
+
 
 
 function App() {
@@ -122,13 +195,143 @@ function App() {
       <Route path="/pusat-bantuan" element={<PusatBantuan />} />
       <Route element={<AuthGuard />}>
         <Route element={<MainLayout />}>
-          /* Daftar Akun */
-          <Route path="/isi-daftar-akun/ppn-keluaran" element={<PpnKeluaran />} />
-          <Route path="/isi-daftar-akun/:kode_akun" element={<PpnKeluaran />} />
+          /* Isi Daftar Akun */
           <Route path="/isi-daftar-akun/ppn-masukan" element={<PpnMasukan />} />
           <Route path="/isi-daftar-akun/:kode_akun" element={<PpnMasukan />} />
           <Route path="/isi-daftar-akun/kas" element={<Kas />} />
           <Route path="/isi-daftar-akun/:kode_akun" element={<Kas />} />
+          <Route path="/isi-daftar-akun/rekening-bank" element={<RekeningBank />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<RekeningBank />} />
+          <Route path="/isi-daftar-akun/giro" element={<Giro />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<Giro />} />
+          <Route path="/isi-daftar-akun/piutang-belum-ditagih" element={<PiutangBelumDitagih />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PiutangBelumDitagih />} />
+          <Route path="/isi-daftar-akun/piutang-usaha" element={<PiutangUsaha />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PiutangUsaha />} />
+          <Route path="/isi-daftar-akun/cadangan-kerugian-piutang" element={<CadanganKerugianPiutang />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<CadanganKerugianPiutang />} />
+          <Route path="/isi-daftar-akun/persediaan-barang" element={<PersediaanBarang />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PersediaanBarang />} />
+          <Route path="/isi-daftar-akun/piutang-lainnya" element={<PiutangLainnya />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PiutangLainnya />} />
+          <Route path="/isi-daftar-akun/piutang-karyawan" element={<PiutangKaryawan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PiutangKaryawan />} />
+          <Route path="/isi-daftar-akun/dana-belum-disetor" element={<DanaBelumDisetor />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<DanaBelumDisetor />} />
+          <Route path="/isi-daftar-akun/aset-lancar-lainnya" element={<AsetLancarLainnya />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetLancarLainnya />} />
+          <Route path="/isi-daftar-akun/biaya-dibayar-dimuka" element={<BiayaDibayarDimuka />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<BiayaDibayarDimuka />} />
+          <Route path="/isi-daftar-akun/uang-muka" element={<UangMuka />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<UangMuka />} />
+          <Route path="/isi-daftar-akun/pph-23" element={<PPh23 />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PPh23 />} />
+          <Route path="/isi-daftar-akun/pph-22" element={<PPh22 />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PPh22 />} />
+          <Route path="/isi-daftar-akun/pph-25" element={<PPh25 />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PPh25 />} />
+          <Route path="/isi-daftar-akun/aset-tetap-tanah" element={<AsetTetapTanah />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetTetapTanah />} />
+          <Route path="/isi-daftar-akun/aset-tetap-bangunan" element={<AsetTetapBangunan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetTetapBangunan />} />
+          <Route path="/isi-daftar-akun/aset-tetap-building-improvements" element={<AsetTetapBuildingImprovements />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetTetapBuildingImprovements />} />
+          <Route path="/isi-daftar-akun/aset-tetap-kendaraan" element={<AsetTetapKendaraan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetTetapKendaraan />} />
+          <Route path="/isi-daftar-akun/aset-tetap-mesin-peralatan" element={<AsetTetapMesinPeralatan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetTetapMesinPeralatan />} />
+          <Route path="/isi-daftar-akun/aset-tetap-perlengkapan-kantor" element={<AsetTetapPerlengkapanKantor />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetTetapPerlengkapanKantor />} />
+          <Route path="/isi-daftar-akun/aset-tetap-sewa-guna-usaha" element={<AsetTetapSewaGunaUsaha />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetTetapSewaGunaUsaha />} />
+          <Route path="/isi-daftar-akun/aset-tak-berwujud" element={<AsetTakBerwujud />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AsetTakBerwujud />} />
+          <Route path="/isi-daftar-akun/akumulasi-penyusutan-bangunan" element={<AkumulasiPenyusutanBangunan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AkumulasiPenyusutanBangunan />} />
+          <Route path="/isi-daftar-akun/akumulasi-penyusutan-building-improvements" element={<AkumulasiPenyusutanBuilding />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AkumulasiPenyusutanBuilding />} />
+          <Route path="/isi-daftar-akun/akumulasi-penyusutan-kendaraan" element={<AkumulasiPenyusutanKendaraan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AkumulasiPenyusutanKendaraan />} />
+          <Route path="/isi-daftar-akun/akumulasi-penyusutan-mesin-peralatan" element={<AkumulasiPenyusutanMesinPeralatan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AkumulasiPenyusutanMesinPeralatan />} />
+          <Route path="/isi-daftar-akun/akumulasi-penyusutan-peralatan-kantor" element={<AkumulasiPenyusutanPeralatanKantor />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AkumulasiPenyusutanPeralatanKantor />} />
+          <Route path="/isi-daftar-akun/akumulasi-penyusutan-sewa-guna-usaha" element={<AkumulasiPenyusutanSewaGunaUsaha />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AkumulasiPenyusutanSewaGunaUsaha />} />
+          <Route path="/isi-daftar-akun/akumulasi-penyusutan-amortisasi" element={<AkumulasiPenyusutanAmortisasi />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<AkumulasiPenyusutanAmortisasi />} />
+          <Route path="/isi-daftar-akun/investasi" element={<Investasi />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<Investasi />} />
+          <Route path="/isi-daftar-akun/hutang-usaha" element={<HutangUsaha />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangUsaha />} />
+          <Route path="/isi-daftar-akun/hutang-belum-ditagih" element={<HutangBelumDitagih />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangBelumDitagih />} />
+          <Route path="/isi-daftar-akun/hutang-lain-lain" element={<HutangLainLain />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangLainLain />} />
+          <Route path="/isi-daftar-akun/hutang-gaji" element={<HutangGaji />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangGaji />} />
+          <Route path="/isi-daftar-akun/hutang-deviden" element={<HutangDeviden />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangDeviden />} />
+          <Route path="/isi-daftar-akun/pendapatan-diterima-dimuka" element={<PendapatanDiterimaDimuka />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PendapatanDiterimaDimuka />} />
+          <Route path="/isi-daftar-akun/sarana-kantor-terhutang" element={<SaranaKantorTerhutang />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<SaranaKantorTerhutang />} />
+          <Route path="/isi-daftar-akun/bunga-terhutang" element={<BungaTerhutang />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<BungaTerhutang />} />
+          <Route path="/isi-daftar-akun/biaya-terhutang-lainnya" element={<BiayaTerhutangLainnya />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<BiayaTerhutangLainnya />} />
+          <Route path="/isi-daftar-akun/hutang-bank" element={<HutangBank />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangBank />} />
+          <Route path="/isi-daftar-akun/ppn-keluaran" element={<PPNKeluaran />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PPNKeluaran />} />
+          <Route path="/isi-daftar-akun/hutang-pajak-pph21" element={<HutangPajakPPH21 />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangPajakPPH21 />} />
+          <Route path="/isi-daftar-akun/hutang-pajak-pph22" element={<HutangPajakPPH22 />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangPajakPPH22 />} />
+          <Route path="/isi-daftar-akun/hutang-pajak-pph23" element={<HutangPajakPPH23 />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangPajakPPH23 />} />
+          <Route path="/isi-daftar-akun/hutang-pajak-pph29" element={<HutangPajakPPH29 />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangPajakPPH29 />} />
+          <Route path="/isi-daftar-akun/hutang-pajak-lainnya" element={<HutangPajakLainnya />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangPajakLainnya />} />
+          <Route path="/isi-daftar-akun/hutang-dari-pemegang-saham" element={<HutangDariPemegangSaham />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<HutangDariPemegangSaham />} />
+          <Route path="/isi-daftar-akun/kewajiban-lancar-lainnya" element={<KewajibanLancarLainnya />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<KewajibanLancarLainnya />} />
+          <Route path="/isi-daftar-akun/kewajiban-manfaat-karyawan" element={<KewajibanManfaatKaryawan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<KewajibanManfaatKaryawan />} />
+          <Route path="/isi-daftar-akun/modal-saham" element={<ModalSaham />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<ModalSaham />} />
+          <Route path="/isi-daftar-akun/tambahan-modal-disetor" element={<TambahanModalDisetor />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<TambahanModalDisetor />} />
+          <Route path="/isi-daftar-akun/laba-ditahan" element={<LabaDitahan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<LabaDitahan />} />
+          <Route path="/isi-daftar-akun/deviden" element={<Deviden />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<Deviden />} />
+          <Route path="/isi-daftar-akun/pendapatan-komprehensif-lainnya" element={<PendapatanKomprehensifLainnya />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PendapatanKomprehensifLainnya />} />
+          <Route path="/isi-daftar-akun/equitas-saldo-awal" element={<EquitasSaldoAwal />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<EquitasSaldoAwal />} />
+          <Route path="/isi-daftar-akun/diskon-penjualan" element={<DiskonPenjualan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<DiskonPenjualan />} />
+          <Route path="/isi-daftar-akun/pendapatan-belum-ditagih" element={<PendapatanBelumDitagih />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PendapatanBelumDitagih />} />
+          <Route path="/isi-daftar-akun/pendapatan-jasa" element={<PendapatanJasa />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PendapatanJasa />} />
+          <Route path="/isi-daftar-akun/retur-penjualan" element={<ReturPenjualan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<ReturPenjualan />} />
+          <Route path="/isi-daftar-akun/pengiriman-pengangkutan" element={<PengirimanPengangkutan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<PengirimanPengangkutan />} />
+          <Route path="/isi-daftar-akun/biaya-produksi" element={<BiayaProduksi />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<BiayaProduksi />} />
+          <Route path="/isi-daftar-akun/diskon-pembelian" element={<DiskonPembelian />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<DiskonPembelian />} />
+          <Route path="/isi-daftar-akun/retur-pembelian" element={<ReturPembelian />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<ReturPembelian />} />
+          <Route path="/isi-daftar-akun/beban-pokok-pendapatan" element={<BebanPokokPendapatan />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<BebanPokokPendapatan />} />
+          <Route path="/isi-daftar-akun/biaya-impor" element={<BiayaImpor />} />
+          <Route path="/isi-daftar-akun/:kode_akun" element={<BiayaImpor />} />
           /* Kontak */
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/main-contact/profil-kontak/:id" element={<ProfilKontak/>} />
@@ -145,10 +348,20 @@ function App() {
           <Route path="/main-product/profil-produk/:id" element={<ProfilProduk />} />
           <Route path="/main-product/profil-produk" element={<ProfilProduk />} />
           <Route path="/main-product/ubah-produk" element={<UbahProduk />} />
-          /* Beranda */
+          /* Penjualan */
           <Route path="/penjualan" element={<PenjualanPage />} />
-          <Route path="/kas-bank" element={<KasBankPage />} />
+          <Route path="/penjualan/create" element={<CreateInvoice />} />
+          <Route path="/penjualan/create-sales-order" element={<CreateSalesOrderPage />} />
+          <Route path="/penjualan/create-sales-quote" element={<CreateSalesQuotePage />} />
+          /* Pembelian */
           <Route path="/pembelian" element={<PembelianPage />} />
+          <Route path="/pembelian/faktur/create" element={<CreatePurchaseInvoice />} />
+          <Route path="/pembelian/tukar-faktur/create" element={<CreatePurchaseExchange />} />
+          <Route path="/pembelian/pesanan/create" element={<CreatePurchaseOrderPage />} />
+          <Route path="/pembelian/penawaran/create" element={<CreatePurchaseQuotePage />} />
+          <Route path="/pembelian/permintaan/create" element={<CreatePurchaseRequestPage />} />
+          /* Beranda */
+          <Route path="/kas-bank" element={<KasBankPage />} />
           <Route path="/biaya" element={<BiayaPage />} />
           <Route path="/daftar-lainnya" element={<DaftarLainnya />} />
           <Route path="/pajak" element={<Pajak />} />

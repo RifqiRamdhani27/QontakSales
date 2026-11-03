@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import XLSXStyle from "xlsx-js-style";
 import {
   Box, Flex, Text, Button, Input, Select, Badge,
@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import {
   MagnifyingGlass, Plus, PencilSimple, Trash, X, FloppyDisk, BookOpen, LockKey,
-  List, FileXls, UploadSimple, User,
+  List, FileXls, UploadSimple, User, CaretDown, Check,
 } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import api from "@/services/api";
@@ -111,13 +111,10 @@ const EMPTY_FORM = {
 
 export default function DaftarAkunPage() {
   const navigate = useNavigate();
-  const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterKategori, setFilterKategori] = useState("");
-  const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const pageSize = 20;
+  const [allAccounts, setAllAccounts] = useState([]);
 
   const [selectedIds, setSelectedIds] = useState([]);
   const [tindakanOpen, setTindakanOpen] = useState(false);
@@ -130,6 +127,23 @@ export default function DaftarAkunPage() {
   const [penggunaOption, setPenggunaOption] = useState("all");
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
+
+    const accounts = useMemo(() => {
+      const q = search.trim().toLowerCase();
+      return allAccounts.filter((a) => {
+        const matchSearch =
+          !q ||
+          (a.kode_akun || "").toLowerCase().includes(q) ||
+          (a.nama_akun || "").toLowerCase().includes(q);
+        const matchKategori = !filterKategori || a.kategori_akun === filterKategori;
+        return matchSearch && matchKategori;
+      });
+    }, [allAccounts, search, filterKategori]);
+
+    const totalCount = accounts.length;
+    useEffect(() => {
+      setSelectedIds((prev) => prev.filter((id) => accounts.some((a) => a.id === id)));
+    }, [accounts]);
 
   const isAllSelected = accounts.length > 0 && accounts.every((a) => selectedIds.includes(a.id));
 
@@ -293,29 +307,29 @@ export default function DaftarAkunPage() {
     }
   };
 
-  const fetchAccounts = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = { page, page_size: pageSize };
-      if (search) params.search = search;
-      if (filterKategori) params.kategori = filterKategori;
-      const res = await api.get("/coa/", { params });
-      setAccounts(res.data.results ?? res.data);
-      setTotalCount(res.data.count ?? (res.data.results ?? res.data).length);
-    } catch {
-      setAccounts([]);
-    } finally {
-      setLoading(false);
+  const fetchAccounts = useCallback(async (showLoading = false) => {
+  if (showLoading) setLoading(true);
+  try {
+    let pageNum = 1;
+    let all = [];
+    while (true) {
+      const res = await api.get("/coa/", { params: { page_size: 1000, page: pageNum } });
+      const data = res.data.results ?? res.data;
+      all = all.concat(data);
+      if (!Array.isArray(res.data.results) || !res.data.next) break;
+      pageNum += 1;
     }
-  }, [page, search, filterKategori]);
+    setAllAccounts(all);
+  } catch {
+    setAllAccounts([]);
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
-  useEffect(() => {
-    setPage(1);
-  }, [search, filterKategori]);
-
-  useEffect(() => {
-    fetchAccounts();
-  }, [fetchAccounts]);
+useEffect(() => {
+  fetchAccounts(true); 
+}, [fetchAccounts]);
 
   const openCreate = () => {
     setEditTarget(null);
@@ -385,8 +399,6 @@ export default function DaftarAkunPage() {
       setDeleteOpen(false);
     }
   };
-
-  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <Box p={{ base: 4, md: 6 }} bg="white" minH="100vh">
@@ -534,7 +546,8 @@ export default function DaftarAkunPage() {
       </Flex>
 
       {/* Filters */}
-      <Box bg="white" borderRadius="xl" border="1px solid" borderColor="border" p={4} mb={4}>
+      <Box bg="white" borderRadius="xl" border="1px solid" borderColor="border" 
+      boxShadow="0 2px 6px rgba(0,0,0,0.06)" p={4} mb={4}>
         <Flex gap={3} flexWrap="wrap">
           <Box position="relative" flex={1} minW="220px">
             <Box position="absolute" left={3} top="50%" transform="translateY(-50%)" color="gray.400" zIndex={1}>
@@ -551,37 +564,23 @@ export default function DaftarAkunPage() {
               fontSize="sm"
             />
           </Box>
-          <Box minW="200px">
-            <select
+          <Box minW="220px">
+            <CategoryDropdown
               value={filterKategori}
-              onChange={(e) => setFilterKategori(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "8px 12px",
-                borderRadius: "10px",
-                border: "1px solid #E4ECFC",
-                fontSize: "14px",
-                color: filterKategori ? "#0F172A" : "#94A3B8",
-                background: "white",
-                outline: "none",
-                cursor: "pointer",
-              }}
-            >
-              <option value="">Pilih Kategori</option>
-              {KATEGORI_LIST.map((k) => (
-                <option key={k} value={k}>{k}</option>
-              ))}
-            </select>
+              onChange={setFilterKategori}
+              options={KATEGORI_LIST}
+              placeholder="Pilih Kategori"
+            />
           </Box>
         </Flex>
       </Box>
 
-      {/* Notice & Table */}
-      <Box bg="white" borderRadius="lg" border="1px solid" borderColor="#E2E8F0" overflow="hidden">
-        {/* Top Info Banner */}
-        <Flex justify="flex-end" px={4} py={2} bg="#F8FAFC" borderBottom="1px solid #E2E8F0">
-        </Flex>
-
+      {/* Table */}
+      <Box
+        bg="white" borderRadius="lg" border="1px solid" borderColor="#E2E8F0"
+        boxShadow="0 2px 6px rgba(0,0,0,0.06)"
+        overflow="hidden"
+      >
         {loading ? (
           <Flex justify="center" align="center" py={16}>
             <Spinner color="primary" size="lg" />
@@ -686,6 +685,138 @@ export default function DaftarAkunPage() {
                             navigate("/isi-daftar-akun/ppn-masukan");
                           } else if (acct.kode_akun === "1-10001") {
                             navigate("/isi-daftar-akun/kas");
+                          } else if (acct.kode_akun === "1-10002") {
+                            navigate("/isi-daftar-akun/rekening-bank");
+                          } else if (acct.kode_akun === "1-10003") {
+                            navigate("/isi-daftar-akun/giro");
+                          } else if (acct.kode_akun === "1-10101") {
+                            navigate("/isi-daftar-akun/piutang-belum-ditagih");
+                          } else if (acct.kode_akun === "1-10100") {
+                            navigate("/isi-daftar-akun/piutang-usaha");
+                          } else if (acct.kode_akun === "1-10102") {
+                            navigate("/isi-daftar-akun/cadangan-kerugian-piutang");
+                          } else if (acct.kode_akun === "1-10200") {
+                            navigate("/isi-daftar-akun/persediaan-barang");
+                          } else if (acct.kode_akun === "1-10300") {
+                            navigate("/isi-daftar-akun/piutang-lainnya");
+                          } else if (acct.kode_akun === "1-10301") {
+                            navigate("/isi-daftar-akun/piutang-karyawan");
+                          } else if (acct.kode_akun === "1-10400") {
+                            navigate("/isi-daftar-akun/dana-belum-disetor");
+                          } else if (acct.kode_akun === "1-10402") {
+                            navigate("/isi-daftar-akun/biaya-dibayar-dimuka");
+                          } else if (acct.kode_akun === "1-10401") {
+                            navigate("/isi-daftar-akun/aset-lancar-lainnya");
+                          } else if (acct.kode_akun === "1-10403") {
+                            navigate("/isi-daftar-akun/uang-muka");
+                          } else if (acct.kode_akun === "1-10500") {
+                            navigate("/isi-daftar-akun/ppn-masukan");
+                          } else if (acct.kode_akun === "1-10501") {
+                            navigate("/isi-daftar-akun/pph-22");
+                          } else if (acct.kode_akun === "1-10502") {
+                            navigate("/isi-daftar-akun/pph-23");
+                          } else if (acct.kode_akun === "1-10503") {
+                            navigate("/isi-daftar-akun/pph-25");
+                          } else if (acct.kode_akun === "1-10700") {
+                            navigate("/isi-daftar-akun/aset-tetap-tanah");
+                          } else if (acct.kode_akun === "1-10701") {
+                            navigate("/isi-daftar-akun/aset-tetap-bangunan");
+                          } else if (acct.kode_akun === "1-10702") {
+                            navigate("/isi-daftar-akun/aset-tetap-building-improvements");
+                          } else if (acct.kode_akun === "1-10703") {
+                            navigate("/isi-daftar-akun/aset-tetap-kendaraan");
+                          } else if (acct.kode_akun === "1-10704") {
+                            navigate("/isi-daftar-akun/aset-tetap-mesin-peralatan");
+                          } else if (acct.kode_akun === "1-10705") {
+                            navigate("/isi-daftar-akun/aset-tetap-perlengkapan-kantor");
+                          } else if (acct.kode_akun === "1-10706") {
+                            navigate("/isi-daftar-akun/aset-tetap-sewa-guna-usaha");
+                          } else if (acct.kode_akun === "1-10707") {
+                            navigate("/isi-daftar-akun/aset-tak-berwujud");
+                          } else if (acct.kode_akun === "1-10751") {
+                            navigate("/isi-daftar-akun/akumulasi-penyusutan-bangunan");
+                          } else if (acct.kode_akun === "1-10752") {
+                            navigate("/isi-daftar-akun/akumulasi-penyusutan-building-improvements");
+                          } else if (acct.kode_akun === "1-10753") {
+                            navigate("/isi-daftar-akun/akumulasi-penyusutan-kendaraan");
+                          } else if (acct.kode_akun === "1-10754") {
+                            navigate("/isi-daftar-akun/akumulasi-penyusutan-mesin-peralatan");
+                          } else if (acct.kode_akun === "1-10755") {
+                            navigate("/isi-daftar-akun/akumulasi-penyusutan-peralatan-kantor");
+                          } else if (acct.kode_akun === "1-10756") {
+                            navigate("/isi-daftar-akun/akumulasi-penyusutan-sewa-guna-usaha");
+                          } else if (acct.kode_akun === "1-10757") {
+                            navigate("/isi-daftar-akun/akumulasi-penyusutan-amortisasi");
+                          } else if (acct.kode_akun === "1-10800") {
+                            navigate("/isi-daftar-akun/investasi");
+                          } else if (acct.kode_akun === "2-20100") {
+                            navigate("/isi-daftar-akun/hutang-usaha");
+                          } else if (acct.kode_akun === "2-20101") {
+                            navigate("/isi-daftar-akun/hutang-belum-ditagih");
+                          } else if (acct.kode_akun === "2-20200") {
+                            navigate("/isi-daftar-akun/hutang-lain-lain");
+                          } else if (acct.kode_akun === "2-20201") {
+                            navigate("/isi-daftar-akun/hutang-gaji");
+                          } else if (acct.kode_akun === "2-20202") {
+                            navigate("/isi-daftar-akun/hutang-deviden");
+                          } else if (acct.kode_akun === "2-20203") {
+                            navigate("/isi-daftar-akun/pendapatan-diterima-dimuka");
+                          } else if (acct.kode_akun === "2-20301") {
+                            navigate("/isi-daftar-akun/sarana-kantor-terhutang");
+                          } else if (acct.kode_akun === "2-20302") {
+                            navigate("/isi-daftar-akun/bunga-terhutang");
+                          } else if (acct.kode_akun === "2-20399") {
+                            navigate("/isi-daftar-akun/biaya-terhutang-lainnya");
+                          } else if (acct.kode_akun === "2-20400") {
+                            navigate("/isi-daftar-akun/hutang-bank");
+                          } else if (acct.kode_akun === "2-20500") {
+                            navigate("/isi-daftar-akun/ppn-keluaran");
+                          } else if (acct.kode_akun === "2-20501") {
+                            navigate("/isi-daftar-akun/hutang-pajak-pph21");
+                          } else if (acct.kode_akun === "2-20502") {
+                            navigate("/isi-daftar-akun/hutang-pajak-pph22");
+                          } else if (acct.kode_akun === "2-20503") {
+                            navigate("/isi-daftar-akun/hutang-pajak-pph23");
+                          } else if (acct.kode_akun === "2-20504") {
+                            navigate("/isi-daftar-akun/hutang-pajak-pph29");
+                          } else if (acct.kode_akun === "2-20599") {
+                            navigate("/isi-daftar-akun/hutang-pajak-lainnya");
+                          } else if (acct.kode_akun === "2-20600") {
+                            navigate("/isi-daftar-akun/hutang-dari-pemegang-saham");
+                          } else if (acct.kode_akun === "2-20601") {
+                            navigate("/isi-daftar-akun/kewajiban-lancar-lainnya");
+                          } else if (acct.kode_akun === "2-20700") {
+                            navigate("/isi-daftar-akun/kewajiban-manfaat-karyawan");
+                          } else if (acct.kode_akun === "3-30000") {
+                            navigate("/isi-daftar-akun/modal-saham");
+                          } else if (acct.kode_akun === "3-30001") {
+                            navigate("/isi-daftar-akun/tambahan-modal-disetor");
+                          } else if (acct.kode_akun === "3-30100") {
+                            navigate("/isi-daftar-akun/laba-ditahan");
+                          } else if (acct.kode_akun === "3-30200") {
+                            navigate("/isi-daftar-akun/deviden");
+                          } else if (acct.kode_akun === "3-30300") {
+                            navigate("/isi-daftar-akun/pendapatan-komprehensif-lainnya");
+                          } else if (acct.kode_akun === "3-30999") {
+                            navigate("/isi-daftar-akun/equitas-saldo-awal");
+                          } else if (acct.kode_akun === "4-40000") {
+                            navigate("/isi-daftar-akun/pendapatan-jasa");
+                          } else if (acct.kode_akun === "4-40100") {
+                            navigate("/isi-daftar-akun/diskon-penjualan");
+                          } else if (acct.kode_akun === "4-40200") {
+                            navigate("/isi-daftar-akun/retur-penjualan");
+                          } else if (acct.kode_akun === "4-40201") {
+                            navigate("/isi-daftar-akun/pendapatan-belum-ditagih");
+                          } else if (acct.kode_akun === "5-50000") {
+                            navigate("/isi-daftar-akun/beban-pokok-pendapatan");
+                          } else if (acct.kode_akun === "5-50100") {
+                            navigate("/isi-daftar-akun/diskon-pembelian");
+                          } else if (acct.kode_akun === "5-50300") {
+                            navigate("/isi-daftar-akun/pengiriman-pengangkutan");
+                          } else if (acct.kode_akun === "5-50400") {
+                            navigate("/isi-daftar-akun/biaya-impor");
+                          } else if (acct.kode_akun === "5-50500") {
+                            navigate("/isi-daftar-akun/biaya-produksi");
                           } 
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.textDecoration = "underline"}
@@ -712,7 +843,7 @@ export default function DaftarAkunPage() {
                       <td style={{ padding: "6px 12px", textAlign: "right", whiteSpace: "nowrap", color: "#1E293B", fontFamily: "Segoe UI, sans-serif" }}>
                         {formatIDR(acct.saldo)}
                       </td>
-                      <td style={{ padding: "6px 12px", textAlign: "right", whiteSpace: "nowrap" }}>
+                                            <td style={{ padding: "6px 12px", textAlign: "right", whiteSpace: "nowrap" }}>
                         <HStack gap={1} justify="flex-end">
                           <IconButton
                             size="xs"
@@ -726,41 +857,6 @@ export default function DaftarAkunPage() {
                           >
                             <PencilSimple size={14} />
                           </IconButton>
-                          {isLocked ? (
-                            <Box
-                              as="span"
-                              display="inline-flex"
-                              title="Tidak dapat menghapus akun sistem / akun bawaan default"
-                              style={{ cursor: "not-allowed" }}
-                            >
-                              <IconButton
-                                size="xs"
-                                variant="ghost"
-                                color="gray.800"
-                                disabled
-                                aria-label="Tidak dapat dihapus"
-                                borderRadius="md"
-                                opacity={0.4}
-                                _hover={{ bg: "transparent" }}
-                                style={{ cursor: "not-allowed", pointerEvents: "none" }}
-                              >
-                                <Trash size={14} />
-                              </IconButton>
-                            </Box>
-                          ) : (
-                            <IconButton
-                              size="xs"
-                              variant="ghost"
-                              color="red.500"
-                              _hover={{ bg: "red.50" }}
-                              onClick={() => confirmDelete(acct)}
-                              aria-label="Hapus"
-                              borderRadius="md"
-                              title="Hapus Akun"
-                            >
-                              <Trash size={14} />
-                            </IconButton>
-                          )}
                         </HStack>
                       </td>
                     </tr>
@@ -771,37 +867,16 @@ export default function DaftarAkunPage() {
           </Box>
         )}
 
-        {/* Pagination */}
+        {/* Total */}
         {!loading && totalCount > 0 && (
           <Flex
-            justify="space-between" align="center"
+            justify="flex-start" align="center"
             px={4} py={2.5} borderTop="1px solid" borderColor="#E2E8F0"
-            flexWrap="wrap" gap={2} bg="#F8FAFC"
+            bg="#F8FAFC"
           >
             <Text fontSize="12px" color="#64748B">
-              Menampilkan {Math.min((page - 1) * pageSize + 1, totalCount)}–{Math.min(page * pageSize, totalCount)} dari {totalCount} akun
+              Total {totalCount} akun
             </Text>
-            <HStack gap={2}>
-              <Button
-                size="xs" variant="outline" borderColor="#CBD5E1"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                borderRadius="md"
-                fontSize="12px"
-              >
-                ← Sebelumnya
-              </Button>
-              <Text fontSize="12px" color="#475569" px={1}>{page} / {totalPages}</Text>
-              <Button
-                size="xs" variant="outline" borderColor="#CBD5E1"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                borderRadius="md"
-                fontSize="12px"
-              >
-                Berikutnya →
-              </Button>
-            </HStack>
           </Flex>
         )}
       </Box>
@@ -1181,6 +1256,7 @@ export default function DaftarAkunPage() {
                   flex={1} variant="outline" borderColor="border"
                   onClick={() => setBulkDeleteOpen(false)}
                   borderRadius="lg"
+                  fontSize="sm"
                 >
                   Batal
                 </Button>
@@ -1190,6 +1266,7 @@ export default function DaftarAkunPage() {
                   onClick={handleBulkDelete}
                   borderRadius="lg"
                   fontWeight="semibold"
+                  fontSize="sm"
                 >
                   Hapus Semua Terpilih
                 </Button>
@@ -1199,5 +1276,145 @@ export default function DaftarAkunPage() {
         </Box>
       )}
     </Box>
+  );
+}
+
+function CategoryDropdown({ value, onChange, options, placeholder = "Pilih Kategori" }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const onDown = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
+  const pick = (v) => {
+    onChange(v);
+    setOpen(false);
+  };
+
+  const itemBase = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "8px",
+    padding: "9px 12px",
+    fontSize: "13px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    transition: "background 0.12s ease, color 0.12s ease",
+  };
+
+  return (
+    <div ref={ref} style={{ position: "relative", width: "100%" }}>
+      {/* Trigger */}
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "8px",
+          padding: "8px 12px",
+          borderRadius: "10px",
+          border: open ? "1px solid #2563EB" : "1px solid #E4ECFC",
+          boxShadow: open ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
+          background: "white",
+          fontSize: "14px",
+          color: value ? "#0F172A" : "#94A3B8",
+          cursor: "pointer",
+          outline: "none",
+          transition: "all 0.15s ease",
+          textAlign: "left",
+        }}
+      >
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {value || placeholder}
+        </span>
+        <CaretDown
+          size={14}
+          weight="bold"
+          color="#64748B"
+          style={{
+            flexShrink: 0,
+            transition: "transform 0.2s ease",
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+          }}
+        />
+      </button>
+
+      {/* Panel opsi (selalu ter-render supaya animasi buka/tutup halus) */}
+      <div
+        style={{
+          position: "absolute",
+          top: "calc(100% + 6px)",
+          left: 0,
+          right: 0,
+          zIndex: 60,
+          background: "white",
+          border: "1px solid #E2E8F0",
+          borderRadius: "12px",
+          boxShadow: "0 12px 32px rgba(15,23,42,0.14)",
+          padding: "6px",
+          maxHeight: "300px",
+          overflowY: "auto",
+          opacity: open ? 1 : 0,
+          transform: open ? "translateY(0) scale(1)" : "translateY(-6px) scale(0.98)",
+          transformOrigin: "top",
+          visibility: open ? "visible" : "hidden",
+          pointerEvents: open ? "auto" : "none",
+          transition: "opacity 0.15s ease, transform 0.18s ease, visibility 0.18s",
+        }}
+      >
+        {/* Opsi: semua kategori */}
+        <div
+          onClick={() => pick("")}
+          style={{
+            ...itemBase,
+            color: !value ? "#1D62A4" : "#64748B",
+            background: !value ? "#EFF6FF" : "transparent",
+            fontWeight: !value ? 600 : 400,
+          }}
+          onMouseEnter={(e) => { if (value) e.currentTarget.style.background = "#F1F5F9"; }}
+          onMouseLeave={(e) => { if (value) e.currentTarget.style.background = "transparent"; }}
+        >
+          <span>Semua Kategori</span>
+          {!value && <Check size={14} weight="bold" color="#1D62A4" />}
+        </div>
+
+        <div style={{ height: "1px", background: "#F1F5F9", margin: "4px 6px" }} />
+
+        {options.map((k) => {
+          const selected = value === k;
+          return (
+            <div
+              key={k}
+              onClick={() => pick(k)}
+              style={{
+                ...itemBase,
+                color: selected ? "#1D62A4" : "#334155",
+                background: selected ? "#EFF6FF" : "transparent",
+                fontWeight: selected ? 600 : 400,
+              }}
+              onMouseEnter={(e) => { if (!selected) e.currentTarget.style.background = "#F1F5F9"; }}
+              onMouseLeave={(e) => { if (!selected) e.currentTarget.style.background = "transparent"; }}
+            >
+              <span>{k}</span>
+              {selected && <Check size={14} weight="bold" color="#1D62A4" />}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }

@@ -18,7 +18,6 @@ const allNavItems = [
   { label: "Biaya", icon: MagnifyingGlass, path: "/biaya" },
   { label: "Kas & Bank", icon: Bank, CaretDown, Star, path: "/kas-bank" },
   { label: "Daftar Lainnya", icon: NoteIcon, path: "/daftar-lainnya" },
-
 ];
 
 export default function Sidebar({ open, onClose }) {
@@ -45,6 +44,7 @@ export default function Sidebar({ open, onClose }) {
       <Box
         w={sidebarWidth}
         h="100vh" bg="white" borderRight="1px solid" borderColor="border"
+        boxShadow="0 2px 6px rgba(0,0,0,0.06)"
         display="flex" flexDirection="column"
         position={{ base: "fixed", md: isSettingsRoute ? "relative" : "relative" }}
         zIndex={isSettingsRoute ? 60 : 50}
@@ -96,22 +96,22 @@ export default function Sidebar({ open, onClose }) {
             const Icon = item.icon;
             return (
               <ChakraLink
-  key={item.path}
-  as={RouterLink}
-  to={item.path}
-  display="flex" alignItems="center" gap={3} px={4} py={3} borderRadius="md"
-  fontWeight={isActive ? "semibold" : "normal"}
-  bg={isActive ? "#0adae1ff" : "transparent"} 
-  color={isActive ? "#ffffffff" : "foreground"} 
-  _hover={{ 
-    bg: isActive ? "#0bdfe6ff" : "#efefefff", 
-    color: isActive ? "#ffffffff" : "#111827", 
-    textDecoration: "none" 
-  }}
-  transition="all 150ms ease"
-  onClick={onClose}
-  title={isCollapsed ? item.label : undefined}
->
+                key={item.path}
+                as={RouterLink}
+                to={item.path}
+                display="flex" alignItems="center" gap={3} px={4} py={3} borderRadius="md"
+                fontWeight={isActive ? "semibold" : "normal"}
+                bg={isActive ? "#0adae1ff" : "transparent"} 
+                color={isActive ? "#ffffffff" : "foreground"} 
+                _hover={{ 
+                  bg: isActive ? "#0bdfe6ff" : "#efefefff", 
+                  color: isActive ? "#ffffffff" : "#111827", 
+                  textDecoration: "none" 
+                }}
+                transition="all 150ms ease"
+                onClick={onClose}
+                title={isCollapsed ? item.label : undefined}
+              >
                 <Icon size={20} style={{ flexShrink: 0 }} />
                 {!isCollapsed && <Text fontSize="sm" whiteSpace="nowrap">{item.label}</Text>}
               </ChakraLink>

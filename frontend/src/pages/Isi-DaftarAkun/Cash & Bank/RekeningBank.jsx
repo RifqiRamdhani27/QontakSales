@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import dompetBiru from "../../assets/dompetbiru.png";
+import dompetBiru from "../../../assets/dompetbiru.png";
 
 const KAS_BANK_PATH = "/kas-bank";
 
@@ -191,7 +191,6 @@ function RekeningKoranTab() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Toggle checked={hideDeleted} onChange={setHideDeleted} label="Sembunyikan mutasi dihapus" />
           <SearchInput placeholder="Cari mutasi" />
         </div>
       </section>
@@ -242,7 +241,7 @@ export default function Kas() {
                 Kas &amp; bank
               </a>
               <h1 style={{ fontSize: "24px", fontWeight: 600, color: "#1e293b", margin: 0, lineHeight: 1.2 }}>
-                (1-10001) - Kas
+                (1-10002) - Rekening Bank
               </h1>
             </div>
 
@@ -274,7 +273,7 @@ export default function Kas() {
                     display: "flex", alignItems: "center", gap: "6px", padding: "10px 5px 12px", fontSize: "13px", whiteSpace: "nowrap", textDecoration: "none",
                     fontWeight: 400, color: active ? PRIMARY : hovered ? "#1e293b" : "#475569",
                     borderBottom: `2px solid ${active ? PRIMARY : "transparent"}`,
-                    backgroundColor: active ? "#eef1fb" : "transparent", borderRadius: active ? "6px 6px 0 0" : 0,
+                    backgroundColor: "transparent", borderRadius: active ? "6px 6px 0 0" : 0,
                   }}
                 >
                   <span>{tab.label}</span>
