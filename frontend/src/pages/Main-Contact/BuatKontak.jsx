@@ -35,7 +35,7 @@ const fieldClass =
 const textareaClass =
   "w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2 text-xs text-gray-900 outline-none placeholder:text-gray-400 focus:border-brand";
 const tagBoxClass =
-  "flex min-h-9 w-full cursor-text flex-wrap items-center gap-1.5 rounded-md border bg-white px-2 py-1";
+  "tag-box flex min-h-9 w-full cursor-text flex-wrap items-center gap-1.5 rounded-md border bg-white px-2 py-1";
 
 const MAX_GROUPS = 3;
 const MAX_BANKS = 3;
@@ -106,12 +106,12 @@ const createInitialForm = () => ({
 function Checkbox({ checked, indeterminate = false, disabled = false, onChange }) {
   const ref = useRef(null);
   if (ref.current) ref.current.indeterminate = indeterminate;
-  
+
   return (
     <input
       ref={ref}
       type="checkbox"
-      className="h-4 w-4 shrink-0 cursor-pointer accent-[#4B61DD] disabled:cursor-not-allowed rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0"
+      className="gold-check h-4 w-4 shrink-0 cursor-pointer accent-[#4B61DD] disabled:cursor-not-allowed rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0"
       checked={checked}
       disabled={disabled}
       onChange={onChange}
@@ -167,7 +167,7 @@ function ComboSelect({ value, options, placeholder = "", searchable = true, onCh
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const ref = useRef(null);
-  
+
   useClickOutside(ref, () => setOpen(false));
 
   const selected = options.find((option) => option.value === value);
@@ -201,7 +201,7 @@ function GroupMultiSelect({ groups = [], value = [], onChange }) {
   const [query, setQuery] = useState("");
   const inputRef = useRef(null);
   const ref = useRef(null);
-  
+
   useClickOutside(ref, () => setOpen(false));
 
   const full = value.length >= MAX_GROUPS;
@@ -249,8 +249,8 @@ function EmailInput({ value, onChange }) {
   };
 
   return (
-    <div 
-      className={`${tagBoxClass} ${invalid ? "border-red-500" : "border-gray-300 focus-within:border-brand"}`} 
+    <div
+      className={`${tagBoxClass} ${invalid ? "border-red-500" : "border-gray-300 focus-within:border-brand"}`}
       onClick={(e) => {
         // Jangan fokus jika yang diklik adalah tombol "X" pada chip
         if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'svg' && e.target.tagName !== 'path') {
@@ -295,9 +295,12 @@ function BankAccount({ bank, index, onChange, onRemove }) {
 }
 
 // === KOMPONEN UTAMA FORM ===
-export default function BuatKontak({ groups, onClose, onSave }) {
+export default function BuatKontak({ groups, defaultType = null, onClose, onSave }) {
   const navigate = useNavigate();
-  const [form, setForm] = useState(createInitialForm);
+  const [form, setForm] = useState(() => ({
+    ...createInitialForm(),
+    types: defaultType ? [defaultType] : [],
+  }));
   const [submitted, setSubmitted] = useState(false);
   const [typeTouched, setTypeTouched] = useState(false);
   const [leaveOpen, setLeaveOpen] = useState(false);
@@ -306,6 +309,21 @@ export default function BuatKontak({ groups, onClose, onSave }) {
   const saveMenuRef = useRef(null);
 
   useClickOutside(saveMenuRef, () => setSaveMenuOpen(false));
+  const [themeMode, setThemeMode] = useState(
+    () => localStorage.getItem("app_theme") || "light"
+  );
+
+  useEffect(() => {
+    const sync = () => setThemeMode(localStorage.getItem("app_theme") || "light");
+    window.addEventListener("themeChanged", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("themeChanged", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const isDark = themeMode === "dark";
 
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const setDetail = (key, value) => setForm((current) => ({ ...current, detail: { ...current.detail, [key]: value } }));
@@ -328,17 +346,17 @@ export default function BuatKontak({ groups, onClose, onSave }) {
       if (top) top.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
-    
+
     try {
-      await onSave(form, createAnother); 
-      
+      await onSave(form, createAnother);
+
       if (createAnother) {
-        setForm(createInitialForm());
+        setForm({ ...createInitialForm(), types: defaultType ? [defaultType] : [] });
         setSubmitted(false);
         setTypeTouched(false);
         alert("Kontak berhasil dibuat. Silakan isi form berikutnya.");
       } else {
-        setSuccessOpen(true); 
+        setSuccessOpen(true);
       }
     } catch (err) {
       console.error(err);
@@ -347,16 +365,17 @@ export default function BuatKontak({ groups, onClose, onSave }) {
   };
 
   return (
-    <div className="-m-7 w-[calc(100%+3.5rem)] bg-white max-md:-m-[18px] max-md:w-[calc(100%+2.25rem)]">
-      
-      {/* HEADER BEBAS JARAK */}
+    <div
+      className={`${isDark ? "dash-dark" : ""} -m-7 w-[calc(100%+3.5rem)] bg-white max-md:-m-[18px] max-md:w-[calc(100%+2.25rem)]`}
+      style={isDark ? { backgroundColor: "#121212", minHeight: "100vh" } : undefined}
+    >
       <div
         id="create-contact-top"
         className="w-full border-b border-gray-200 bg-[#EDFFFD] px-7 py-4 max-md:px-[18px]"
       >
         <button
           type="button"
-          className="cursor-pointer border-0 bg-transparent p-0 text-xs font-semibold text-brand hover:underline"
+          className="cursor-pointer border-0 p-0 text-xs font-semibold text-brand hover:underline"
           onClick={() => setLeaveOpen(true)}
         >
           Kontak
@@ -365,7 +384,7 @@ export default function BuatKontak({ groups, onClose, onSave }) {
       </div>
 
       {/* KONTEN FORM */}
-      <div className="flex items-start gap-5 p-7 max-lg:flex-col max-md:p-[18px] w-full">        
+      <div className="flex items-start gap-5 p-7 max-lg:flex-col max-md:p-[18px] w-full">
         <div className="min-w-0 flex-1">
           <FormSection icon={UserCircle} title="Info kontak" collapsible={false}>
             <div className="flex flex-col gap-4">
@@ -457,8 +476,8 @@ export default function BuatKontak({ groups, onClose, onSave }) {
           <div className="flex items-center justify-end gap-4 pt-2">
             <button type="button" className="cursor-pointer border-0 bg-transparent px-3 py-2 text-xs font-semibold text-gray-600 hover:text-gray-900" onClick={() => setLeaveOpen(true)}>Batal</button>
             <div className="relative flex" ref={saveMenuRef}>
-              <button type="button" onClick={() => handleSave(false)} style={{ height: "36px", cursor: "pointer", borderTopLeftRadius: "6px", borderBottomLeftRadius: "6px", borderTopRightRadius: "0px", borderBottomRightRadius: "0px", border: "none", backgroundColor: "#4B61DD", color: "#ffffff", padding: "0 20px", fontSize: "12px", fontWeight: "600", transition: "background-color 0.15s ease" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#3d4fbd")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4B61DD")}>Simpan</button>
-              <button type="button" onClick={() => setSaveMenuOpen((current) => !current)} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "36px", cursor: "pointer", borderTopRightRadius: "6px", borderBottomRightRadius: "6px", border: "none", borderLeft: "1px solid rgba(255,255,255,0.3)", backgroundColor: "#4B61DD", color: "#ffffff", padding: "0 10px", transition: "background-color 0.15s ease" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#3d4fbd")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4B61DD")}><svg className="h-3 w-3 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg></button>
+              <button type="button" className="btn-primary-dark" onClick={() => handleSave(false)} style={{ height: "36px", cursor: "pointer", borderTopLeftRadius: "6px", borderBottomLeftRadius: "6px", borderTopRightRadius: "0px", borderBottomRightRadius: "0px", border: "none", backgroundColor: "#4B61DD", color: "#ffffff", padding: "0 20px", fontSize: "12px", fontWeight: "600", transition: "background-color 0.15s ease" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#3d4fbd")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4B61DD")}>Simpan</button>
+              <button type="button" className="btn-primary-dark" onClick={() => setSaveMenuOpen((current) => !current)} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "36px", cursor: "pointer", borderTopRightRadius: "6px", borderBottomRightRadius: "6px", border: "none", borderLeft: "1px solid rgba(255,255,255,0.3)", backgroundColor: "#4B61DD", color: "#ffffff", padding: "0 10px", transition: "background-color 0.15s ease" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#3d4fbd")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#4B61DD")}><svg className="h-3 w-3 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg></button>
               {saveMenuOpen && <div className="absolute bottom-full right-0 z-30 mb-1 w-[170px] rounded-md border border-gray-200 bg-white py-1 shadow-lg"><button type="button" className="block w-full cursor-pointer border-0 bg-transparent px-3 py-2 text-left text-[13px] text-gray-700 hover:bg-slate-50" onClick={() => handleSave(true)}>Simpan & buat baru</button></div>}
             </div>
           </div>
@@ -500,6 +519,79 @@ export default function BuatKontak({ groups, onClose, onSave }) {
           </div>
         </div>
       )}
+      <style>{`
+  .dash-dark input, .dash-dark textarea { color-scheme: dark; }
+  .dash-dark input:not([type="checkbox"]):not([type="radio"]),
+  .dash-dark textarea { background-color: #262626; color: #f1f5f9; border-color: #634f27; }
+  .dash-dark ::placeholder { color: #94a3b8; }
+  .dash-dark input[type="checkbox"],
+  .dash-dark input[type="radio"] { accent-color: #E5B85C; }
+  .dash-dark .focus-within\\:border-brand:focus-within { border-color: #E5B85C; }
+  .dash-dark input:focus, .dash-dark textarea:focus { border-color: #E5B85C; }
+
+  /* Permukaan */
+  .dash-dark .bg-white { background-color: #121212; }
+  /* Kotak tag (Grup kontak & Email): satu warna penuh */
+  .dash-dark .tag-box { background-color: #262626; }
+  .dash-dark .tag-box input {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  }
+  .dash-dark .bg-slate-50,
+  .dash-dark .bg-slate-100 { background-color: #262626; }
+  .dash-dark [class*="bg-[#EDFFFD]"] { background-color: #d38e0d69; }
+  .dash-dark .bg-indigo-50,
+  .dash-dark .bg-indigo-100 { background-color: rgba(229,184,92,0.15); }
+
+  /* Border */
+  .dash-dark .border-gray-200,
+  .dash-dark .border-gray-300 { border-color: #634f27; }
+
+  /* Teks */
+  .dash-dark .text-gray-900,
+  .dash-dark .text-gray-800,
+  .dash-dark .text-gray-700 { color: #f1f5f9; }
+  .dash-dark .text-gray-600,
+  .dash-dark .text-slate-500 { color: #cbd5e1; }
+  .dash-dark .text-gray-500,
+  .dash-dark .text-gray-400 { color: #94a3b8; }
+  .dash-dark .text-red-500,
+  .dash-dark .text-red-600 { color: #f87171; }
+  .dash-dark .hover\\:text-red-600:hover { color: #f87171; }
+
+  /* Aksen biru -> emas */
+  .dash-dark .text-brand { color: #fefefeff; }
+  .dash-dark .btn-primary-dark {
+    background-color: #d39212ff !important;
+    color: #121212 !important;
+  }
+    .dash-dark .btn-primary-dark:hover {
+  background-color: #eaac32ff !important;
+  }
+  .dash-dark .btn-primary-dark svg { fill: #121212; }
+  .dash-dark .btn-primary-dark + .btn-primary-dark {
+    border-left: 1px solid rgba(18,18,18,0.35) !important;
+  }
+  .dash-dark [class*="bg-[#4B61DD]"] { background-color: #E5B85C; color: #121212; }
+  .dash-dark [class*="hover:bg-[#3d4fbd]"]:hover { background-color: #f0c978; }
+
+  /* Overlay modal netral */
+  .dash-dark .modal-overlay { background-color: rgba(0,0,0,0.65) !important; }
+
+  /* Hover (paling bawah) */
+  .dash-dark [class*="hover:bg-slate-50"]:hover,
+  .dash-dark [class*="hover:bg-slate-100"]:hover { background-color: #2d2d2d; }
+  .dash-dark [class*="hover:text-gray-"]:hover { color: #ffffff; }
+
+  .dash-dark input.gold-check {
+  accent-color: #ba9242ff !important;
+  }
+  .dash-dark input.gold-check:checked {
+  background-color: #ba9242ff !important;
+  border-color: #ba9242ff !important;
+  } 
+`}</style>
     </div>
   );
 }

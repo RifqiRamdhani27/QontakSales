@@ -376,11 +376,15 @@ useEffect(() => {
       setModalOpen(false);
       fetchAccounts();
     } catch (err) {
+      console.error("SAVE ERROR:", err.response?.status, err.response?.data);
       const data = err.response?.data;
-      if (data?.kode_akun) setFormError(`Kode Akun: ${data.kode_akun[0]}`);
-      else setFormError("Gagal menyimpan. Periksa kembali data Anda.");
-    } finally {
-      setSaving(false);
+      if (data && typeof data === "object") {
+        const firstKey = Object.keys(data)[0];
+        const firstVal = Array.isArray(data[firstKey]) ? data[firstKey][0] : data[firstKey];
+        setFormError(`${firstKey}: ${firstVal}`);
+      } else {
+        setFormError("Gagal menyimpan. Periksa kembali data Anda.");
+      }
     }
   };
 
@@ -817,7 +821,129 @@ useEffect(() => {
                             navigate("/isi-daftar-akun/biaya-impor");
                           } else if (acct.kode_akun === "5-50500") {
                             navigate("/isi-daftar-akun/biaya-produksi");
-                          } 
+                          }  else if (acct.kode_akun === "6-60000") {
+                            navigate("/isi-daftar-akun/biaya-penjualan");
+                          } else if (acct.kode_akun === "6-60001") {
+                            navigate("/isi-daftar-akun/iklan-promosi");
+                          } else if (acct.kode_akun === "6-60002") {
+                            navigate("/isi-daftar-akun/komisi-fee");
+                          } else if (acct.kode_akun === "6-60003") {
+                            navigate("/isi-daftar-akun/bensin-tol-parkir-penjualan");
+                          } else if (acct.kode_akun === "6-60004") {
+                            navigate("/isi-daftar-akun/perjalanan-dinas-penjualan");
+                          } else if (acct.kode_akun === "6-60005") {
+                            navigate("/isi-daftar-akun/komunikasi-penjualan");
+                          } else if (acct.kode_akun === "6-60006") {
+                            navigate("/isi-daftar-akun/marketing-lainnya");
+                          } else if (acct.kode_akun === "6-60100") {
+                            navigate("/isi-daftar-akun/biaya-umum-administratif");
+                          } else if (acct.kode_akun === "6-60101") {
+                            navigate("/isi-daftar-akun/gaji");
+                          } else if (acct.kode_akun === "6-60102") {
+                            navigate("/isi-daftar-akun/upah");
+                          } else if (acct.kode_akun === "6-60103") {
+                            navigate("/isi-daftar-akun/makanan-transportasi");
+                          } else if (acct.kode_akun === "6-60104") {
+                            navigate("/isi-daftar-akun/lembur");
+                          } else if (acct.kode_akun === "6-60105") {
+                            navigate("/isi-daftar-akun/pengobatan");
+                          } else if (acct.kode_akun === "6-60106") {
+                            navigate("/isi-daftar-akun/thr-bonus");
+                          } else if (acct.kode_akun === "6-60107") {
+                            navigate("/isi-daftar-akun/jamsostek");
+                          } else if (acct.kode_akun === "6-60108") {
+                            navigate("/isi-daftar-akun/insentif");
+                          } else if (acct.kode_akun === "6-60109") {
+                            navigate("/isi-daftar-akun/pesangon");
+                          } else if (acct.kode_akun === "6-60110") {
+                            navigate("/isi-daftar-akun/manfaat-tunjangan-lain");
+                          } else if (acct.kode_akun === "6-60200") {
+                            navigate("/isi-daftar-akun/donasi");
+                          } else if (acct.kode_akun === "6-60201") {
+                            navigate("/isi-daftar-akun/hiburan");
+                          } else if (acct.kode_akun === "6-60202") {
+                            navigate("/isi-daftar-akun/bensin-tol-parkir-umum");
+                          } else if (acct.kode_akun === "6-60203") {
+                            navigate("/isi-daftar-akun/perbaikan-pemeliharaan");
+                          } else if (acct.kode_akun === "6-60204") {
+                            navigate("/isi-daftar-akun/perjalanan-dinas-umum");
+                          } else if (acct.kode_akun === "6-60205") {
+                            navigate("/isi-daftar-akun/makanan");
+                          } else if (acct.kode_akun === "6-60206") {
+                            navigate("/isi-daftar-akun/komunikasi-umum");
+                          } else if (acct.kode_akun === "6-60207") {
+                            navigate("/isi-daftar-akun/iuran-langganan");
+                          } else if (acct.kode_akun === "6-60208") {
+                            navigate("/isi-daftar-akun/asuransi");
+                          } else if (acct.kode_akun === "6-60209") {
+                            navigate("/isi-daftar-akun/legal-profesional");
+                          } else if (acct.kode_akun === "6-60210") {
+                            navigate("/isi-daftar-akun/beban-manfaat-karyawan");
+                          } else if (acct.kode_akun === "6-60211") {
+                            navigate("/isi-daftar-akun/sarana-kantor");
+                          } else if (acct.kode_akun === "6-60212") {
+                            navigate("/isi-daftar-akun/pelatihan-pengembangan");
+                          } else if (acct.kode_akun === "6-60213") {
+                            navigate("/isi-daftar-akun/beban-piutang-tak-tertagih");
+                          } else if (acct.kode_akun === "6-60214") {
+                            navigate("/isi-daftar-akun/pajak-perizinan");
+                          } else if (acct.kode_akun === "6-60215") {
+                            navigate("/isi-daftar-akun/denda");
+                          } else if (acct.kode_akun === "6-60216") {
+                            navigate("/isi-daftar-akun/pengeluaran-barang-rusak");
+                          } else if (acct.kode_akun === "6-60300") {
+                            navigate("/isi-daftar-akun/beban-kantor");
+                          } else if (acct.kode_akun === "6-60301") {
+                            navigate("/isi-daftar-akun/alat-tulis-kantor-printing");
+                          } else if (acct.kode_akun === "6-60302") {
+                            navigate("/isi-daftar-akun/bea-materai");
+                          } else if (acct.kode_akun === "6-60303") {
+                            navigate("/isi-daftar-akun/keamanan-kebersihan");
+                          } else if (acct.kode_akun === "6-60304") {
+                            navigate("/isi-daftar-akun/supplies-material");
+                          } else if (acct.kode_akun === "6-60305") {
+                            navigate("/isi-daftar-akun/pemborong");
+                          } else if (acct.kode_akun === "6-60400") {
+                            navigate("/isi-daftar-akun/biaya-sewa-bangunan");
+                          } else if (acct.kode_akun === "6-60401") {
+                            navigate("/isi-daftar-akun/biaya-sewa-kendaraan");
+                          } else if (acct.kode_akun === "6-60402") {
+                            navigate("/isi-daftar-akun/biaya-sewa-operasional");
+                          } else if (acct.kode_akun === "6-60403") {
+                            navigate("/isi-daftar-akun/biaya-sewa-lain-lain");
+                          } else if (acct.kode_akun === "6-60500") {
+                            navigate("/isi-daftar-akun/penyusutan-bangunan");
+                          } else if (acct.kode_akun === "6-60501") {
+                            navigate("/isi-daftar-akun/penyusutan-perbaikan-bangunan");
+                          } else if (acct.kode_akun === "6-60502") {
+                            navigate("/isi-daftar-akun/penyusutan-kendaraan");
+                          } else if (acct.kode_akun === "6-60503") {
+                            navigate("/isi-daftar-akun/penyusutan-mesin-peralatan");
+                          } else if (acct.kode_akun === "6-60504") {
+                            navigate("/isi-daftar-akun/penyusutan-peralatan-kantor");
+                          } else if (acct.kode_akun === "6-60599") {
+                            navigate("/isi-daftar-akun/penyusutan-aset-sewa-guna-usaha");
+                          } else if (acct.kode_akun === "7-70000") {
+                            navigate("/isi-daftar-akun/pendapatan-bunga-bank");
+                          } else if (acct.kode_akun === "7-70001") {
+                            navigate("/isi-daftar-akun/pendapatan-bunga-deposito");
+                          } else if (acct.kode_akun === "7-70099") {
+                            navigate("/isi-daftar-akun/pendapatan-lain-lain");
+                          } else if (acct.kode_akun === "8-80000") {
+                            navigate("/isi-daftar-akun/beban-bunga");
+                          } else if (acct.kode_akun === "8-80999") {
+                            navigate("/isi-daftar-akun/beban-lain-lain");
+                          } else if (acct.kode_akun === "9-90000") {
+                            navigate("/isi-daftar-akun/beban-pajak-kini");
+                          } else if (acct.kode_akun === "9-90001") {
+                            navigate("/isi-daftar-akun/beban-pajak-tangguhan");
+                          } else if (acct.kode_akun === "8-80002") {
+                            navigate("/isi-daftar-akun/laba-rugi-pelepasan-aset-tetap");
+                          } else if (acct.kode_akun === "8-80100") {
+                            navigate("/isi-daftar-akun/penyesuaian-persediaan");
+                          } else if (acct.kode_akun === "8-80001") {
+                            navigate("/isi-daftar-akun/provisi");
+                          }
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.textDecoration = "underline"}
                         onMouseLeave={(e) => e.currentTarget.style.textDecoration = "none"}

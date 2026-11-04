@@ -184,9 +184,8 @@ function DropdownFilter({ value, onChange, options }) {
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className={`flex min-w-[130px] cursor-pointer items-center justify-between rounded border border-gray-300 bg-white px-3 py-1.5 text-xs text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-          open ? "ring-1 ring-blue-500" : ""
-        }`}
+        className={`flex min-w-[130px] cursor-pointer items-center justify-between rounded border border-gray-300 bg-white px-3 py-1.5 text-xs text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500 ${open ? "ring-1 ring-blue-500" : ""
+          }`}
       >
         <span>{selected ? selected.label : "Pilih tipe"}</span>
         <span className={`text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
@@ -204,11 +203,10 @@ function DropdownFilter({ value, onChange, options }) {
                 onChange(opt.value);
                 setOpen(false);
               }}
-              className={`block w-full px-3 py-2 text-left text-xs transition-colors hover:bg-slate-100 ${
-                value === opt.value
+              className={`block w-full px-3 py-2 text-left text-xs transition-colors hover:bg-slate-100 ${value === opt.value
                   ? "bg-slate-50 font-semibold text-slate-600"
                   : "text-gray-700"
-              }`}
+                }`}
             >
               {opt.label}
             </button>
@@ -228,11 +226,10 @@ function RowsPerPageDropdown({ value, onChange }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`group inline-flex items-center justify-between gap-2.5 h-9 min-w-[70px] px-3 rounded-lg border bg-white text-[13px] font-semibold transition-all duration-150 cursor-pointer shadow-xs ${
-          open
+        className={`group inline-flex items-center justify-between gap-2.5 h-9 min-w-[70px] px-3 rounded-lg border bg-white text-[13px] font-semibold transition-all duration-150 cursor-pointer shadow-xs ${open
             ? "border-[#4B61DD] ring-2 ring-[#4B61DD]/15 text-[#4B61DD]"
             : "border-gray-200 text-gray-800 hover:border-gray-300 hover:bg-slate-50/80"
-        }`}
+          }`}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -240,9 +237,8 @@ function RowsPerPageDropdown({ value, onChange }) {
         <CaretDown
           size={12}
           weight="bold"
-          className={`transition-transform duration-200 ${
-            open ? "rotate-180 text-[#4B61DD]" : "text-gray-400 group-hover:text-gray-600"
-          }`}
+          className={`transition-transform duration-200 ${open ? "rotate-180 text-[#4B61DD]" : "text-gray-400 group-hover:text-gray-600"
+            }`}
         />
       </button>
 
@@ -261,11 +257,10 @@ function RowsPerPageDropdown({ value, onChange }) {
                   onChange(opt);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center justify-between px-2.5 py-1.5 text-[13px] font-medium rounded-lg transition-colors cursor-pointer ${
-                  isSelected
+                className={`flex w-full items-center justify-between px-2.5 py-1.5 text-[13px] font-medium rounded-lg transition-colors cursor-pointer ${isSelected
                     ? "bg-[#4B61DD]/10 text-[#4B61DD] font-semibold"
                     : "text-gray-700 hover:bg-slate-100 hover:text-gray-900"
-                }`}
+                  }`}
               >
                 <span>{opt}</span>
                 {isSelected && (
@@ -300,17 +295,16 @@ function ActionDropdown() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`inline-flex items-center rounded bg-[#2f54eb] px-4 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#2546cf] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
-          open ? "ring-2 ring-blue-500 ring-offset-1" : ""
-        }`}
+        className={`inline-flex items-center rounded bg-[#2f54eb] px-4 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#2546cf] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${open ? "ring-2 ring-blue-500 ring-offset-1" : ""
+          }`}
       >
         <span>Tindakan</span>
         <ChevronDown className={`ml-2 h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-[260px] overflow-hidden rounded-md border border-gray-200 bg-white py-1.5 shadow-lg animate-in fade-in zoom-in-95 duration-100">
-          
+        <div className="action-menu absolute right-0 z-50 mt-2 w-[260px] overflow-hidden rounded-md border border-gray-200 bg-white py-1.5 shadow-lg animate-in fade-in zoom-in-95 duration-100">
+
           {/* Item 1 */}
           <button
             type="button"
@@ -409,48 +403,114 @@ export default function ProfilProduk() {
   const rangeFrom = filtered.length === 0 ? 0 : startIndex + 1;
   const rangeTo = Math.min(startIndex + rowsPerPage, filtered.length);
 
-  const renderHeader = () => (
-    <header className="border-b border-gray-200 bg-white">
-      <div className="mx-auto flex max-w-[1360px] items-center justify-between px-6 py-3.5 sm:px-8">
-        <div>
-          <Link
-            to="/main-product/products"
-            className="mb-1 inline-block text-xs font-medium text-[#2f54eb] hover:underline"
-          >
-            Daftar produk
-          </Link>
-          <h1 className="m-0 text-xl font-bold leading-tight tracking-tight text-gray-900">
-            Detail produk
-          </h1>
-        </div>
+  const [themeMode, setThemeMode] = useState(
+    () => localStorage.getItem("app_theme") || "light"
+  );
 
-        <div className="flex items-center space-x-1.5">
-          <button
-            type="button"
-            aria-label="Sebelumnya"
-            disabled={!product?.prev_id}
-            onClick={() => navigate(`${PRODUK_PATH}/${product.prev_id}`)}
-            className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 bg-white text-gray-400 transition-colors hover:border-gray-300 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <ChevronLeft />
-          </button>
-          <button
-            type="button"
-            aria-label="Berikutnya"
-            disabled={!product?.next_id}
-            onClick={() => navigate(`${PRODUK_PATH}/${product.next_id}`)}
-            className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 bg-white text-gray-400 transition-colors hover:border-gray-300 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <ChevronRight />
-          </button>
+  useEffect(() => {
+    const sync = () => setThemeMode(localStorage.getItem("app_theme") || "light");
+    window.addEventListener("themeChanged", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("themeChanged", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const isDark = themeMode === "dark";
+  const rootClass = `${isDark ? "dash-dark" : ""} min-h-screen bg-white`;
+  const rootStyle = isDark ? { backgroundColor: "#121212" } : undefined;
+
+  const renderHeader = () => (
+    <>
+      <header className="border-b border-gray-200 bg-white">
+        <div className="mx-auto flex max-w-[1360px] items-center justify-between px-6 py-3.5 sm:px-8">
+          <div>
+            <Link
+              to="/main-product/products"
+              className="mb-1 inline-block text-xs font-medium text-[#2f54eb] hover:underline"
+            >
+              Daftar produk
+            </Link>
+            <h1 className="m-0 text-xl font-bold leading-tight tracking-tight text-gray-900">
+              Detail produk
+            </h1>
+          </div>
+
+          <div className="flex items-center space-x-1.5">
+            <button
+              type="button"
+              aria-label="Sebelumnya"
+              disabled={!product?.prev_id}
+              onClick={() => navigate(`${PRODUK_PATH}/${product.prev_id}`)}
+              className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 bg-white text-gray-400 transition-colors hover:border-gray-300 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <ChevronLeft />
+            </button>
+            <button
+              type="button"
+              aria-label="Berikutnya"
+              disabled={!product?.next_id}
+              onClick={() => navigate(`${PRODUK_PATH}/${product.next_id}`)}
+              className="flex h-7 w-7 items-center justify-center rounded border border-gray-200 bg-white text-gray-400 transition-colors hover:border-gray-300 hover:text-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <ChevronRight />
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <style>{`
+      .dash-dark input { color-scheme: dark; background-color: #262626 !important; color: #f1f5f9 !important; border-color: #634f27 !important; }
+
+      /* Permukaan */
+      .dash-dark .bg-white { background-color: #121212; }
+      .dash-dark .action-menu { background-color: #121212; border-color: #634f27; }
+      .dash-dark .action-menu button { background-color: transparent; }
+      .dash-dark .action-menu button:hover { background-color: #1f1f1f; }
+      .dash-dark [class*="bg-slate-50"],
+      .dash-dark [class*="bg-gray-50"] { background-color: #262626; }
+      .dash-dark [class*="bg-[#EDFFFD]"] { background-color: #262626; }
+      .dash-dark [class*="bg-[#edf2f9]"] { background-color: #262626; }
+      .dash-dark [class*="hover:bg-slate-100"]:hover,
+      .dash-dark [class*="hover:bg-slate-50"]:hover,
+      .dash-dark [class*="hover:bg-gray-50"]:hover,
+      .dash-dark [class*="hover:bg-[#edf2f9]"]:hover { background-color: #2d2d2d; }
+      .dash-dark [class*="bg-[#4B61DD]/10"] { background-color: rgba(229,184,92,0.15); }
+
+      /* Border */
+      .dash-dark .border-gray-100,
+      .dash-dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #3a3326; }
+      .dash-dark .border-gray-200,
+      .dash-dark .border-gray-300 { border-color: #634f27; }
+      .dash-dark [class*="hover:border-gray-300"]:hover { border-color: #E5B85C; }
+
+      /* Teks */
+      .dash-dark .text-gray-900,
+      .dash-dark .text-gray-800,
+      .dash-dark .text-gray-700,
+      .dash-dark .text-slate-700 { color: #f1f5f9; }
+      .dash-dark .text-gray-600,
+      .dash-dark .text-gray-500 { color: #cbd5e1; }
+      .dash-dark .text-gray-400,
+      .dash-dark .text-gray-300 { color: #94a3b8; }
+      .dash-dark [class*="hover:text-gray-"]:hover { color: #ffffff; }
+
+      /* Aksen biru -> emas */
+      .dash-dark [class~="text-[#2f54eb]"],
+      .dash-dark [class~="text-[#4B61DD]"] { color: #E5B85C; }
+      .dash-dark [class*="border-[#2f54eb]"],
+      .dash-dark [class*="border-[#4B61DD]"] { border-color: #E5B85C; }
+      .dash-dark [class~="bg-[#2f54eb]"] { background-color: #E5B85C; color: #121212; }
+      .dash-dark [class*="hover:bg-[#2546cf]"]:hover { background-color: #f0c978; }
+      .dash-dark [class*="ring-[#4B61DD]"] { --tw-ring-color: rgba(229,184,92,0.25); }
+    `}</style>
+    </>
   );
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className={rootClass} style={rootStyle}>
         {renderHeader()}
         <main className="mx-auto max-w-[1360px] px-6 pt-5 sm:px-8">
           <p className="m-0 text-xs text-gray-500">Memuat data produk...</p>
@@ -461,7 +521,7 @@ export default function ProfilProduk() {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className={rootClass} style={rootStyle}>
         {renderHeader()}
         <main className="mx-auto max-w-[1360px] px-6 pt-5 sm:px-8">
           <p className="m-0 text-xs text-gray-500">
@@ -479,12 +539,15 @@ export default function ProfilProduk() {
   const imageUrl = product.image || product.image_url;
 
   return (
-    <div className="min-h-screen bg-white pb-16 text-[13px] text-slate-700 antialiased">
+    <div
+      className={`${rootClass} pb-16 text-[13px] text-slate-700 antialiased`}
+      style={rootStyle}
+    >
       {renderHeader()}
 
       {/* MEMASTIKAN WRAPPER & PADDING DI MAIN SAMA PERSIS DENGAN HEADER */}
       <main className="mx-auto max-w-[1360px] px-6 pt-5 sm:px-8">
-        
+
         {/* Nama + Aksi */}
         <div className="flex flex-col gap-4 border-b border-gray-100 pb-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -586,11 +649,10 @@ export default function ProfilProduk() {
                     key={item.key}
                     type="button"
                     onClick={() => setTab(item.key)}
-                    className={`whitespace-nowrap border-0 border-b-2 bg-transparent px-0.5 py-2 text-xs transition-colors focus:outline-none ${
-                      active
+                    className={`whitespace-nowrap border-0 border-b-2 bg-transparent px-0.5 py-2 text-xs transition-colors focus:outline-none ${active
                         ? "border-[#2f54eb] font-semibold text-[#2f54eb]"
                         : "border-transparent font-normal text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                    }`}
+                      }`}
                   >
                     {item.label}
                   </button>
@@ -673,7 +735,7 @@ export default function ProfilProduk() {
               <div className="flex flex-wrap items-center justify-between gap-4 border-t border-gray-200 py-3 text-xs text-gray-500">
                 <div className="flex items-center space-x-3">
                   <span>Baris per halaman</span>
-                  
+
                   <RowsPerPageDropdown
                     value={rowsPerPage}
                     onChange={(val) => {

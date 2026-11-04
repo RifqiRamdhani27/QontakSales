@@ -21,7 +21,7 @@ const fieldClass =
 const textareaClass =
   "w-full resize-y rounded-md border border-gray-300 bg-white px-3 py-2 text-xs text-gray-900 outline-none placeholder:text-gray-400 focus:border-brand";
 const tagBoxClass =
-  "flex min-h-9 w-full cursor-text flex-wrap items-center gap-1.5 rounded-md border bg-white px-2 py-1";
+  "tag-box flex min-h-9 w-full cursor-text flex-wrap items-center gap-1.5 rounded-md border bg-white px-2 py-1";
 
 const MAX_GROUPS = 3;
 const MAX_BANKS = 3;
@@ -132,7 +132,7 @@ function Checkbox({ checked, indeterminate = false, disabled = false, onChange }
     <input
       ref={ref}
       type="checkbox"
-      className="h-4 w-4 shrink-0 cursor-pointer accent-[#4B61DD] disabled:cursor-not-allowed rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0"
+      className="gold-check h-4 w-4 shrink-0 cursor-pointer accent-[#4B61DD] disabled:cursor-not-allowed rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0"
       checked={checked}
       disabled={disabled}
       onChange={onChange}
@@ -360,6 +360,22 @@ export default function UbahKontak(props) {
   const [leaveOpen, setLeaveOpen] = useState(false);
   const [saveMenuOpen, setSaveMenuOpen] = useState(false);
 
+  const [themeMode, setThemeMode] = useState(
+  () => localStorage.getItem("app_theme") || "light"
+);
+
+useEffect(() => {
+  const sync = () => setThemeMode(localStorage.getItem("app_theme") || "light");
+  window.addEventListener("themeChanged", sync);
+  window.addEventListener("storage", sync);
+  return () => {
+    window.removeEventListener("themeChanged", sync);
+    window.removeEventListener("storage", sync);
+  };
+}, []);
+
+const isDark = themeMode === "dark";
+
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const setDetail = (key, value) => setForm((current) => ({ ...current, detail: { ...current.detail, [key]: value } }));
   const setBank = (id, key, value) => setForm((current) => ({ ...current, banks: current.banks.map((bank) => bank.id === id ? { ...bank, [key]: value } : bank) }));
@@ -387,8 +403,10 @@ export default function UbahKontak(props) {
   if (!contact) return <div className="p-10">Data kontak tidak ditemukan.</div>;
 
   return (
-    <div className="-m-7 w-[calc(100%+3.5rem)] bg-white max-md:-m-[18px] max-md:w-[calc(100%+2.25rem)]">
-      
+      <div
+        className={`${isDark ? "dash-dark" : ""} -m-7 w-[calc(100%+3.5rem)] bg-white max-md:-m-[18px] max-md:w-[calc(100%+2.25rem)]`}
+        style={isDark ? { backgroundColor: "#121212", minHeight: "100vh" } : undefined}
+      >      
       {/* HEADER BEBAS JARAK */}
       <div
         id="create-contact-top"
@@ -511,7 +529,7 @@ export default function UbahKontak(props) {
       </div>
 
       {leaveOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40">
+        <div className="modal-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/40">
           <div className="flex w-[335px] flex-col rounded-md bg-white shadow-lg">
             <div className="flex items-center justify-between border-b px-3 py-3"><h2 className="m-0 text-xs font-bold">Tinggalkan halaman ini?</h2><button onClick={() => setLeaveOpen(false)}><X size={16} /></button></div>
             <div className="p-3 text-xs">Perubahan kontak ini tidak akan tersimpan. Anda tidak dapat membatalkan tindakan ini.</div>
@@ -542,6 +560,99 @@ export default function UbahKontak(props) {
           </div>
         </div>
       )}
+
+      <style>{`
+      .dash-dark input, .dash-dark textarea { color-scheme: dark; }
+      .dash-dark input:not([type="checkbox"]):not([type="radio"]),
+      .dash-dark textarea {
+        background-color: #262626;
+        color: #f1f5f9;
+        border-color: #634f27;
+      }
+      .dash-dark ::placeholder { color: #94a3b8; }
+      .dash-dark input[type="radio"] { accent-color: #E5B85C; }
+      .dash-dark .focus-within\\:border-brand:focus-within { border-color: #E5B85C; }
+      .dash-dark input:focus, .dash-dark textarea:focus { border-color: #E5B85C; }
+
+      /* Permukaan */
+      .dash-dark .bg-white { background-color: #121212; }
+      .dash-dark .tag-box { background-color: #262626; }
+      .dash-dark .tag-box input {
+        background-color: transparent !important;
+        border-color: transparent !important;
+        box-shadow: none !important;
+      }
+      .dash-dark .bg-slate-50,
+      .dash-dark .bg-slate-100 { background-color: #262626; }
+      .dash-dark [class*="bg-[#EDFFFD]"] { background-color: #d38e0d69; }
+      .dash-dark .bg-indigo-50,
+      .dash-dark .bg-indigo-100 { background-color: rgba(229,184,92,0.15); }
+
+      /* Border */
+      .dash-dark .border-gray-200,
+      .dash-dark .border-gray-300 { border-color: #634f27; }
+      .dash-dark .border-b,
+      .dash-dark .border-t { border-color: #634f27; }
+
+      /* Teks */
+      .dash-dark .text-gray-900,
+      .dash-dark .text-gray-800,
+      .dash-dark .text-gray-700 { color: #f1f5f9; }
+      .dash-dark .text-gray-600,
+      .dash-dark .text-slate-500 { color: #cbd5e1; }
+      .dash-dark .text-gray-500,
+      .dash-dark .text-gray-400 { color: #94a3b8; }
+      .dash-dark .text-red-500,
+      .dash-dark .text-red-600 { color: #f87171; }
+      .dash-dark .hover\\:text-red-600:hover { color: #f87171; }
+      .dash-dark .text-green-500 { color: #22c55e; }
+
+      /* Aksen biru -> emas */
+      .dash-dark .text-brand { color: #E5B85C; }
+      .dash-dark [class*="bg-[#4B61DD]"] { background-color: #E5B85C; color: #121212; }
+      .dash-dark [class*="hover:bg-[#3d4fbd]"]:hover { background-color: #f0c978; }
+      .dash-dark .btn-primary-dark {
+        background-color: #E5B85C !important;
+        color: #121212 !important;
+      }
+      .dash-dark .btn-primary-dark:hover { background-color: #f0c978 !important; }
+      .dash-dark .btn-primary-dark svg { fill: #121212; }
+      .dash-dark .btn-primary-dark + .btn-primary-dark {
+        border-left: 1px solid rgba(18,18,18,0.35) !important;
+      }
+
+      /* Overlay modal netral */
+      .dash-dark .modal-overlay { background-color: rgba(0,0,0,0.65) !important; }
+
+      /* Checkbox emas */
+      .dash-dark input.gold-check {
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: #262626 !important;
+        border: 1px solid #634f27 !important;
+        position: relative;
+      }
+      .dash-dark input.gold-check:checked {
+        background-color: #ba9242 !important;
+        border-color: #ba9242 !important;
+      }
+      .dash-dark input.gold-check:checked::after {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 1px;
+        width: 4px;
+        height: 8px;
+        border: solid #121212;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+
+      /* Hover (paling bawah) */
+      .dash-dark [class*="hover:bg-slate-50"]:hover,
+      .dash-dark [class*="hover:bg-slate-100"]:hover { background-color: #2d2d2d; }
+      .dash-dark [class*="hover:text-gray-"]:hover { color: #ffffff; }
+    `}</style>
     </div>
   );
 }

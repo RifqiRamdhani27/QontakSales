@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, VStack, Text, Link as ChakraLink, HStack } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import {
@@ -24,6 +24,42 @@ const allNavItems = [
   { label: "Daftar Lainnya", icon: NoteIcon, path: "/daftar-lainnya" },
 ];
 
+const FLOWER_WIDTH = 30;
+
+const THEME = {
+  light: {
+    bg: "white",
+    text: "foreground",
+    border: "border",
+    shadow: "0 2px 6px rgba(0,0,0,0.06)",
+    hoverBg: "#efefefff",
+    hoverColor: "#111827",
+    activeBg: "#0adae1ff",
+    activeColor: "#ffffffff",
+    activeHoverBg: "#0bdfe6ff",
+    toggleBg: "white",
+    toggleBorder: "border",
+    toggleColor: "gray.500",
+    logoFilter: "none",
+    titleFilter: "none",
+  },
+  dark: {
+    bg: "#1A1A1A",
+    text: "#F3F4F6",
+    border: "#333333",
+    shadow: "0 4px 14px rgba(229, 184, 92, 0.2)",
+    hoverBg: "rgba(236, 230, 220, 0.15)",
+    hoverColor: "rgba(212, 142, 36, 0.92)",
+    activeBg: "rgba(180, 118, 25, 0.92)",
+    activeColor: "#ffffff",
+    activeHoverBg: "rgba(212, 142, 36, 0.92)",
+    toggleBg: "#242424",
+    toggleBorder: "#444",
+    toggleColor: "#E5B85C",
+    logoFilter: "brightness(0) saturate(100%) invert(78%) sepia(22%) saturate(1046%) hue-rotate(351deg) brightness(93%) contrast(91%)",    titleFilter: "brightness(0) invert(1)",
+  }
+};
+
 export default function Sidebar({ open, onClose }) {
   const location = useLocation();
   const userRole = localStorage.getItem("user_role");
@@ -32,6 +68,26 @@ export default function Sidebar({ open, onClose }) {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const sidebarWidth = isCollapsed ? "76px" : "260px";
+
+  const [themeMode, setThemeMode] = useState(() => {
+    return localStorage.getItem("app_theme") || "light";
+  });
+
+  useEffect(() => {
+    const handleThemeChange = () => {
+      setThemeMode(localStorage.getItem("app_theme") || "light");
+    };
+    window.addEventListener("themeChanged", handleThemeChange);
+    window.addEventListener("storage", handleThemeChange);
+
+    return () => {
+      window.removeEventListener("themeChanged", handleThemeChange);
+      window.removeEventListener("storage", handleThemeChange);
+    };
+  }, []);
+
+  const currentTheme = THEME[themeMode];
+  const isDark = themeMode === "dark";
 
   return (
     <>
@@ -54,7 +110,6 @@ export default function Sidebar({ open, onClose }) {
         transform={{ base: open ? "translateX(0)" : "translateX(-100%)", md: "translateX(0)" }}
         transition="width 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 200ms ease"
       >
-        {/* TOMBOL TOGGLE DI LUAR TIRAI (BIAR GAK KEPOTONG & BISA DI LUAR GARIS) */}
         <Box
           as="button"
           onClick={() => setIsCollapsed((v) => !v)}
@@ -67,12 +122,16 @@ export default function Sidebar({ open, onClose }) {
           alignItems="center"
           justifyContent="center"
           borderRadius="full"
-          bg="white"
+          bg={currentTheme.toggleBg}
           border="1px solid"
-          borderColor="border"
-          color="gray.500"
-          boxShadow="0 1px 4px rgba(0,0,0,0.08)"
-          _hover={{ bg: "gray.50", color: "gray.800", boxShadow: "0 2px 6px rgba(0,0,0,0.12)" }}
+          borderColor={currentTheme.toggleBorder}
+          color={currentTheme.toggleColor}
+          boxShadow={currentTheme.shadow}
+          _hover={{ 
+            bg: themeMode === 'dark' ? '#333' : 'gray.50', 
+            color: themeMode === 'dark' ? '#FFF' : 'gray.800', 
+            boxShadow: "0 2px 6px rgba(0,0,0,0.12)" 
+          }}
           transition="all 150ms ease"
           zIndex={60}
         >
@@ -86,19 +145,18 @@ export default function Sidebar({ open, onClose }) {
           />
         </Box>
 
-        {/* TIRAI UNTUK ANIMASI NUTUP KE KIRI */}
         <Box
           w="100%"
           h="100%"
-          bg="white"
+          bg={currentTheme.bg}
           borderRight="1px solid"
-          borderColor="border"
-          boxShadow="0 2px 6px rgba(0,0,0,0.06)"
+          borderColor={currentTheme.border}
+          boxShadow={currentTheme.shadow}
+          transition="background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease"
           display="flex"
           flexDirection="column"
           overflow="hidden" 
         >
-          {/* KONTEN ASLI DIKUNCI 260px BIAR GAK GESER */}
           <Box
             w="260px"
             h="100%"
@@ -111,7 +169,6 @@ export default function Sidebar({ open, onClose }) {
               minH="64px"
               flexShrink={0}
             >
-              {/* LOGO: Kalau collapsed cuma nampilin icon Qontak aja (crop), kalau normal nampilin full */}
               {isCollapsed ? (
                 <Box
                   w="32px"
@@ -132,17 +189,62 @@ export default function Sidebar({ open, onClose }) {
                       maxWidth: "none",
                       objectFit: "cover",
                       objectPosition: "left center",
+                      filter: currentTheme.logoFilter,
+                      transition: "filter 0.3s ease",
+                    }}
+                  />
+                </Box>
+              ) : isDark ? (
+                /* Dark mode: tulisan putih, bunga emas */
+                <Box position="relative" h="28px" flexShrink={0} display="inline-block">
+                  {/* Lapisan bawah: seluruh logo putih (tulisan) */}
+                  <Box
+                    as="img"
+                    src={brandLogo}
+                    alt="QontakSales"
+                    h="28px"
+                    display="block"
+                    style={{
+                      filter: currentTheme.titleFilter,
+                      transition: "filter 0.3s ease",
+                    }}
+                  />
+                  {/* Lapisan atas: logo emas, hanya bagian bunga yang terlihat */}
+                  <Box
+                    as="img"
+                    src={brandLogo}
+                    alt=""
+                    aria-hidden="true"
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    h="28px"
+                    style={{
+                      filter: currentTheme.logoFilter,
+                      clipPath: `inset(0 calc(100% - ${FLOWER_WIDTH}px) 0 0)`,
+                      transition: "filter 0.3s ease",
                     }}
                   />
                 </Box>
               ) : (
-                <Box as="img" src={brandLogo} h="28px" alt="QontakSales" flexShrink={0} />
+                <Box 
+                  as="img" 
+                  src={brandLogo} 
+                  h="28px" 
+                  alt="QontakSales" 
+                  flexShrink={0} 
+                  style={{ 
+                    filter: currentTheme.logoFilter,
+                    transition: "filter 0.3s ease",
+                  }} 
+                />
               )}
 
               <Box
                 display={{ base: "block", md: "none" }}
                 cursor="pointer"
                 onClick={onClose}
+                color={currentTheme.text}
               >
                 <X size={20} />
               </Box>
@@ -166,11 +268,11 @@ export default function Sidebar({ open, onClose }) {
                     py={3}
                     borderRadius="md"
                     fontWeight={isActive ? "semibold" : "normal"}
-                    bg={isActive ? "#0adae1ff" : "transparent"}
-                    color={isActive ? "#ffffffff" : "foreground"}
+                    bg={isActive ? currentTheme.activeBg : "transparent"}
+                    color={isActive ? currentTheme.activeColor : currentTheme.text}
                     _hover={{
-                      bg: isActive ? "#0bdfe6ff" : "#efefefff",
-                      color: isActive ? "#ffffffff" : "#111827",
+                      bg: isActive ? currentTheme.activeHoverBg : currentTheme.hoverBg,
+                      color: isActive ? currentTheme.activeColor : currentTheme.hoverColor,
                       textDecoration: "none",
                     }}
                     transition="all 150ms ease"
@@ -178,7 +280,6 @@ export default function Sidebar({ open, onClose }) {
                     minH="44px"
                   >
                     <Icon size={22} style={{ flexShrink: 0 }} />
-                    {/* TEKS: Hilang total saat collapsed */}
                     <Text
                       fontSize="sm"
                       whiteSpace="nowrap"
@@ -201,15 +302,18 @@ export default function Sidebar({ open, onClose }) {
                 px={4}
                 py={3}
                 borderRadius="md"
-                color="foreground"
-                bg={location.pathname.startsWith("/settings") ? "muted" : "transparent"}
-                _hover={{ bg: "muted", textDecoration: "none" }}
+                color={location.pathname.startsWith("/settings") ? currentTheme.activeColor : currentTheme.text}
+                bg={location.pathname.startsWith("/settings") ? currentTheme.activeBg : "transparent"}
+                _hover={{ 
+                  bg: location.pathname.startsWith("/settings") ? currentTheme.activeHoverBg : currentTheme.hoverBg, 
+                  color: location.pathname.startsWith("/settings") ? currentTheme.activeColor : currentTheme.hoverColor,
+                  textDecoration: "none" 
+                }}
                 transition="all 150ms ease"
                 onClick={onClose}
                 minH="44px"
               >
                 <Gear size={22} style={{ flexShrink: 0 }} />
-                {/* TEKS SETTINGS: Hilang total saat collapsed */}
                 <Text
                   fontSize="sm"
                   whiteSpace="nowrap"

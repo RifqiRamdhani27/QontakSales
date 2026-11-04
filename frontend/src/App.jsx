@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Beranda from "./pages/Beranda";
+import Beranda from "./pages/Main-Beranda/Beranda";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import BiayaPage from "./pages/BiayaPage";
 import ProductsMain from "./pages/Main-Product/ProductsMain";
-import DashboardPage from "./pages/DashboardPage";
+import DashboardPage from "./pages/Main-Dashboard/DashboardPage";
 import LeadsPage from "./pages/LeadsPage";
 import PipelinePage from "./pages/PipelinePage";
 import CalendarPage from "./pages/CalendarPage";
@@ -157,6 +157,67 @@ import DiskonPembelian from "./pages/Isi-DaftarAkun/CostOfSales/DiskonPembelian"
 import ReturPembelian from "./pages/Isi-DaftarAkun/CostOfSales/ReturPembelian";
 import BiayaProduksi from "./pages/Isi-DaftarAkun/CostOfSales/BiayaProduksi";
 import PengirimanPengangkutan from "./pages/Isi-DaftarAkun/CostOfSales/Pengiriman&Pengangkutan" 
+import BiayaPenjualan from "./pages/Isi-DaftarAkun/Expenses/BiayaPenjualan";
+import IklanPromosi from "./pages/Isi-DaftarAkun/Expenses/IklanPromosi";
+import KomisiFee from "./pages/Isi-DaftarAkun/Expenses/KomisiFee";
+import BensinTolParkirPenjualan from "./pages/Isi-DaftarAkun/Expenses/BensinTolParkirPenjualan";
+import PerjalananDinasPenjualan from "./pages/Isi-DaftarAkun/Expenses/PerjalananDinasPenjualan";
+import KomunikasiPenjualan from "./pages/Isi-DaftarAkun/Expenses/KomunikasiPenjualan";
+import MarketingLainnya from "./pages/Isi-DaftarAkun/Expenses/MarketingLainnya";
+import BiayaUmumAdministratif from "./pages/Isi-DaftarAkun/Expenses/BiayaUmumAdministratif";
+import Gaji from "./pages/Isi-DaftarAkun/Expenses/Gaji";
+import Upah from "./pages/Isi-DaftarAkun/Expenses/Upah";
+import MakananTransportasi from "./pages/Isi-DaftarAkun/Expenses/Makanan&Transportasi";
+import Lembur from "./pages/Isi-DaftarAkun/Expenses/Lembur";
+import Pengobatan from "./pages/Isi-DaftarAkun/Expenses/Pengobatan";
+import ThrBonus from "./pages/Isi-DaftarAkun/Expenses/Thr&Bonus";
+import Jamsostek from "./pages/Isi-DaftarAkun/Expenses/Jamsostek";
+import Insentif from "./pages/Isi-DaftarAkun/Expenses/Insentif";
+import Pesangon from "./pages/Isi-DaftarAkun/Expenses/Pesangon";
+import ManfaatTunjanganLain from "./pages/Isi-DaftarAkun/Expenses/Manfaat&TunjanganLain";
+import Donasi from "./pages/Isi-DaftarAkun/Expenses/Donasi";
+import Hiburan from "./pages/Isi-DaftarAkun/Expenses/Hiburan";
+import BensinTolParkirUmum from "./pages/Isi-DaftarAkun/Expenses/BensinTolParkirUmum";
+import PerbaikanPemeliharaan from "./pages/Isi-DaftarAkun/Expenses/Perbaikan&Pemeliharaan";
+import PerjalananDinasUmum from "./pages/Isi-DaftarAkun/Expenses/PerjalananDinasUmum";
+import Makanan from "./pages/Isi-DaftarAkun/Expenses/Makanan";
+import KomunikasiUmum from "./pages/Isi-DaftarAkun/Expenses/KomunikasiUmum";
+import IuranLangganan from "./pages/Isi-DaftarAkun/Expenses/Iuran&Langganan";
+import Asuransi from "./pages/Isi-DaftarAkun/Expenses/Asuransi";
+import LegalProfesional from "./pages/Isi-DaftarAkun/Expenses/Legal&Profesional";
+import BebanManfaatKaryawan from "./pages/Isi-DaftarAkun/Expenses/BebanManfaatKaryawan";
+import SaranaKantor from "./pages/Isi-DaftarAkun/Expenses/SaranaKantor";
+import PelatihanPengembangan from "./pages/Isi-DaftarAkun/Expenses/Pelatihan&Pengembangan";
+import BebanPiutangTakTertagih from "./pages/Isi-DaftarAkun/Expenses/BebanPiutangTakTertagih";
+import PajakPerizinan from "./pages/Isi-DaftarAkun/Expenses/Pajak&Perizinan";
+import Denda from "./pages/Isi-DaftarAkun/Expenses/Denda";
+import PengeluaranBarangRusak from "./pages/Isi-DaftarAkun/Expenses/PengeluaranBarangRusak";
+import BebanKantor from "./pages/Isi-DaftarAkun/Expenses/BebanKantor";
+import AlatTulisKantorPrinting from "./pages/Isi-DaftarAkun/Expenses/AlatTulisKantor&Printing";
+import BeaMaterai from "./pages/Isi-DaftarAkun/Expenses/BeaMaterai";
+import KeamananKebersihan from "./pages/Isi-DaftarAkun/Expenses/Keamanan&Kebersihan";
+import SuppliesMaterial from "./pages/Isi-DaftarAkun/Expenses/Supplies&Material";
+import Pemborong from "./pages/Isi-DaftarAkun/Expenses/Pemborong";
+import BiayaSewaBangunan from "./pages/Isi-DaftarAkun/Expenses/BiayaSewaBangunan";
+import BiayaSewaKendaraan from "./pages/Isi-DaftarAkun/Expenses/BiayaSewaKendaraan";
+import BiayaSewaOperasional from "./pages/Isi-DaftarAkun/Expenses/BiayaSewaOperasional";
+import BiayaSewaLainLain from "./pages/Isi-DaftarAkun/Expenses/BiayaSewaLainLain";
+import PenyusutanBangunan from "./pages/Isi-DaftarAkun/Expenses/PenyusutanBangunan";
+import PenyusutanPerbaikanBangunan from "./pages/Isi-DaftarAkun/Expenses/PenyusutanPerbaikanBangunan";
+import PenyusutanKendaraan from "./pages/Isi-DaftarAkun/Expenses/PenyusutanKendaraan";
+import PenyusutanMesinPeralatan from "./pages/Isi-DaftarAkun/Expenses/PenyusutanMesin&Peralatan";
+import PenyusutanPeralatanKantor from "./pages/Isi-DaftarAkun/Expenses/PenyusutanPeralatanKantor";
+import PenyusutanAsetSewaGunaUsaha from "./pages/Isi-DaftarAkun/Expenses/PenyusutanAsetSewaGunaUsaha";
+import PendapatanBungaBank from "./pages/Isi-DaftarAkun/OtherIncome/PendapatanBungaBank";
+import PendapatanBungaDeposito from "./pages/Isi-DaftarAkun/OtherIncome/PendapatanBungaDeposito";
+import PendapatanLainLain from "./pages/Isi-DaftarAkun/OtherIncome/PendapatanLainLain";
+import BebanBunga from "./pages/Isi-DaftarAkun/OtherExpense/BebanBunga";
+import BebanLainLain from "./pages/Isi-DaftarAkun/OtherExpense/BebanLainLain";
+import BebanPajakKini from "./pages/Isi-DaftarAkun/OtherExpense/BebanPajakKini";
+import BebanPajakTangguhan from "./pages/Isi-DaftarAkun/OtherExpense/BebanPajakTangguhan";
+import LabaRugiPelepasanAsetTetap from "./pages/Isi-DaftarAkun/OtherExpense/LabaRugiPelepasanAsetTetap";
+import PenyesuaianPersediaan from "./pages/Isi-DaftarAkun/OtherExpense/PenyesuaianPersediaan";
+import Provisi from "./pages/Isi-DaftarAkun/OtherExpense/Provisi";
 /* Kontak */
 import ProfilKontak from "./pages/Main-Contact/ProfilKontak";
 import BuatKontak from "./pages/Main-Contact/BuatKontak";
@@ -332,6 +393,67 @@ function App() {
           <Route path="/isi-daftar-akun/:kode_akun" element={<BebanPokokPendapatan />} />
           <Route path="/isi-daftar-akun/biaya-impor" element={<BiayaImpor />} />
           <Route path="/isi-daftar-akun/:kode_akun" element={<BiayaImpor />} />
+          <Route path="/isi-daftar-akun/biaya-penjualan" element={<BiayaPenjualan />} />
+          <Route path="/isi-daftar-akun/iklan-promosi" element={<IklanPromosi />} />
+          <Route path="/isi-daftar-akun/komisi-fee" element={<KomisiFee />} />
+          <Route path="/isi-daftar-akun/bensin-tol-parkir-penjualan" element={<BensinTolParkirPenjualan />} />
+          <Route path="/isi-daftar-akun/perjalanan-dinas-penjualan" element={<PerjalananDinasPenjualan />} />
+          <Route path="/isi-daftar-akun/komunikasi-penjualan" element={<KomunikasiPenjualan />} />
+          <Route path="/isi-daftar-akun/marketing-lainnya" element={<MarketingLainnya />} />
+          <Route path="/isi-daftar-akun/biaya-umum-administratif" element={<BiayaUmumAdministratif />} />
+          <Route path="/isi-daftar-akun/gaji" element={<Gaji />} />
+          <Route path="/isi-daftar-akun/upah" element={<Upah />} />
+          <Route path="/isi-daftar-akun/makanan-transportasi" element={<MakananTransportasi />} />
+          <Route path="/isi-daftar-akun/lembur" element={<Lembur />} />
+          <Route path="/isi-daftar-akun/pengobatan" element={<Pengobatan />} />
+          <Route path="/isi-daftar-akun/thr-bonus" element={<ThrBonus />} />
+          <Route path="/isi-daftar-akun/jamsostek" element={<Jamsostek />} />
+          <Route path="/isi-daftar-akun/insentif" element={<Insentif />} />
+          <Route path="/isi-daftar-akun/pesangon" element={<Pesangon />} />
+          <Route path="/isi-daftar-akun/manfaat-tunjangan-lain" element={<ManfaatTunjanganLain />} />
+          <Route path="/isi-daftar-akun/donasi" element={<Donasi />} />
+          <Route path="/isi-daftar-akun/hiburan" element={<Hiburan />} />
+          <Route path="/isi-daftar-akun/bensin-tol-parkir-umum" element={<BensinTolParkirUmum />} />
+          <Route path="/isi-daftar-akun/perbaikan-pemeliharaan" element={<PerbaikanPemeliharaan />} />
+          <Route path="/isi-daftar-akun/perjalanan-dinas-umum" element={<PerjalananDinasUmum />} />
+          <Route path="/isi-daftar-akun/makanan" element={<Makanan />} />
+          <Route path="/isi-daftar-akun/komunikasi-umum" element={<KomunikasiUmum />} />
+          <Route path="/isi-daftar-akun/iuran-langganan" element={<IuranLangganan />} />
+          <Route path="/isi-daftar-akun/asuransi" element={<Asuransi />} />
+          <Route path="/isi-daftar-akun/legal-profesional" element={<LegalProfesional />} />
+          <Route path="/isi-daftar-akun/beban-manfaat-karyawan" element={<BebanManfaatKaryawan />} />
+          <Route path="/isi-daftar-akun/sarana-kantor" element={<SaranaKantor />} />
+          <Route path="/isi-daftar-akun/pelatihan-pengembangan" element={<PelatihanPengembangan />} />
+          <Route path="/isi-daftar-akun/beban-piutang-tak-tertagih" element={<BebanPiutangTakTertagih />} />
+          <Route path="/isi-daftar-akun/pajak-perizinan" element={<PajakPerizinan />} />
+          <Route path="/isi-daftar-akun/denda" element={<Denda />} />
+          <Route path="/isi-daftar-akun/pengeluaran-barang-rusak" element={<PengeluaranBarangRusak />} />
+          <Route path="/isi-daftar-akun/beban-kantor" element={<BebanKantor />} />
+          <Route path="/isi-daftar-akun/alat-tulis-kantor-printing" element={<AlatTulisKantorPrinting />} />
+          <Route path="/isi-daftar-akun/bea-materai" element={<BeaMaterai />} />
+          <Route path="/isi-daftar-akun/keamanan-kebersihan" element={<KeamananKebersihan />} />
+          <Route path="/isi-daftar-akun/supplies-material" element={<SuppliesMaterial />} />
+          <Route path="/isi-daftar-akun/pemborong" element={<Pemborong />} />
+          <Route path="/isi-daftar-akun/biaya-sewa-bangunan" element={<BiayaSewaBangunan />} />
+          <Route path="/isi-daftar-akun/biaya-sewa-kendaraan" element={<BiayaSewaKendaraan />} />
+          <Route path="/isi-daftar-akun/biaya-sewa-operasional" element={<BiayaSewaOperasional />} />
+          <Route path="/isi-daftar-akun/biaya-sewa-lain-lain" element={<BiayaSewaLainLain />} />
+          <Route path="/isi-daftar-akun/penyusutan-bangunan" element={<PenyusutanBangunan />} />
+          <Route path="/isi-daftar-akun/penyusutan-perbaikan-bangunan" element={<PenyusutanPerbaikanBangunan />} />
+          <Route path="/isi-daftar-akun/penyusutan-kendaraan" element={<PenyusutanKendaraan />} />
+          <Route path="/isi-daftar-akun/penyusutan-mesin-peralatan" element={<PenyusutanMesinPeralatan />} />
+          <Route path="/isi-daftar-akun/penyusutan-peralatan-kantor" element={<PenyusutanPeralatanKantor />} />
+          <Route path="/isi-daftar-akun/penyusutan-aset-sewa-guna-usaha" element={<PenyusutanAsetSewaGunaUsaha />} />
+          <Route path="/isi-daftar-akun/pendapatan-bunga-bank" element={<PendapatanBungaBank />} />
+          <Route path="/isi-daftar-akun/pendapatan-bunga-deposito" element={<PendapatanBungaDeposito />} />
+          <Route path="/isi-daftar-akun/pendapatan-lain-lain" element={<PendapatanLainLain />} />
+          <Route path="/isi-daftar-akun/beban-bunga" element={<BebanBunga />} />
+          <Route path="/isi-daftar-akun/beban-lain-lain" element={<BebanLainLain />} />
+          <Route path="/isi-daftar-akun/beban-pajak-kini" element={<BebanPajakKini />} />
+          <Route path="/isi-daftar-akun/beban-pajak-tangguhan" element={<BebanPajakTangguhan />} />
+          <Route path="/isi-daftar-akun/laba-rugi-pelepasan-aset-tetap" element={<LabaRugiPelepasanAsetTetap />} />
+          <Route path="/isi-daftar-akun/penyesuaian-persediaan" element={<PenyesuaianPersediaan />} />
+          <Route path="/isi-daftar-akun/provisi" element={<Provisi />} />
           /* Kontak */
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/main-contact/profil-kontak/:id" element={<ProfilKontak/>} />

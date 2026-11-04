@@ -153,7 +153,7 @@ function TypeBadge({ type }) {
 
 function SplitButton({ children, onClick }) {
   return (
-    <div className="inline-flex shadow-sm h-[34px] rounded-md overflow-hidden">
+    <div className="split-btn inline-flex shadow-sm h-[34px] rounded-md overflow-hidden">
       <button
         type="button"
         onClick={onClick}
@@ -186,6 +186,24 @@ export default function ProfilKontak() {
   const [error, setError] = useState("");
   const [tab, setTab] = useState("profil");
 
+  const [themeMode, setThemeMode] = useState(
+  () => localStorage.getItem("app_theme") || "light"
+);
+
+useEffect(() => {
+  const sync = () => setThemeMode(localStorage.getItem("app_theme") || "light");
+  window.addEventListener("themeChanged", sync);
+  window.addEventListener("storage", sync);
+  return () => {
+    window.removeEventListener("themeChanged", sync);
+    window.removeEventListener("storage", sync);
+  };
+}, []);
+
+const isDark = themeMode === "dark";
+const rootClass = isDark ? "dash-dark" : "";
+const rootStyle = isDark ? { backgroundColor: "#121212" } : undefined;
+
   useEffect(() => {
     let cancelled = false;
 
@@ -214,6 +232,7 @@ export default function ProfilKontak() {
   const goBack = () => navigate(KONTAK_PATH);
 
   const header = (
+    <>
     <header className="mx-auto max-w-[1400px] px-8 pb-0 pt-5">
       <div className="mb-1.5 flex items-center justify-between">
         <Link
@@ -272,11 +291,48 @@ export default function ProfilKontak() {
         })}
       </div>
     </header>
+
+    <style>{`
+      /* Permukaan */
+      .dash-dark .bg-white,
+      .dash-dark [class*="bg-[#fbfcfd]"] { background-color: #121212; }
+
+      /* Border */
+      .dash-dark .border-slate-100 { border-color: #3a3326; }
+      .dash-dark .border-slate-200,
+      .dash-dark .border-gray-300 { border-color: #634f27; }
+
+      /* Teks */
+      .dash-dark .text-slate-900,
+      .dash-dark .text-slate-800,
+      .dash-dark .text-slate-700,
+      .dash-dark .text-gray-800 { color: #f1f5f9; }
+      .dash-dark .text-slate-600,
+      .dash-dark .text-gray-500,
+      .dash-dark .text-slate-500 { color: #cbd5e1; }
+      .dash-dark .text-slate-400 { color: #94a3b8; }
+
+      /* Aksen biru -> emas */
+      .dash-dark .text-brand,
+      .dash-dark [class~="text-[#4B61DD]"] { color: #E5B85C; }
+      .dash-dark .bg-brand { background-color: #E5B85C; }
+      .dash-dark [class~="bg-[#4B61DD]"] { background-color: #E5B85C; color: #121212; }
+      .dash-dark [class*="hover:bg-[#3d4fbd]"]:hover { background-color: #f0c978; }
+      .dash-dark [class*="hover:text-brand-dark"]:hover { color: #f0c978; }
+      .dash-dark .split-btn svg { fill: #121212; }
+      .dash-dark .split-btn button { color: #121212; }
+
+      /* Hover (paling bawah) */
+      .dash-dark [class*="hover:bg-slate-50"]:hover,
+      .dash-dark [class*="hover:bg-slate-100"]:hover { background-color: #2d2d2d; }
+      .dash-dark [class*="hover:text-slate-"]:hover { color: #ffffff; }
+    `}</style>
+  </>
   );
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fbfcfd]">
+      <div className={`${rootClass} min-h-screen bg-[#fbfcfd]`} style={rootStyle}>
         {header}
         <div className="mx-auto max-w-[1400px] border-t border-slate-100 bg-white px-8 py-10">
           <p className="m-0 text-[13px] text-slate-500">Memuat data kontak...</p>
@@ -287,7 +343,7 @@ export default function ProfilKontak() {
 
   if (error || !contact) {
     return (
-      <div className="min-h-screen bg-[#fbfcfd]">
+      <div className={`${rootClass} min-h-screen bg-[#fbfcfd]`} style={rootStyle}>
         {header}
         <div className="mx-auto max-w-[1400px] border-t border-slate-100 bg-white px-8 py-10">
           <p className="m-0 text-[13px] text-slate-500">
@@ -312,7 +368,7 @@ export default function ProfilKontak() {
   const isForeign = contact.citizenship === "foreign";
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 antialiased">
+    <div className={`${rootClass} min-h-screen bg-white text-slate-800 antialiased`} style={rootStyle}>
       {header}
 
       <div className="mx-auto min-h-[calc(100vh-140px)] max-w-[1400px] border-t border-slate-100 bg-white px-8 py-7">

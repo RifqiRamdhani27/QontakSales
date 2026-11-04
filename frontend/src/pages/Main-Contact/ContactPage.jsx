@@ -175,7 +175,7 @@ function Checkbox({ checked, indeterminate = false, disabled = false, onChange }
 
 function Modal({ title, onClose, width = "w-[335px]", children }) {
   return (
-    <div className={modalOverlay}>
+    <div className={`${modalOverlay} modal-overlay`}>
       <div className={`flex max-h-[90vh] max-w-full flex-col rounded-md bg-white shadow-[0_20px_50px_rgba(0,0,0,0.25)] ${width}`}>
         <div className="flex shrink-0 items-center justify-between rounded-t-md border-b border-gray-200 bg-slate-50 px-3 py-3">
           <h2 className="m-0 text-xs font-bold text-gray-900">{title}</h2>
@@ -264,7 +264,7 @@ function ImportStep({ number, title, last = false, children }) {
       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#4B61DD] text-xs font-semibold text-white">
         {number}
       </span>
-      
+
       <div className="min-w-0 flex-1">
         <h3 className="m-0 mb-1 text-[15px] font-semibold text-gray-900">{title}</h3>
         {children}
@@ -440,7 +440,7 @@ function FilterDrawer({ groups, filters, onClose, onApply }) {
   const update = (key, value) => setDraft((current) => ({ ...current, [key]: value }));
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/40">
+    <div className="modal-overlay fixed inset-0 z-50 flex justify-end bg-black/40">
       <aside className="flex h-full w-[260px] max-w-full flex-col bg-white shadow-[-10px_0_40px_rgba(0,0,0,0.2)]">
         <div className="flex shrink-0 items-center justify-between border-b border-gray-200 bg-slate-50 px-3 py-3">
           <h2 className="m-0 text-xs font-bold text-gray-900">Filter daftar kontak</h2>
@@ -457,7 +457,7 @@ function FilterDrawer({ groups, filters, onClose, onApply }) {
           <button type="button" className="cursor-pointer border-0 bg-transparent p-0 text-xs font-semibold text-brand hover:underline" onClick={() => setDraft(EMPTY_FILTERS)}>Reset</button>
           <div className="flex items-center gap-2">
             <button type="button" className="cursor-pointer border-0 bg-transparent px-3 py-2 text-xs font-semibold text-gray-600 hover:text-gray-900" onClick={onClose}>Batal</button>
-            <button type="button" className="h-9 cursor-pointer rounded-md border-0 bg-[#4B61DD] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#3d4fbd]" onClick={() => onApply(draft)}>Terapkan</button>          
+            <button type="button" className="h-9 cursor-pointer rounded-md border-0 bg-[#4B61DD] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#3d4fbd]" onClick={() => onApply(draft)}>Terapkan</button>
           </div>
         </div>
       </aside>
@@ -468,10 +468,10 @@ function FilterDrawer({ groups, filters, onClose, onApply }) {
 function SummaryCard({ title, tone, count = 0, total = 0 }) {
   const t = TONES[tone];
   return (
-<div className={`group cursor-pointer overflow-hidden rounded-md border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${t.border}`}>      <div className={`flex items-center justify-between px-2.5 py-2 ${t.header}`}>
-        <span className="text-xs font-bold text-gray-900">{title}</span>
-        <span className={`flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[10px] font-bold text-white ${t.badge}`}>{count}</span>
-      </div>
+    <div className={`stat-card group cursor-pointer overflow-hidden rounded-md border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${t.border}`}>      <div className={`flex items-center justify-between px-2.5 py-2 ${t.header}`}>
+      <span className="text-xs font-bold text-gray-900">{title}</span>
+      <span className={`flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[10px] font-bold text-white ${t.badge}`}>{count}</span>
+    </div>
       <div className="relative px-2.5 pb-2.5 pt-2">
         <p className="m-0 text-[11px] text-slate-500">Total</p>
         <p className="m-0 text-lg font-semibold text-gray-900">{total}</p>
@@ -571,11 +571,10 @@ function RowsPerPageDropdown({ value, onChange }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`group inline-flex items-center justify-between gap-2.5 h-10 min-w-[70px] px-3 rounded-lg border bg-white text-[13px] font-semibold transition-all duration-150 cursor-pointer shadow-xs ${
-          open
-            ? "border-[#4B61DD] ring-2 ring-[#4B61DD]/15 text-[#4B61DD]"
-            : "border-gray-200 text-gray-800 hover:border-gray-300 hover:bg-slate-50/80"
-        }`}
+        className={`group inline-flex items-center justify-between gap-2.5 h-10 min-w-[70px] px-3 rounded-lg border bg-white text-[13px] font-semibold transition-all duration-150 cursor-pointer shadow-xs ${open
+          ? "border-[#4B61DD] ring-2 ring-[#4B61DD]/15 text-[#4B61DD]"
+          : "border-gray-200 text-gray-800 hover:border-gray-300 hover:bg-slate-50/80"
+          }`}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
@@ -583,9 +582,8 @@ function RowsPerPageDropdown({ value, onChange }) {
         <CaretDown
           size={12}
           weight="bold"
-          className={`transition-transform duration-200 ${
-            open ? "rotate-180 text-[#4B61DD]" : "text-gray-400 group-hover:text-gray-600"
-          }`}
+          className={`transition-transform duration-200 ${open ? "rotate-180 text-[#4B61DD]" : "text-gray-400 group-hover:text-gray-600"
+            }`}
         />
       </button>
 
@@ -604,11 +602,10 @@ function RowsPerPageDropdown({ value, onChange }) {
                   onChange(opt);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center justify-between px-2.5 py-1.5 text-[13px] font-medium rounded-lg transition-colors cursor-pointer ${
-                  isSelected
-                    ? "bg-[#4B61DD]/10 text-[#4B61DD] font-semibold"
-                    : "text-gray-700 hover:bg-slate-100 hover:text-gray-900"
-                }`}
+                className={`flex w-full items-center justify-between px-2.5 py-1.5 text-[13px] font-medium rounded-lg transition-colors cursor-pointer ${isSelected
+                  ? "bg-[#4B61DD]/10 text-[#4B61DD] font-semibold"
+                  : "text-gray-700 hover:bg-slate-100 hover:text-gray-900"
+                  }`}
               >
                 <span>{opt}</span>
                 {isSelected && (
@@ -641,7 +638,7 @@ function ContactsTable({ contacts, columns, onOpenContact, onDeleteContacts, onA
   const ids = rows.map((contact) => contact.id);
   const selectedCount = ids.filter((id) => selected.includes(id)).length;
   const allSelected = ids.length > 0 && selectedCount === ids.length;
-  
+
   const toggleAll = () => setSelected(allSelected ? [] : ids);
   const toggleOne = (id) => setSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
   const toggleSort = () => setSortDir((current) => current === null ? "asc" : current === "asc" ? "desc" : "asc");
@@ -650,10 +647,10 @@ function ContactsTable({ contacts, columns, onOpenContact, onDeleteContacts, onA
   const handleConfirmDelete = async () => {
     // Panggil API hapus
     await onDeleteContacts(selected);
-    
+
     // Tutup modal konfirmasi, lalu buka modal sukses
     setDeleteConfirmOpen(false);
-    setDeleteSuccessOpen(true); 
+    setDeleteSuccessOpen(true);
   };
 
   return (
@@ -670,7 +667,7 @@ function ContactsTable({ contacts, columns, onOpenContact, onDeleteContacts, onA
               className="flex h-[18px] w-[18px] items-center justify-center rounded-[4px] bg-[#4B61DD] text-white hover:bg-[#3d4fbd]"
               title="Batalkan pilihan"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12h14" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12h14" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
             <span className="text-[13px] font-medium text-gray-700">
               {selectedCount} kontak dipilih
@@ -686,7 +683,7 @@ function ContactsTable({ contacts, columns, onOpenContact, onDeleteContacts, onA
               Tindakan
               <svg className="h-3 w-3 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
             </button>
-            
+
             {/* Dropdown Menu Tindakan */}
             {actionMenuOpen && (
               <>
@@ -774,9 +771,9 @@ function ContactsTable({ contacts, columns, onOpenContact, onDeleteContacts, onA
       {/* MODAL KONFIRMASI HAPUS */}
       {/* ========================================== */}
       {deleteConfirmOpen && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-[#2d333b]/60 p-4 pt-[10vh] animate-in fade-in duration-300">          
+        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-[#2d333b]/60 p-4 pt-[10vh] animate-in fade-in duration-300">
           <div className="w-full max-w-[342px] overflow-hidden rounded-lg bg-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3),0_8px_10px_-6px_rgba(0,0,0,0.2)] animate-in zoom-in-95 duration-300">
-            
+
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#e2e8f0] bg-[#f0f4f8] px-4 py-3">
               <h3 className="text-[15px] font-bold tracking-tight text-[#1f2937]">
@@ -817,7 +814,7 @@ function ContactsTable({ contacts, columns, onOpenContact, onDeleteContacts, onA
                 Hapus
               </button>
             </div>
-            
+
           </div>
         </div>
       )}
@@ -826,9 +823,9 @@ function ContactsTable({ contacts, columns, onOpenContact, onDeleteContacts, onA
       {/* MODAL SUKSES HAPUS */}
       {/* ========================================== */}
       {deleteSuccessOpen && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-[#2d333b]/60 p-4 pt-[10vh] animate-in fade-in duration-300">          
+        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-[#2d333b]/60 p-4 pt-[10vh] animate-in fade-in duration-300">
           <div className="w-full max-w-[342px] overflow-hidden rounded-lg bg-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3),0_8px_10px_-6px_rgba(0,0,0,0.2)] animate-in zoom-in-95 duration-300">
-            
+
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#e2e8f0] bg-[#f0f4f8] px-4 py-3">
               <h3 className="text-[15px] font-bold tracking-tight text-[#1f2937]">
@@ -868,7 +865,7 @@ function ContactsTable({ contacts, columns, onOpenContact, onDeleteContacts, onA
                 OK, Mengerti
               </button>
             </div>
-            
+
           </div>
         </div>
       )}
@@ -897,6 +894,22 @@ export default function ContactsPage() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [importOption, setImportOption] = useState(null);
 
+  const [themeMode, setThemeMode] = useState(
+    () => localStorage.getItem("app_theme") || "light"
+  );
+
+  useEffect(() => {
+    const sync = () => setThemeMode(localStorage.getItem("app_theme") || "light");
+    window.addEventListener("themeChanged", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("themeChanged", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const isDark = themeMode === "dark";
+
   // --- STATE PAGINASI ---
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
@@ -917,7 +930,7 @@ export default function ContactsPage() {
     setLoading(true);
     setActiveKey(key);
     setSide("they");
-    setCurrentPage(1); 
+    setCurrentPage(1);
     window.history.replaceState(null, "", `#${key}`);
   };
 
@@ -968,7 +981,8 @@ export default function ContactsPage() {
         archived: c.is_archived,
       }));
       setContacts(normalized);
-    } catch (err) { console.error("Gagal memuat kontak dari database:", err); 
+    } catch (err) {
+      console.error("Gagal memuat kontak dari database:", err);
     } finally { setLoading(false); }
   };
 
@@ -982,10 +996,10 @@ export default function ContactsPage() {
   useEffect(() => { fetchGroups(); }, []);
   useEffect(() => { fetchContacts(); fetchSummary(); }, [activeKey, filters.archived]);
 
-  const handleApplyFilters = (next) => { 
+  const handleApplyFilters = (next) => {
     setLoading(true);
-    setFilters(next); 
-    setFilterOpen(false); 
+    setFilters(next);
+    setFilterOpen(false);
     setCurrentPage(1); // Reset halaman saat filter berubah
   };
 
@@ -998,7 +1012,7 @@ export default function ContactsPage() {
     } catch (err) {
       console.error("Gagal menyimpan kontak ke database:", err);
       alert("Gagal menyimpan kontak. Mohon periksa kembali kelengkapan form.");
-      throw err; 
+      throw err;
     }
   };
 
@@ -1043,9 +1057,10 @@ export default function ContactsPage() {
     return (
       <BuatKontak
         groups={groups}
+        defaultType={activeKey !== "all" ? activeKey : null}
         onClose={() => {
           setCreating(false);
-          window.history.replaceState(null, "", window.location.pathname); // <--- Hapus hash
+          window.history.replaceState(null, "", window.location.pathname);
         }}
         onSave={handleSaveContact}
       />
@@ -1053,14 +1068,18 @@ export default function ContactsPage() {
   }
 
   return (
-    <div className="p-7 max-md:p-[18px]">
+    <div
+      className={`${isDark ? "dash-dark" : ""} min-h-screen p-7 max-md:p-[18px]`}
+      style={isDark ? { backgroundColor: "#121212" } : undefined}
+    >
       <div className="mb-5 flex items-center justify-between gap-5">
         <h1 className="m-0 text-[24px] font-semibold text-gray-900">Kontak</h1>
         <button
           type="button"
+          className="btn-primary-dark"
           onClick={() => {
             setCreating(true);
-            window.history.replaceState(null, "", "#buat"); 
+            window.history.replaceState(null, "", "#buat");
           }}
           style={{
             display: "inline-flex", alignItems: "center", justifyContent: "center",
@@ -1075,7 +1094,7 @@ export default function ContactsPage() {
         </button>
       </div>
 
-      <div className="mb-5 flex gap-1 overflow-x-auto border-b border-[#EDFFFD]">
+      <div className="mb-5 flex gap-1 overflow-x-auto overflow-y-hidden scrollbar-hide border-b border-[#EDFFFD]">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const active = tab.key === activeKey;
@@ -1226,6 +1245,85 @@ export default function ContactsPage() {
       {groupOpen && <GroupModal groups={groups} contacts={contacts} setGroups={setGroups} onClose={() => setGroupOpen(false)} />}
       {importOption && <ImportModal key={importOption} option={importOption} onClose={() => setImportOption(null)} />}
       {filterOpen && <FilterDrawer groups={groups} filters={filters} onClose={() => setFilterOpen(false)} onApply={handleApplyFilters} />}
+      <style>{`
+  .dash-dark input, .dash-dark select, .dash-dark textarea { color-scheme: dark; }
+  .dash-dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+  .dash-dark textarea { background-color: #262626; color: #f1f5f9; border-color: #634f27; }
+  .dash-dark input:focus { border-color: #E5B85C; }
+  .dash-dark ::placeholder { color: #94a3b8; }
+  .dash-dark input[type="checkbox"] { accent-color: #E5B85C; }
+
+  /* Permukaan (sama seperti Produk) */
+  .dash-dark .bg-white { background-color: #121212; }
+  .dash-dark .modal-overlay { background-color: rgba(0, 0, 0, 0.65) !important; }
+  .dash-dark .bg-slate-50,
+  .dash-dark .bg-slate-100,
+  .dash-dark [class*="bg-[#f0f4f8]"] { background-color: #262626; }
+  .dash-dark [class*="bg-[#EDFFFD]"] { background-color: #d38e0d69; }
+  .dash-dark .bg-indigo-50,
+  .dash-dark .bg-indigo-100,
+  .dash-dark [class*="bg-indigo-50"] { background-color: rgba(229,184,92,0.15); }
+  .dash-dark .bg-amber-50 { background-color: rgba(245,158,11,0.15); }
+  .dash-dark .bg-amber-200 { background-color: rgba(245,158,11,0.22); }
+  .dash-dark .bg-red-200 { background-color: rgba(239,68,68,0.22); }
+  .dash-dark .bg-blue-200 { background-color: rgba(96,165,250,0.22); }
+
+  /* Border */
+  .dash-dark .border-gray-100 { border-color: #3a3326; }
+  .dash-dark .border-gray-200,
+  .dash-dark .border-gray-300,
+  .dash-dark [class*="border-[#e2e8f0]"] { border-color: #634f27; }
+  .dash-dark [class*="border-[#EDFFFD]"] { border-color: #634f27; }
+
+  /* Teks */
+  .dash-dark .text-gray-900,
+  .dash-dark .text-gray-800,
+  .dash-dark .text-gray-700,
+  .dash-dark .text-slate-800,
+  .dash-dark [class*="text-[#1f2937]"],
+  .dash-dark [class*="text-[#334155]"] { color: #f1f5f9; }
+  .dash-dark .text-gray-600,
+  .dash-dark .text-slate-600,
+  .dash-dark .text-slate-500,
+  .dash-dark [class*="text-[#5a6978]"],
+  .dash-dark [class*="text-[#596579]"] { color: #cbd5e1; }
+  .dash-dark .text-gray-500,
+  .dash-dark .text-gray-400 { color: #94a3b8; }
+
+  /* Aksen biru -> emas */
+  .dash-dark .text-brand,
+  .dash-dark [class~="text-[#4B61DD]"] { color: #E5B85C; }
+  .dash-dark .border-brand,
+  .dash-dark [class~="border-[#4B61DD]"] { border-color: #E5B85C; }
+  .dash-dark .bg-brand,
+  .dash-dark [class~="bg-[#4B61DD]"] { background-color: #E5B85C; color: #121212; }
+  .dash-dark [class*="bg-[#4B61DD]/10"] { background-color: rgba(229,184,92,0.15); }
+  .dash-dark [class*="ring-[#4B61DD]"] { --tw-ring-color: rgba(229,184,92,0.25); }
+  .dash-dark button[role="checkbox"] svg path { stroke: #121212; }
+
+  .dash-dark .btn-primary-dark { background-color: #E5B85C !important; color: #121212 !important; }
+
+  /* Kotak pencarian */
+  .dash-dark .search-input {
+    background-color: #121212 !important;
+    color: #f1f5f9 !important;
+    border-color: #634f27 !important;
+  }
+  .dash-dark .search-input:focus {
+    border-color: #E5B85C !important;
+    box-shadow: 0 0 0 2px rgba(229,184,92,0.25) !important;
+    outline: none;
+  }
+
+  /* Hover (HARUS paling bawah) */
+  .dash-dark [class*="hover:bg-slate-50"]:hover,
+  .dash-dark [class*="hover:bg-slate-100"]:hover,
+  .dash-dark [class*="hover:bg-slate-200"]:hover,
+  .dash-dark [class*="hover:bg-blue-50"]:hover { background-color: #2d2d2d; }
+  .dash-dark [class*="hover:text-gray-"]:hover { color: #ffffff; }
+  .dash-dark [class*="hover:text-red"]:hover { color: #f87171; }
+  .dash-dark .stat-card:hover { box-shadow: 0 6px 18px rgba(229, 184, 92, 0.45); }
+`}</style>
     </div>
   );
 }

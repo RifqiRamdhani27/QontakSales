@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Spinner } from "@chakra-ui/react";
+import mekariPayImg from "../../assets/mekariPAY.png"
 import {
   Export,
   ArrowClockwise,
@@ -88,12 +89,14 @@ function EmptyDataState({ text = "Belum ada data" }) {
     <div className="flex flex-col items-center justify-center my-8 text-center">
       <svg className="w-12 h-12 mb-3" viewBox="0 0 48 48" fill="none">
         <path
+          className="empty-icon-stroke"
           d="M 22 7.2 A 17 17 0 1 0 40.8 26"
           stroke="#0040C1"
           strokeWidth="3.5"
           strokeLinecap="round"
         />
         <path
+          className="empty-icon-fill empty-icon-stroke"
           d="M 26 5 C 33.5 5 40.5 12 40.5 19.5 C 40.5 21 39.5 22 38 22 L 26 22 C 24.5 22 24 21 24 19.5 L 24 6.5 C 24 5 25 5 26 5 Z"
           fill="#E8EEFF"
           stroke="#0040C1"
@@ -269,6 +272,22 @@ export default function DashboardPage() {
     }
   };
 
+  const [themeMode, setThemeMode] = useState(
+  () => localStorage.getItem("app_theme") || "light"
+);
+
+useEffect(() => {
+  const sync = () => setThemeMode(localStorage.getItem("app_theme") || "light");
+  window.addEventListener("themeChanged", sync);
+  window.addEventListener("storage", sync);
+  return () => {
+    window.removeEventListener("themeChanged", sync);
+    window.removeEventListener("storage", sync);
+  };
+}, []);
+
+const isDark = themeMode === "dark";
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20 min-h-[400px]">
@@ -343,14 +362,14 @@ export default function DashboardPage() {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { font: { size: 11 }, color: "#64748b" },
+        ticks: { font: { size: 11 }, color: isDark ? "#94a3b8" : "#64748b" },
       },
       y: {
         beginAtZero: true,
-        grid: { color: "#f1f5f9" },
+        grid: { color: isDark ? "#2d2d2d" : "#f1f5f9" },
         ticks: {
           font: { size: 11 },
-          color: "#64748b",
+          color: isDark ? "#94a3b8" : "#64748b",
           callback: (v) => (v >= 1000000 ? `Rp ${(v / 1000000).toFixed(0)}M` : `Rp ${v}`),
         },
       },
@@ -472,9 +491,15 @@ export default function DashboardPage() {
                     {labels.map((m, idx) => (
                       <tr key={m}>
                         <td className="py-2 text-slate-700">{m}</td>
-                        <td className="py-2 text-right font-medium text-blue-600">{formatRp(revenueData[idx])}</td>
-                        <td className="py-2 text-right text-teal-600">{formatRp(cashOutData[idx])}</td>
-                        <td className="py-2 text-right font-semibold text-purple-600">{formatRp(netCashData[idx])}</td>
+                        <td className={`py-2 text-right font-medium ${isDark ? "text-[#4ade80]" : "text-blue-600"}`}>
+                          {formatRp(revenueData[idx])}
+                        </td>
+                        <td className={`py-2 text-right ${isDark ? "text-[#f87171]" : "text-teal-600"}`}>
+                          {formatRp(cashOutData[idx])}
+                        </td>
+                        <td className={`py-2 text-right font-semibold ${isDark ? "text-[#E5B85C]" : "text-purple-600"}`}>
+                          {formatRp(netCashData[idx])}
+                        </td>                      
                       </tr>
                     ))}
                   </tbody>
@@ -907,11 +932,11 @@ export default function DashboardPage() {
                   <DotsSixVertical className="w-5 h-5" />
                 </div>
               )}
-              <h2 className="text-base font-semibold text-slate-800">Mekari Pay</h2>
+              <h2 className="text-base font-semibold text-slate-800">QRIS Pay</h2>
             </div>
             <div className="my-auto flex flex-col items-center">
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYaXiksw9k0h-aHkcOTdBLl_xSpNlhISRvsKH6LPbaoXh8RB45Qv8nG6tH_BxSTGGvlZNRiucM_Nct5Gmc4Oxn-QE71CCfaJBBN8iAReB24WezItGdNxmet7AlcNqIMTAhKelpAJaxZ-Cj7CQbpiFMZXyJpVXWM5YcfzlsKvjqzxcG2aboFjY0FmrjfWLdAVFOGMBz0rAH-6JleO37aqUDKu1RivQz7TYHnsHDlD7J8Z1Xb-k1sf_R1irLEriGbTfvSw"
+                src={mekariPayImg}
                 alt="Mekari Pay Illustration"
                 className="h-20 w-auto object-contain mx-auto mb-3"
               />
@@ -955,8 +980,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="bg-[#f8fafc] text-slate-800 antialiased min-h-screen -m-4 md:-m-6 pb-20">
-      {/* BEGIN: MainHeader */}
+      <div
+          className={`${isDark ? "dash-dark" : ""} bg-[#f8fafc] text-slate-800 antialiased min-h-screen -m-4 md:-m-6 pb-20`}
+          style={isDark ? { backgroundColor: "#121212", color: "#e2e8f0" } : undefined}
+        >
+          {/* BEGIN: MainHeader */}
       <header className="bg-white border-b border-slate-200 px-6 pt-5 pb-0">
         <div className="max-w-[1760px] mx-auto">
           {/* Title & Action Bar */}
@@ -1204,7 +1232,7 @@ export default function DashboardPage() {
                     value={selectedTag}
                     onChange={(e) => setSelectedTag(e.target.value)}
                     placeholder="Pilih tag"
-                    className="w-full text-xs border border-slate-300 rounded-md py-2 px-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400"
+                    className="w-full text-xs border border-slate-300 rounded-md py-2 px-3 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder-slate-400 transition-colors"
                   />
                   {/* Radio Options */}
                   <div className="flex items-center gap-6 pt-1 text-xs text-slate-700">
@@ -1282,6 +1310,51 @@ export default function DashboardPage() {
         .animate-fade-in {
           animation: fadeIn 0.25s ease-out forwards;
         }
+        .dash-dark select, .dash-dark input { color-scheme: dark; }
+        /* Permukaan */
+        .dash-dark .bg-white { background-color: #1e1e1e; }
+        .dash-dark [class*="bg-white/70"] { background-color: rgba(30,30,30,0.75); }
+        .dash-dark .bg-slate-50 { background-color: #262626; }
+        .dash-dark .bg-blue-50 { background-color: rgba(229,184,92,0.15); }
+        .dash-dark .bg-amber-50 { background-color: rgba(245,158,11,0.15); }
+        .dash-dark .bg-red-50 { background-color: rgba(239,68,68,0.15); }
+        .dash-dark .bg-emerald-50 { background-color: rgba(16,185,129,0.15); }
+        /* Border & divider */
+        .dash-dark .border-slate-100,
+        .dash-dark .border-slate-200,
+        .dash-dark .border-slate-300 { border-color: #634f27; }
+        .dash-dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #3a3326; }
+
+        /* Teks */
+        .dash-dark .text-slate-900,
+        .dash-dark .text-slate-800,
+        .dash-dark .text-slate-700 { color: #f1f5f9; }
+        .dash-dark .text-slate-600,
+        .dash-dark .text-slate-500 { color: #cbd5e1; }
+        .dash-dark .text-slate-400 { color: #94a3b8; }
+
+        /* Aksen biru UI -> emas (angka tabel tetap biru agar cocok dengan chart) */
+        .dash-dark .text-blue-700,
+        .dash-dark a.text-blue-600,
+        .dash-dark button.text-blue-600,
+        .dash-dark td.text-blue-600.cursor-pointer { color: #E5B85C; }
+        .dash-dark button.border-blue-600,
+        .dash-dark button.border-blue-500,
+        .dash-dark .border-blue-600 { border-color: #E5B85C; }
+        .dash-dark button.bg-blue-600 { background-color: #E5B85C; color: #121212; }
+        .dash-dark button.bg-blue-600:hover { background-color: #f0c978; }
+        .dash-dark .ring-blue-600 { --tw-ring-color: #E5B85C; }
+        .dash-dark nav button.border-blue-600 { color: #E5B85C; }
+
+        .dash-dark .empty-icon-stroke { stroke: #E5B85C; }
+        .dash-dark .empty-icon-fill { fill: rgba(30, 26, 18, 0.18); }
+
+        /* Hover */
+        .dash-dark [class*="hover:bg-slate-100"]:hover,
+        .dash-dark [class*="hover:bg-slate-50"]:hover,
+        .dash-dark [class*="hover:bg-blue-50"]:hover { background-color: #2d2d2d; }
+        .dash-dark [class*="hover:text-slate-800"]:hover,
+        .dash-dark [class*="hover:text-slate-900"]:hover { color: #ffffff; }
       `}</style>
     </div>
   );

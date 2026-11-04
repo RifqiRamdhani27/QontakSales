@@ -451,7 +451,7 @@ function SearchInput({ value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className={`${inputBase} w-56 pl-9 h-8 py-0`} 
+        className={`${inputBase} search-input w-56 pl-9 h-8 py-0`}
       />
     </div>
   );
@@ -549,8 +549,7 @@ function ProductStatCards() {
       {statCardConfigs.map((card) => (
         <div
           key={card.key}
-          className={`group cursor-pointer overflow-hidden rounded-md border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${statCardTone[card.tone].card}`}
-        >
+className={`stat-card group cursor-pointer overflow-hidden rounded-md border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${statCardTone[card.tone].card}`}        >
           <div className={`flex items-center justify-between px-2.5 py-2 ${statCardTone[card.tone].header}`}>
             <span className="text-xs font-bold text-gray-900">{card.label}</span>
             <Link
@@ -2463,6 +2462,22 @@ export default function ProductPage() {
   const [actionPage, setActionPage] = useState(null);
   const location = useLocation();
 
+  const [themeMode, setThemeMode] = useState(
+  () => localStorage.getItem("app_theme") || "light"
+);
+
+useEffect(() => {
+  const sync = () => setThemeMode(localStorage.getItem("app_theme") || "light");
+  window.addEventListener("themeChanged", sync);
+  window.addEventListener("storage", sync);
+  return () => {
+    window.removeEventListener("themeChanged", sync);
+    window.removeEventListener("storage", sync);
+  };
+}, []);
+
+const isDark = themeMode === "dark";
+
   useEffect(() => {
     if (location.state?.openImportModal) {
       setActionPage("importNewProducts"); 
@@ -2480,7 +2495,10 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+      <div
+        className={`${isDark ? "dash-dark" : ""} min-h-screen bg-white`}
+        style={isDark ? { backgroundColor: "#121212" } : undefined}
+      >
       <ProductHeader mainTab={mainTab} onMainTabChange={setMainTab} onAction={handleAction} />
 
       {mainTab === "goods" && (
@@ -2512,6 +2530,79 @@ export default function ProductPage() {
       {actionPage === "updateImportBundles" && (
         <ImportProductModal onClose={closeActionPage} title="Perbarui & impor paket" />
       )}
+      <style>{`
+      .dash-dark input, .dash-dark select, .dash-dark textarea { color-scheme: dark; }
+      .dash-dark input:not([type="checkbox"]):not([type="radio"]),
+      .dash-dark textarea { background-color: #262626; color: #f1f5f9; }
+      .dash-dark ::placeholder { color: #94a3b8; }
+
+      /* Permukaan */
+      .dash-dark .bg-white { background-color: #121212; }
+      .dash-dark .bg-slate-50,
+      .dash-dark .bg-slate-100 { background-color: #262626; }
+      .dash-dark [class*="bg-[#EDFFFD]"] { background-color: #d38e0d69; }
+      .dash-dark .bg-slate-300 { background-color: #4a4a4a; }
+      .dash-dark .bg-indigo-50 { background-color: rgba(229,184,92,0.15); }
+      .dash-dark .bg-green-100 { background-color: rgba(34,197,94,0.18); }
+
+      /* Header kartu statistik */
+      .dash-dark .bg-green-200 { background-color: rgba(34,197,94,0.22); }
+      .dash-dark .bg-amber-200 { background-color: rgba(245,158,11,0.22); }
+      .dash-dark .bg-red-200 { background-color: rgba(239,68,68,0.22); }
+      .dash-dark .bg-blue-200 { background-color: rgba(96,165,250,0.22); }
+
+      /* Border */
+      .dash-dark .border-gray-100 { border-color: #3a3326; }
+      .dash-dark .border-gray-200,
+      .dash-dark .border-gray-300 { border-color: #634f27; }
+
+      /* Teks */
+      .dash-dark .text-gray-900,
+      .dash-dark .text-gray-800,
+      .dash-dark .text-gray-700,
+      .dash-dark .text-slate-900,
+      .dash-dark .text-slate-800,
+      .dash-dark .text-slate-700 { color: #f1f5f9; }
+      .dash-dark .text-gray-600,
+      .dash-dark .text-slate-600,
+      .dash-dark .text-slate-500 { color: #cbd5e1; }
+      .dash-dark .text-gray-400,
+      .dash-dark .text-slate-400 { color: #94a3b8; }
+      .dash-dark .text-green-700 { color: #4ade80; }
+
+      /* Aksen biru/teal -> emas */
+      .dash-dark .text-brand,
+      .dash-dark [class~="text-[#4B61DD]"],
+      .dash-dark [class~="text-[#37BDB5]"] { color: #E5B85C; }
+      .dash-dark [class~="border-[#41D1C8]"],
+      .dash-dark [class~="border-[#4B61DD]"] { border-color: #E5B85C; }
+      .dash-dark [class~="bg-[#4B61DD]"] { background-color: #E5B85C; color: #121212; }
+      .dash-dark [class~="hover:bg-[#3d4fbd]"]:hover { background-color: #f0c978; }
+      .dash-dark [class*="bg-[#4B61DD]/10"] { background-color: rgba(229,184,92,0.15); }
+      .dash-dark [class*="ring-[#4B61DD]"] { --tw-ring-color: rgba(229,184,92,0.25); }
+      .dash-dark [class*="hover:text-brand-dark"]:hover { color: #f0c978; }
+
+      .dash-dark .search-input {
+      background-color: #121212 !important;
+      color: #f1f5f9 !important;
+      border-color: #634f27 !important;
+      }
+      .dash-dark .search-input::placeholder { color: #94a3b8; }
+      .dash-dark .search-input:focus {
+        border-color: #E5B85C !important;
+        box-shadow: 0 0 0 2px rgba(229,184,92,0.25) !important;
+        outline: none;
+      }
+
+      /* Hover */
+      .dash-dark [class*="hover:bg-slate-50"]:hover,
+      .dash-dark [class*="hover:bg-slate-100"]:hover { background-color: #2d2d2d; }
+      .dash-dark [class*="hover:text-slate-"]:hover,
+      .dash-dark [class*="hover:text-gray-"]:hover { color: #ffffff; }
+      .dash-dark .stat-card:hover {
+        box-shadow: 0 6px 18px rgba(229, 184, 92, 0.45);
+      }
+    `}</style>
     </div>
   );
 }

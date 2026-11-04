@@ -182,8 +182,27 @@ function CheckboxField({ checked, onChange, label, description, disabled }) {
 /* ---------- SHELL ---------- */
 
 function ActionPageShell({ title, subtitle, children, footer, onBack, maxWidth = "w-full" }) {
+  const [themeMode, setThemeMode] = useState(
+    () => localStorage.getItem("app_theme") || "light"
+  );
+
+  useEffect(() => {
+    const sync = () => setThemeMode(localStorage.getItem("app_theme") || "light");
+    window.addEventListener("themeChanged", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("themeChanged", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const isDark = themeMode === "dark";
+
   return (
-    <div className="min-h-screen bg-white focus:outline-none">
+    <div
+      className={`${isDark ? "dash-dark" : ""} min-h-screen bg-white focus:outline-none`}
+      style={isDark ? { backgroundColor: "#121212" } : undefined}
+    >
       <div className="border-b border-gray-200 px-6 py-4">
         <div className={`mx-auto ${maxWidth}`}>
           <div>
@@ -209,6 +228,85 @@ function ActionPageShell({ title, subtitle, children, footer, onBack, maxWidth =
           <div className={`mx-auto flex ${maxWidth} items-center justify-end gap-2.5`}>{footer}</div>
         </div>
       )}
+
+      <style>{`
+        .dash-dark input, .dash-dark select, .dash-dark textarea { color-scheme: dark; }
+        .dash-dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+        .dash-dark select,
+        .dash-dark textarea {
+          background-color: #262626 !important;
+          color: #f1f5f9 !important;
+          border-color: #634f27 !important;
+        }
+        .dash-dark select:disabled { opacity: 0.6; }
+        .dash-dark input:focus, .dash-dark select:focus, .dash-dark textarea:focus {
+          border-color: #E5B85C !important;
+          box-shadow: 0 0 0 2px rgba(229,184,92,0.25) !important;
+        }
+        .dash-dark ::placeholder { color: #94a3b8; }
+        .dash-dark input[type="radio"] { accent-color: #E5B85C; }
+        .dash-dark input[type="checkbox"] { background-color: #262626; border-color: #634f27; }
+        .dash-dark input[type="checkbox"]:checked { background-color: #E5B85C; border-color: #E5B85C; }
+
+        /* Permukaan */
+        .dash-dark .bg-white { background-color: #1e1e1e; }
+        .dash-dark [class*="bg-slate-50"] { background-color: #262626; }
+        .dash-dark [class*="hover:bg-slate-50"]:hover,
+        .dash-dark [class*="hover:bg-slate-100"]:hover { background-color: #2d2d2d; }
+
+        /* Border */
+        .dash-dark .border-gray-100 { border-color: #3a3326; }
+        .dash-dark .border-gray-200,
+        .dash-dark .border-gray-300 { border-color: #634f27; }
+
+        /* Label & judul putih polos */
+        .dash-dark label,
+        .dash-dark label span,
+        .dash-dark h1,
+        .dash-dark h2,
+        .dash-dark p { color: #ffffff; }
+
+        /* Pengecualian (harus di bawah blok putih) */
+        .dash-dark [class*="text-red"] { color: #f87171; }
+        .dash-dark .text-slate-600,
+        .dash-dark .text-slate-500 { color: #cbd5e1; }
+        .dash-dark .text-slate-400 { color: #94a3b8; }
+        .dash-dark .text-slate-700,
+        .dash-dark .text-slate-800,
+        .dash-dark .text-slate-900 { color: #f1f5f9; }
+        .dash-dark [class*="hover:text-slate-"]:hover { color: #ffffff; }
+        .dash-dark [class*="hover:text-red"]:hover { color: #f87171; }
+        .dash-dark .text-brand { color: #E5B85C; }
+        .dash-dark [class*="hover:text-brand-dark"]:hover { color: #f0c978; }
+
+        /* Kotak info biru */
+        .dash-dark .info-alert { background-color: rgba(229,184,92,0.10) !important; border-color: #634f27 !important; }
+        .dash-dark .info-alert-icon { background-color: #E5B85C !important; color: #121212 !important; }
+
+        /* Tombol Batal */
+        .dash-dark .btn-cancel {
+          background-color: transparent !important;
+          color: #cbd5e1 !important;
+          border: 1px solid #634f27 !important;
+        }
+        .dash-dark .btn-cancel:hover {
+          background-color: #2d2d2d !important;
+          color: #ffffff !important;
+          border-color: #E5B85C !important;
+        }
+
+        /* Tombol utama (emas) */
+        .dash-dark .btn-save {
+          background-color: #E5B85C !important;
+          color: #121212 !important;
+          font-weight: 600;
+          box-shadow: 0 4px 10px rgba(229, 184, 92, 0.3) !important;
+        }
+        .dash-dark .btn-save:hover:not(:disabled) {
+          background-color: #f0c978 !important;
+          box-shadow: 0 8px 18px rgba(229, 184, 92, 0.45) !important;
+        }
+      `}</style>
     </div>
   );
 }
@@ -391,7 +489,7 @@ export default function UbahProduk() {
           <button 
             type="button" 
             onClick={handleBack} 
-            className={`${btnModalCancel} focus:outline-none`}
+            className={`${btnModalCancel} btn-cancel focus:outline-none`}
           >
             Batal
           </button>
@@ -400,7 +498,7 @@ export default function UbahProduk() {
             type="button" 
             onClick={handleSave} 
             disabled={isSaving}
-            className={`${btnModalSubmit} group relative flex items-center justify-center border-none text-white focus:outline-none transition-all duration-200 disabled:opacity-70`}
+            className={`${btnModalSubmit} btn-save group relative flex items-center justify-center border-none text-white focus:outline-none transition-all duration-200 disabled:opacity-70`}
             style={{ 
               backgroundColor: "rgba(23, 140, 204, 1)",
               boxShadow: "0 4px 6px -1px rgba(23, 140, 204, 0.4), 0 2px 4px -1px rgba(23, 140, 204, 0.2)" 
@@ -532,9 +630,9 @@ export default function UbahProduk() {
         </div>
         
         {/* Info Alert */}
-        <div className="col-span-2 bg-[#eef3fd] text-slate-700 p-3.5 rounded-md flex items-start gap-3 border border-[#dde7fc]">
+        <div className="info-alert col-span-2 bg-[#eef3fd] text-slate-700 p-3.5 rounded-md flex items-start gap-3 border border-[#dde7fc]">
           <div className="flex-shrink-0 mt-0.5">
-            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#3366cc] text-white font-serif text-[11px] font-bold">
+            <span className="info-alert-icon inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#3366cc] text-white font-serif text-[11px] font-bold">
               i
             </span>
           </div>
